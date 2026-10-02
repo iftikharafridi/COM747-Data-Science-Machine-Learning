@@ -1,0 +1,748 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>COM747 Week 1 Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: single-column lab notebook, ~800px measure. Concept sections, then interactive "explorers", then tiered R tasks. */
+:root{
+  --bg:#f5f6f8; --paper:#ffffff; --ink:#1b2330; --muted:#5a6474; --line:#dce1e9; --line-strong:#c3cad6;
+  --accent:#2b5fa6; --accent-soft:#e5edf8;
+  --core:#2f7d5b; --core-soft:#e2f1e9;
+  --chal:#b26a00; --chal-soft:#fbefd9;
+  --str:#7a3fa0; --str-soft:#f1e7f8;
+  --bad:#b3372f; --bad-soft:#f9e3e1;
+  --code-bg:#eef2f7; --code-ink:#1c2a44;
+  --c1:#2b5fa6; --c2:#d0791a; --c3:#2f8a62; --c4:#8a4bb3; --shade:rgba(43,95,166,.28); --grid:#e6e9ef;
+  --f-display:"Source Serif 4", Georgia, "Times New Roman", serif;
+  --f-body:"Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, Consolas, monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#11151c; --paper:#1a2029; --ink:#e4e8ef; --muted:#9aa4b4; --line:#2b3340; --line-strong:#3c4656;
+  --accent:#7fa8e6; --accent-soft:#1e2b3f;
+  --core:#6cc79d; --core-soft:#173025; --chal:#e5a64a; --chal-soft:#33281a; --str:#c39be0; --str-soft:#2a2135;
+  --bad:#ef8a80; --bad-soft:#3a1f1d;
+  --code-bg:#0e131a; --code-ink:#d6e2f5;
+  --c1:#7fa8e6; --c2:#eb9c4c; --c3:#5fc394; --c4:#c39be0; --shade:rgba(127,168,230,.30); --grid:#262e3a;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#11151c; --paper:#1a2029; --ink:#e4e8ef; --muted:#9aa4b4; --line:#2b3340; --line-strong:#3c4656;
+  --accent:#7fa8e6; --accent-soft:#1e2b3f;
+  --core:#6cc79d; --core-soft:#173025; --chal:#e5a64a; --chal-soft:#33281a; --str:#c39be0; --str-soft:#2a2135;
+  --bad:#ef8a80; --bad-soft:#3a1f1d;
+  --code-bg:#0e131a; --code-ink:#d6e2f5;
+  --c1:#7fa8e6; --c2:#eb9c4c; --c3:#5fc394; --c4:#c39be0; --shade:rgba(127,168,230,.30); --grid:#262e3a;
+  color-scheme:dark}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.6;margin:0;padding-inline:16px;padding-block:0 72px}
+a{color:var(--accent)}
+.topnav{max-width:820px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;padding-block:14px;border-bottom:1px solid var(--line);font-size:15px}
+.topnav .brand{font-weight:700;margin-right:auto;color:var(--ink);text-decoration:none}
+.topnav a.wk{color:var(--muted);text-decoration:none;padding:2px 8px;border-radius:6px}
+.topnav a.wk:hover{color:var(--accent)}
+.topnav a.wk[aria-current="page"]{background:var(--accent-soft);color:var(--accent);font-weight:600}
+.wrap{max-width:820px;margin:0 auto;display:flex;flex-direction:column;gap:40px}
+header.hero{padding-block:32px 4px;display:flex;flex-direction:column;gap:10px}
+.eyebrow{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;line-height:1.2;margin:0}
+h1{font-size:clamp(30px,6vw,44px)}
+h2{font-size:27px}
+h3{font-size:20px}
+p{margin:0}
+.lead{color:var(--muted);font-size:18.5px;max-width:65ch}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font-size:13px;font-weight:600;border:1px solid var(--line-strong);border-radius:999px;padding:3px 10px;color:var(--muted)}
+.toc{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:15px;padding:12px 16px;background:var(--paper);border:1px solid var(--line);border-radius:10px}
+.toc a{text-decoration:none}
+section{display:flex;flex-direction:column;gap:16px;scroll-margin-top:16px}
+.sec-head{display:flex;flex-direction:column;gap:4px}
+.sec-num{font-family:var(--f-mono);font-size:13px;color:var(--accent);font-weight:600}
+.prose{display:flex;flex-direction:column;gap:12px;max-width:68ch}
+ul.list,ol.list{margin:0;padding-left:1.3em;display:flex;flex-direction:column;gap:4px}
+.lo-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.lo-list li{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:baseline}
+.lo{font-family:var(--f-mono);font-size:12px;font-weight:600;background:var(--accent-soft);color:var(--accent);padding:2px 8px;border-radius:4px;white-space:nowrap}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.grid2.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media (max-width:600px){.grid2.two{grid-template-columns:1fr}}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.card h3{font-size:18px}
+.card .k{font-size:13px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:700}
+.code{position:relative;background:var(--code-bg);border:1px solid var(--line);border-radius:8px;min-width:0}
+.code pre{margin:0;padding:14px 16px;overflow-x:auto;font-family:var(--f-mono);font-size:14px;color:var(--code-ink);line-height:1.55}
+.code .copy{position:absolute;top:8px;right:8px}
+.copy,.btn{font:600 13px var(--f-body);background:var(--paper);color:var(--muted);border:1px solid var(--line-strong);border-radius:6px;padding:5px 11px;cursor:pointer}
+.copy:hover,.btn:hover{color:var(--accent);border-color:var(--accent)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--paper)}
+.btn.primary:hover{opacity:.9;color:var(--paper)}
+code{font-family:var(--f-mono);font-size:.88em;background:var(--code-bg);padding:1px 5px;border-radius:4px}
+.callout{border-left:3px solid var(--accent);background:var(--accent-soft);padding:12px 16px;border-radius:0 8px 8px 0}
+.callout.warn{border-color:var(--chal);background:var(--chal-soft)}
+.callout.good{border-color:var(--core);background:var(--core-soft)}
+/* figures and explorers */
+figure{margin:0}
+.figure{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.figure figcaption,.caption{font-size:14.5px;color:var(--muted)}
+.figure svg{width:100%;height:auto;display:block;overflow:visible}
+.explorer{border-color:var(--line-strong)}
+.explorer .title{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.explorer .title h3{font-size:19px}
+.tagx{font:700 11px var(--f-body);letter-spacing:.09em;text-transform:uppercase;padding:3px 8px;border-radius:999px;background:var(--accent-soft);color:var(--accent)}
+.controls{display:flex;flex-wrap:wrap;gap:12px 18px;align-items:flex-end}
+.ctl{display:flex;flex-direction:column;gap:4px;font-size:14px;color:var(--muted);min-width:0}
+.ctl b{color:var(--ink);font-family:var(--f-mono);font-weight:600}
+.ctl input[type=range]{width:min(220px,70vw);accent-color:var(--accent)}
+.ctl input[type=number],.ctl input[type=text],.ctl select{font:15px var(--f-mono);padding:5px 8px;border:1px solid var(--line-strong);border-radius:6px;background:var(--bg);color:var(--ink);width:7.5em}
+.ctl input[type=text]{width:12em}
+.ctl select{width:auto;font-family:var(--f-body)}
+.console{background:var(--code-bg);border:1px solid var(--line);border-radius:8px;padding:10px 14px;font-family:var(--f-mono);font-size:14px;color:var(--code-ink);overflow-x:auto;white-space:pre;line-height:1.55}
+.console .p{color:var(--muted)}
+.kpis{display:flex;flex-wrap:wrap;gap:10px}
+.kpi{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 12px;display:flex;flex-direction:column;min-width:110px}
+.kpi span{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+.kpi b{font-family:var(--f-mono);font-size:19px;font-variant-numeric:tabular-nums}
+/* svg classes */
+.ax{stroke:var(--line-strong);stroke-width:1}
+.gridl{stroke:var(--grid);stroke-width:1}
+.tick{fill:var(--muted);font:12px var(--f-body)}
+.lab{fill:var(--ink);font:13px var(--f-body)}
+.labm{fill:var(--muted);font:12px var(--f-body)}
+.mono{font-family:var(--f-mono)}
+.curve{fill:none;stroke:var(--c1);stroke-width:2.2}
+.curve2{fill:none;stroke:var(--c2);stroke-width:2.2}
+.area{fill:var(--shade);stroke:none}
+.bar{fill:var(--c1)}
+.bar2{fill:var(--c2)}
+.bar3{fill:var(--c3)}
+.barmuted{fill:var(--line-strong)}
+.vline{stroke:var(--c2);stroke-width:2}
+.vline2{stroke:var(--c3);stroke-width:2;stroke-dasharray:5 4}
+.dot{fill:var(--c1)}
+/* vector cells */
+.vec{display:flex;flex-wrap:wrap;gap:4px}
+.cell{display:flex;flex-direction:column;align-items:center;min-width:46px;border:1px solid var(--line-strong);border-radius:6px;background:var(--paper);overflow:hidden;transition:background .15s,border-color .15s}
+.cell .v{font-family:var(--f-mono);font-size:15px;font-weight:600;padding:6px 6px 2px}
+.cell .i{font-family:var(--f-mono);font-size:11px;color:var(--muted);padding:0 6px 4px}
+.cell .t{font-family:var(--f-mono);font-size:10.5px;padding:2px 4px;width:100%;text-align:center;border-top:1px solid var(--line)}
+.cell.on{background:var(--core-soft);border-color:var(--core)}
+.cell.on .t{color:var(--core);font-weight:700}
+.cell.off{opacity:.55}
+.cell.off .t{color:var(--bad)}
+.cell.rec{border-style:dashed;opacity:.75}
+/* tiers and tasks */
+.tier{display:flex;flex-direction:column;gap:12px}
+.tier-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.tag{font:700 12px var(--f-body);letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:999px}
+.t-core .tag{background:var(--core-soft);color:var(--core)}
+.t-chal .tag{background:var(--chal-soft);color:var(--chal)}
+.t-str .tag{background:var(--str-soft);color:var(--str)}
+.note{color:var(--muted);font-size:15px}
+ol.tasks{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px}
+.task{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:14px 16px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.task-q{display:grid;grid-template-columns:2.4em 1fr;gap:4px}
+.task-q > span:last-child{min-width:0}
+.num{font-family:var(--f-mono);font-weight:600;color:var(--muted)}
+details{font-size:15px}
+summary{cursor:pointer;color:var(--accent);font-weight:600;width:max-content;max-width:100%}
+details > *:not(summary){margin-top:8px}
+summary:focus-visible,.copy:focus-visible,.btn:focus-visible,button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+/* tables */
+.tbl{overflow-x:auto;background:var(--paper);border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th,td{text-align:left;padding:8px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:none}
+th{font-weight:700;color:var(--muted);font-size:12.5px;text-transform:uppercase;letter-spacing:.06em;background:var(--bg)}
+td.m,th.m{font-family:var(--f-mono);font-size:14px;white-space:nowrap}
+td.n{text-align:right;font-variant-numeric:tabular-nums;font-family:var(--f-mono);font-size:14px}
+/* quiz */
+.quiz{display:flex;flex-direction:column;gap:14px}
+.q{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.q .opts{display:flex;flex-direction:column;gap:6px}
+.q button.opt{text-align:left;font:15px var(--f-body);background:var(--bg);color:var(--ink);border:1px solid var(--line-strong);border-radius:8px;padding:8px 12px;cursor:pointer}
+.q button.opt:hover{border-color:var(--accent)}
+.q button.opt.right{background:var(--core-soft);border-color:var(--core)}
+.q button.opt.wrong{background:var(--bad-soft);border-color:var(--bad)}
+.q .fb{font-size:15px;color:var(--muted)}
+.q .fb b.ok{color:var(--core)} .q .fb b.no{color:var(--bad)}
+/* rating */
+.rate{display:flex;flex-direction:column;gap:10px}
+.rate-row{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:10px 14px}
+.rate-row > span{min-width:0;flex:1 1 240px}
+.btns{display:flex;gap:6px}
+.btns button{font:600 14px var(--f-body);border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:6px;padding:6px 12px;cursor:pointer;min-width:44px}
+.btns button[aria-pressed="true"][data-v="1"]{background:var(--chal-soft);border-color:var(--chal);color:var(--chal)}
+.btns button[aria-pressed="true"][data-v="2"]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.btns button[aria-pressed="true"][data-v="3"]{background:var(--core-soft);border-color:var(--core);color:var(--core)}
+footer{max-width:820px;margin:48px auto 0;border-top:1px solid var(--line);padding-top:16px;color:var(--muted);font-size:14px;display:flex;flex-wrap:wrap;gap:8px 20px;justify-content:space-between}
+@media (max-width:520px){ body{font-size:16px} .card,.figure{padding:14px} .cell{min-width:40px} }
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+.wrap > *, section > *, .figure > *, .card > *{min-width:0;max-width:100%}
+p code, span code, li code, td code{overflow-wrap:anywhere}
+a.wkcard{text-decoration:none;color:var(--ink);transition:border-color .15s}
+a.wkcard:hover{border-color:var(--accent)}
+a.wkcard .go{color:var(--accent);font-weight:600;font-size:15px;margin-top:auto}
+@media (max-width:560px){
+  .figure svg .tick, .figure svg .labm{font-size:22px}
+  .figure svg .lab{font-size:23px}
+}
+
+</style>
+</head>
+<body data-page="week1">
+<nav class="topnav" aria-label="Weeks"><a class="brand" href="index.html">COM747 R Labs</a><a class="wk" href="week1.html" aria-current="page">Week 1</a><a class="wk" href="week2.html">Week 2</a><a class="wk" href="week3.html">Week 3</a><a class="wk" href="week4.html">Week 4</a></nav>
+<div class="wrap">
+<header class="hero">
+  <div class="eyebrow">COM747 Data Science &amp; Machine Learning · Week 1</div>
+  <h1>Data, Questions and R</h1>
+  <p class="lead">What data is, how a data science project is organised, and your first steps in R. Read the concept sections, try the explorers, then do the R tasks in RStudio.</p>
+  <div class="chips"><span class="chip">Lecture + lab</span><span class="chip">RStudio</span><span class="chip">Dataset: typed in by you</span></div>
+</header>
+
+<nav class="toc" aria-label="On this page">
+  <a href="#outcomes">Outcomes</a><a href="#data">What is data?</a><a href="#value">From data to decisions</a><a href="#crisp">CRISP-DM</a><a href="#wrangling">Wrangling</a><a href="#rstudio">R and RStudio</a><a href="#basics">R basics</a><a href="#tasks">R tasks</a><a href="#quiz">Quiz</a><a href="#exit">Exit check</a>
+</nav>
+
+<section id="outcomes">
+  <div class="sec-head"><span class="sec-num">01</span><h2>By the end of this week you can</h2></div>
+  <ul class="lo-list">
+    <li><span class="lo">LO1</span><span>Describe data, variables and the main types of data.</span></li>
+    <li><span class="lo">LO2</span><span>Outline the stages of a data science project using CRISP-DM.</span></li>
+    <li><span class="lo">LO3</span><span>Use R as a calculator and create variables and vectors.</span></li>
+    <li><span class="lo">LO4</span><span>Summarise a set of marks with built-in R functions.</span></li>
+  </ul>
+  <div class="grid2">
+    <div class="card"><span class="k">Coursework 1 · 40%</span><h3>Practical skills test</h3><p>90 minutes, in the lab, open book (module materials and your own notes only). You load a dataset in RStudio and answer questions with R code. Covers Weeks 1–6.</p></div>
+    <div class="card"><span class="k">Coursework 2 · 60%</span><h3>Group data science project</h3><p>Choose an open dataset (UCI, Kaggle, PURE), follow a lifecycle such as CRISP-DM, write a 4-page IEEE paper. Individual video and code summary count for half the marks.</p></div>
+  </div>
+</section>
+
+<section id="data">
+  <div class="sec-head"><span class="sec-num">02</span><h2>What is data?</h2></div>
+  <div class="prose">
+    <p>Data is recorded observations. Most data you analyse in this module is <b>structured</b>: a table where each <b>row</b> is one thing you observed and each <b>column</b> is one property you measured.</p>
+  </div>
+  <figure class="figure">
+    <div class="tbl" style="border:none">
+      <table>
+        <thead><tr><th>Student</th><th>Age</th><th>Campus</th><th>Hours studied</th><th>Mark</th></tr></thead>
+        <tbody>
+          <tr><td>S001</td><td class="n">24</td><td>London</td><td class="n">6.5</td><td class="n">55</td></tr>
+          <tr><td>S002</td><td class="n">31</td><td>Birmingham</td><td class="n">3.0</td><td class="n">44</td></tr>
+          <tr><td>S003</td><td class="n">27</td><td>Manchester</td><td class="n">1.5</td><td class="n">30</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <figcaption><b>Rows</b> are instances, observations or records. <b>Columns</b> are variables, also called features or attributes. Machine learning papers say "features"; statistics books say "variables". They mean the same thing.</figcaption>
+  </figure>
+  <div class="grid2 two">
+    <div class="card"><span class="k">Structured</span><p>Fits a table: SQL databases, spreadsheets, CSV files. Easy to analyse with R.</p></div>
+    <div class="card"><span class="k">Unstructured</span><p>Free text, emails, social media posts, doctors' notes, images. Estimated at 80–90% of all data. Needs extra processing (text mining, computer vision).</p></div>
+    <div class="card"><span class="k">Quantitative · the "what"</span><p>Numbers: temperature, heart rate, Likert ratings. Analysed with descriptive and inferential statistics.</p></div>
+    <div class="card"><span class="k">Qualitative · the "why"</span><p>Words: interviews, survey comments, app reviews. Analysed with thematic analysis or text analytics.</p></div>
+  </div>
+
+  <div class="figure explorer" id="sorter">
+    <div class="title"><span class="tagx">Explorer</span><h3>Sort the variables</h3></div>
+    <p class="caption">Choose a type for each variable, then check. Some are deliberately tricky.</p>
+    <div class="tbl"><table><thead><tr><th>Variable</th><th>Your answer</th><th>Feedback</th></tr></thead><tbody id="sorter-body"></tbody></table></div>
+    <div class="controls"><button class="btn primary" id="sorter-check" type="button">Check my answers</button><span class="note" id="sorter-score"></span></div>
+  </div>
+</section>
+
+<section id="value">
+  <div class="sec-head"><span class="sec-num">03</span><h2>From data to decisions</h2></div>
+  <div class="prose"><p>Data on its own is not useful. Analytics turns it into information, knowledge and finally a decision. The further right you go, the harder the analysis and the more valuable the answer.</p></div>
+  <figure class="figure">
+    <svg id="continuum" role="img" aria-label="Analytics continuum: descriptive, diagnostic, predictive and prescriptive analytics, each harder and more valuable than the last"></svg>
+    <figcaption>The Gartner analytics continuum. This module moves left to right: descriptive statistics (Weeks 1–3), inference (Week 4), then prediction with machine learning.</figcaption>
+  </figure>
+</section>
+
+<section id="crisp">
+  <div class="sec-head"><span class="sec-num">04</span><h2>CRISP-DM: how projects are organised</h2></div>
+  <div class="prose"><p>The Cross-Industry Standard Process for Data Mining has six phases. It is a cycle: what you learn in evaluation often sends you back to the start. Your group project should follow it.</p></div>
+  <div class="figure explorer">
+    <div class="title"><span class="tagx">Explorer</span><h3>Click a phase</h3></div>
+    <svg id="crisp-svg" role="img" aria-label="CRISP-DM cycle with six phases around the data"></svg>
+    <div class="callout" id="crisp-info" aria-live="polite"></div>
+  </div>
+  <p class="note">A similar process, KDD (knowledge discovery in databases), has five stages: selection, pre-processing, transformation, data mining, interpretation. Expect data cleaning to take most of the time: the often-quoted split is 80% preparing data, 20% modelling.</p>
+</section>
+
+<section id="wrangling">
+  <div class="sec-head"><span class="sec-num">05</span><h2>Data wrangling</h2></div>
+  <div class="prose"><p>Wrangling means getting data into the shape and quality your analysis needs: merging datasets, reshaping, combining or discretising variables, filling missing values, cleaning labels.</p></div>
+  <div class="figure explorer">
+    <div class="title"><span class="tagx">Explorer</span><h3>Wide and long formats</h3></div>
+    <p class="caption">The same page-view data in two shapes. Wide is easy to read; long is what most R plotting and modelling functions want.</p>
+    <div class="controls"><button class="btn primary" id="wl-toggle" type="button">Transform to long</button><span class="note" id="wl-note"></span></div>
+    <div class="tbl" id="wl-table"></div>
+  </div>
+  <div class="figure explorer">
+    <div class="title"><span class="tagx">Explorer</span><h3>Cleaning a messy variable</h3></div>
+    <p class="caption">A "gender" column typed by hand into a form. How many categories does R think there are?</p>
+    <div class="controls"><button class="btn primary" id="clean-btn" type="button">Clean: first letter, upper case</button><button class="btn" id="clean-reset" type="button">Reset</button></div>
+    <div class="vec" id="clean-vec"></div>
+    <svg id="clean-svg" role="img" aria-label="Bar chart of category counts"></svg>
+    <div class="console" id="clean-code"></div>
+  </div>
+</section>
+
+<section id="rstudio">
+  <div class="sec-head"><span class="sec-num">06</span><h2>R and RStudio</h2></div>
+  <div class="grid2">
+    <div class="card"><span class="k">Step 1</span><h3>Install R</h3><p>From CRAN, <code>cran.r-project.org</code>. This is the language itself plus the base package.</p></div>
+    <div class="card"><span class="k">Step 2</span><h3>Install RStudio Desktop</h3><p>From <code>posit.co/download/rstudio-desktop</code>. RStudio is the editor you work in; it runs R for you.</p></div>
+  </div>
+  <figure class="figure">
+    <div class="grid2" style="gap:8px">
+      <div class="card" style="background:var(--accent-soft);border-color:transparent"><span class="k">Top left · Source</span><p>Your script or R Notebook. Write code here and save it. Run a line with <b>Ctrl+Enter</b>.</p></div>
+      <div class="card" style="background:var(--core-soft);border-color:transparent"><span class="k">Top right · Environment</span><p>Every object you have created, e.g. <code>marks</code>, with its value.</p></div>
+      <div class="card" style="background:var(--chal-soft);border-color:transparent"><span class="k">Bottom left · Console</span><p>Where code runs and output appears. Fine for quick checks; nothing typed here is saved.</p></div>
+      <div class="card" style="background:var(--str-soft);border-color:transparent"><span class="k">Bottom right · Files, Plots, Help</span><p>Your folders, the last plot you drew, and documentation from <code>?mean</code>.</p></div>
+    </div>
+    <figcaption>The four panes of RStudio. Always work in a script or notebook so you can rerun your analysis; that is what reproducibility means in practice.</figcaption>
+  </figure>
+  <div class="callout">R was created for statistical computing (it grew out of the S language from Bell Labs). Python is more general purpose. Both are accepted for the group project.</div>
+</section>
+
+<section id="basics">
+  <div class="sec-head"><span class="sec-num">07</span><h2>R basics</h2></div>
+  <div class="tbl"><table>
+    <thead><tr><th>You type</th><th>R returns</th><th>What it does</th></tr></thead>
+    <tbody>
+      <tr><td class="m">2 + 5 * 6</td><td class="m">32</td><td>Multiplication before addition</td></tr>
+      <tr><td class="m">(2 + 5) * 6</td><td class="m">42</td><td>Brackets first</td></tr>
+      <tr><td class="m">10 %% 3</td><td class="m">1</td><td>Remainder</td></tr>
+      <tr><td class="m">2 ^ 20</td><td class="m">1048576</td><td>Combinations of 20 yes/no variables</td></tr>
+      <tr><td class="m">x &lt;- 10</td><td class="m">(nothing)</td><td>Stores 10 in <code>x</code>; see it in the Environment</td></tr>
+      <tr><td class="m">marks &lt;- c(55, 44, 30)</td><td class="m">(nothing)</td><td><code>c()</code> combines values into a vector</td></tr>
+      <tr><td class="m">marks[2]</td><td class="m">44</td><td>Second element. R counts from 1, not 0</td></tr>
+    </tbody>
+  </table></div>
+  <div class="callout warn"><b>In R, everything is a vector.</b> Even <code>x &lt;- 10</code> is a vector of length 1. A vector holds values of one type only: all numbers, all text, or all TRUE/FALSE.</div>
+
+  <div class="figure explorer">
+    <div class="title"><span class="tagx">Explorer</span><h3>Indexing a vector</h3></div>
+    <div class="code" data-nocopy><pre>marks &lt;- c(55, 44, 30, 60, 59, 80, 85, 73, 71, 25)</pre></div>
+    <div class="controls">
+      <label class="ctl" for="ix-in">Type an index inside <b>marks[ ]</b><input type="text" id="ix-in" value="c(1, 3, 5)" autocomplete="off" spellcheck="false"></label>
+      <div class="ctl">Try<span><button class="btn" type="button" data-ix="5">5</button> <button class="btn" type="button" data-ix="2:4">2:4</button> <button class="btn" type="button" data-ix="-1">-1</button> <button class="btn" type="button" data-ix="c(10, 1)">c(10, 1)</button> <button class="btn" type="button" data-ix="11">11</button></span></div>
+    </div>
+    <div class="vec" id="ix-vec"></div>
+    <div class="console" id="ix-out" aria-live="polite"></div>
+  </div>
+</section>
+
+<section id="tasks">
+  <div class="sec-head"><span class="sec-num">08</span><h2>Your R tasks</h2></div>
+  <p class="note">Create a new R Notebook in RStudio (File → New File → R Notebook). Put each task in its own chunk. Predict the answer before you run each line.</p>
+  <div class="code"><pre>marks &lt;- c(55, 44, 30, 60, 59, 80, 85, 73, 71, 25)</pre></div>
+
+  <div class="tier t-core">
+    <div class="tier-head"><span class="tag">Core</span><span class="note">Everyone</span></div>
+    <ol class="tasks">
+      <li class="task"><div class="task-q"><span class="num">1</span><span>Use R as a calculator: how many seconds are in a 12-week semester?</span></div>
+        <details><summary>Check your answer</summary><div class="code"><pre>12 * 7 * 24 * 60 * 60   # 7257600</pre></div></details></li>
+      <li class="task"><div class="task-q"><span class="num">2</span><span>How many students are there? What is the total of all marks?</span></div>
+        <details><summary>Hint</summary><p><code>length()</code> and <code>sum()</code>.</p></details>
+        <details><summary>Check your answer</summary><div class="code"><pre>length(marks)   # 10
+sum(marks)      # 582</pre></div></details></li>
+      <li class="task"><div class="task-q"><span class="num">3</span><span>Find the mean, median, minimum and maximum.</span></div>
+        <details><summary>Check your answer</summary><div class="code"><pre>mean(marks)     # 58.2
+median(marks)   # 59.5
+min(marks)      # 25
+max(marks)      # 85</pre></div></details></li>
+      <li class="task"><div class="task-q"><span class="num">4</span><span>Calculate the mean by hand, using only <code>sum()</code> and <code>length()</code>. Do you get the same answer?</span></div>
+        <details><summary>Check your answer</summary><div class="code"><pre>sum(marks) / length(marks)   # 58.2</pre></div></details></li>
+      <li class="task"><div class="task-q"><span class="num">5</span><span>What is the mark of the 5th student?</span></div>
+        <details><summary>Check your answer</summary><div class="code"><pre>marks[5]   # 59</pre></div></details></li>
+    </ol>
+  </div>
+
+  <div class="tier t-chal">
+    <div class="tier-head"><span class="tag">Challenge</span><span class="note">Spread and vectorisation</span></div>
+    <ol class="tasks">
+      <li class="task"><div class="task-q"><span class="num">6</span><span>Find the standard deviation and the variance. How are they related?</span></div>
+        <details><summary>Check your answer</summary><div class="code"><pre>sd(marks)          # 20.25
+var(marks)         # 409.96
+sqrt(var(marks))   # 20.25: sd is the square root of the variance</pre></div></details></li>
+      <li class="task"><div class="task-q"><span class="num">7</span><span>The markers were too strict. Add 5 marks to every student and store the result as <code>new_marks</code>. Predict first: does the standard deviation change?</span></div>
+        <details><summary>Check your answer</summary><div class="code"><pre>new_marks &lt;- marks + 5
+mean(new_marks)   # 63.2
+sd(new_marks)     # 20.25 (unchanged: everyone moved by the same amount)</pre></div></details></li>
+      <li class="task"><div class="task-q"><span class="num">8</span><span>Show the marks of the first three students, then all students except the last one.</span></div>
+        <details><summary>Check your answer</summary><div class="code"><pre>marks[1:3]                 # 55 44 30
+marks[-length(marks)]      # drops the 10th</pre></div></details></li>
+      <li class="task"><div class="task-q"><span class="num">9</span><span>Draw a bar chart of the marks with a dashed line at the pass mark of 40.</span></div>
+        <details><summary>Check your answer</summary><div class="code"><pre>barplot(marks, names.arg = 1:10, ylim = c(0, 100))
+abline(h = 40, lty = 2)</pre></div></details></li>
+    </ol>
+  </div>
+
+  <div class="tier t-str">
+    <div class="tier-head"><span class="tag">Stretch</span><span class="note">Think like a data scientist</span></div>
+    <ol class="tasks">
+      <li class="task"><div class="task-q"><span class="num">10</span><span>A CSV file has 1,500,000 rows and 120 numeric columns. Each number takes 8 bytes. Use R to estimate how many gigabytes of RAM it needs.</span></div>
+        <details><summary>Check your answer</summary><div class="code"><pre>1500000 * 120 * 8 / 1024^3   # about 1.34 GB</pre></div></details></li>
+      <li class="task"><div class="task-q"><span class="num">11</span><span>Create a character vector of the four campus names you know, and a logical vector saying whether each has a lab. Check their types with <code>class()</code>.</span></div>
+        <details><summary>Example</summary><div class="code"><pre>campus &lt;- c("London", "Birmingham", "Manchester", "Online")
+has_lab &lt;- c(TRUE, TRUE, TRUE, FALSE)
+class(campus); class(has_lab)</pre></div></details></li>
+      <li class="task"><div class="task-q"><span class="num">12</span><span>Clean this messy vector so it has only two categories, then count them with <code>table()</code>: <code>c("Male","m","Female","MALE","F","f","male")</code></span></div>
+        <details><summary>Hint</summary><p>Look up <code>?substr</code> and <code>?toupper</code>.</p></details>
+        <details><summary>Check your answer</summary><div class="code"><pre>g &lt;- c("Male","m","Female","MALE","F","f","male")
+table(toupper(substr(g, 1, 1)))   # F: 3, M: 4</pre></div></details></li>
+    </ol>
+  </div>
+</section>
+
+<section id="quiz">
+  <div class="sec-head"><span class="sec-num">09</span><h2>Check yourself</h2></div>
+  <div class="quiz">
+    <div class="q" data-answer="2" data-why="Rows are observations; columns are the variables (features) measured for each one.">
+      <p><b>1.</b> In a dataset of 400 students with 30 columns, what is a "feature"?</p>
+      <div class="opts"><button class="opt">One student</button><button class="opt">The whole table</button><button class="opt">One column, such as age</button></div><p class="fb"></p></div>
+    <div class="q" data-answer="1" data-why="Predictive analytics answers &quot;what will happen?&quot;. Prescriptive goes further and recommends an action.">
+      <p><b>2.</b> Forecasting next year's enrolments is an example of…</p>
+      <div class="opts"><button class="opt">Descriptive analytics</button><button class="opt">Predictive analytics</button><button class="opt">Diagnostic analytics</button></div><p class="fb"></p></div>
+    <div class="q" data-answer="0" data-why="R indexes from 1, so marks[2] is the second value: 44.">
+      <p><b>3.</b> <code>marks &lt;- c(55, 44, 30)</code>. What does <code>marks[2]</code> return?</p>
+      <div class="opts"><button class="opt">44</button><button class="opt">30</button><button class="opt">55 44</button></div><p class="fb"></p></div>
+    <div class="q" data-answer="2" data-why="Data preparation (cleaning, wrangling) comes after data understanding and before modelling.">
+      <p><b>4.</b> In CRISP-DM, which phase removes duplicates and fixes inconsistent labels?</p>
+      <div class="opts"><button class="opt">Business understanding</button><button class="opt">Evaluation</button><button class="opt">Data preparation</button></div><p class="fb"></p></div>
+    <div class="q" data-answer="1" data-why="Every value moves up by 5, so the centre moves but the distances from the mean, and therefore the SD, stay the same.">
+      <p><b>5.</b> You add 5 to every mark. What happens to the standard deviation?</p>
+      <div class="opts"><button class="opt">It goes up by 5</button><button class="opt">It stays the same</button><button class="opt">It goes up by 25</button></div><p class="fb"></p></div>
+  </div>
+</section>
+
+<section id="glossary">
+  <div class="sec-head"><span class="sec-num">10</span><h2>Key terms</h2></div>
+  <div class="tbl"><table><thead><tr><th>Term</th><th>Meaning</th></tr></thead><tbody>
+    <tr><td>Variable / feature</td><td>A measured property; one column of a dataset.</td></tr>
+    <tr><td>Observation / instance</td><td>One thing measured; one row.</td></tr>
+    <tr><td>Continuous</td><td>Numeric and can take any value in a range (height, time).</td></tr>
+    <tr><td>Discrete</td><td>Numeric counts (number of siblings, number of calls).</td></tr>
+    <tr><td>Categorical / nominal</td><td>Labels or groups (campus, blood type). In R: a factor.</td></tr>
+    <tr><td>CRISP-DM</td><td>A six-phase cycle for data science projects.</td></tr>
+    <tr><td>Data wrangling</td><td>Cleaning and reshaping data before analysis.</td></tr>
+    <tr><td class="m">&lt;-</td><td>Assignment: store the value on the right in the name on the left.</td></tr>
+    <tr><td>Vector</td><td>An ordered set of values of one type, made with <code>c()</code>.</td></tr>
+  </tbody></table></div>
+</section>
+
+<section id="exit">
+  <div class="sec-head"><span class="sec-num">11</span><h2>Exit self-check</h2></div>
+  <p class="note">1 = I need help · 2 = nearly there · 3 = confident. Your choices stay on this device.</p>
+  <div class="rate">
+    <div class="rate-row"><span><span class="lo">LO1</span> I can describe data, variables and data types.</span><div class="btns" data-k="lo1"><button data-v="1">1</button><button data-v="2">2</button><button data-v="3">3</button></div></div>
+    <div class="rate-row"><span><span class="lo">LO2</span> I can name the six CRISP-DM phases.</span><div class="btns" data-k="lo2"><button data-v="1">1</button><button data-v="2">2</button><button data-v="3">3</button></div></div>
+    <div class="rate-row"><span><span class="lo">LO3</span> I can create variables and vectors in R.</span><div class="btns" data-k="lo3"><button data-v="1">1</button><button data-v="2">2</button><button data-v="3">3</button></div></div>
+    <div class="rate-row"><span><span class="lo">LO4</span> I can summarise marks with R functions.</span><div class="btns" data-k="lo4"><button data-v="1">1</button><button data-v="2">2</button><button data-v="3">3</button></div></div>
+  </div>
+  <div class="callout"><b>Before next week:</b> install R and RStudio on your own laptop, and redo any task you rated 1 or 2. Next week: filtering, data types, generating data and reading CSV files.</div>
+</section>
+
+</div>
+<footer><span>COM747 Data Science &amp; Machine Learning · QA Higher Education / Ulster University</span><span>Keep RStudio open beside this page.</span></footer>
+<script>
+/* Shared helpers for COM747 student pages: copy buttons, quizzes, self-ratings, stats maths, SVG charts */
+(function(){
+"use strict";
+/* ---------- copy buttons ---------- */
+document.querySelectorAll('.code').forEach(function(box){
+  if (box.dataset.nocopy !== undefined) return;
+  var pre = box.querySelector('pre'); if (!pre) return;
+  var btn = document.createElement('button'); btn.type='button'; btn.className='copy'; btn.textContent='Copy';
+  box.appendChild(btn);
+  btn.addEventListener('click', function(){
+    var text = pre.innerText;
+    var done = function(){ btn.textContent='Copied'; setTimeout(function(){btn.textContent='Copy';},1500); };
+    var fallback = function(){ var r=document.createRange(); r.selectNodeContents(pre); var s=window.getSelection(); s.removeAllRanges(); s.addRange(r); btn.textContent='Press Ctrl+C'; };
+    try { navigator.clipboard.writeText(text).then(done, fallback); } catch(e){ fallback(); }
+  });
+});
+/* ---------- quizzes: <div class="q" data-answer="1" data-why="..."> ---------- */
+document.querySelectorAll('.q').forEach(function(q){
+  var ans = +q.dataset.answer; var fb = q.querySelector('.fb');
+  var opts = q.querySelectorAll('button.opt');
+  opts.forEach(function(b, i){
+    b.type='button';
+    b.addEventListener('click', function(){
+      opts.forEach(function(o){ o.classList.remove('right','wrong'); });
+      if (i === ans){ b.classList.add('right'); fb.innerHTML = '<b class="ok">Correct.</b> ' + (q.dataset.why||''); }
+      else { b.classList.add('wrong'); fb.innerHTML = '<b class="no">Not quite.</b> Try another option.'; }
+    });
+  });
+});
+/* ---------- self-rating ---------- */
+var key = 'com747-' + (document.body.dataset.page || 'page');
+var saved = {};
+try { saved = JSON.parse(localStorage.getItem(key) || '{}'); } catch(e){}
+document.querySelectorAll('.btns').forEach(function(group){
+  var k = group.dataset.k;
+  var set = function(v){ group.querySelectorAll('button').forEach(function(b){ b.setAttribute('aria-pressed', String(b.dataset.v === v)); }); };
+  group.querySelectorAll('button').forEach(function(b){ b.type='button'; b.setAttribute('aria-pressed','false'); });
+  if (saved[k]) set(saved[k]);
+  group.addEventListener('click', function(e){
+    var b = e.target.closest('button'); if(!b) return;
+    set(b.dataset.v); saved[k]=b.dataset.v;
+    try { localStorage.setItem(key, JSON.stringify(saved)); } catch(e){}
+  });
+});
+
+/* ---------- stats maths ---------- */
+var S = {};
+S.mean = function(a){ var s=0; for (var i=0;i<a.length;i++) s+=a[i]; return s/a.length; };
+S.variance = function(a){ var m=S.mean(a), s=0; for (var i=0;i<a.length;i++) s+=(a[i]-m)*(a[i]-m); return s/(a.length-1); };
+S.sd = function(a){ return Math.sqrt(S.variance(a)); };
+S.median = function(a){ var b=a.slice().sort(function(x,y){return x-y;}); var n=b.length; return n%2? b[(n-1)/2] : (b[n/2-1]+b[n/2])/2; };
+S.erf = function(x){ /* Abramowitz-Stegun 7.1.26, |err|<1.5e-7 */
+  var s = x<0?-1:1; x=Math.abs(x);
+  var t=1/(1+0.3275911*x);
+  var y=1-(((((1.061405429*t-1.453152027)*t)+1.421413741)*t-0.284496736)*t+0.254829592)*t*Math.exp(-x*x);
+  return s*y; };
+S.dnorm = function(x,m,s){ m=m||0; s=s||1; var z=(x-m)/s; return Math.exp(-0.5*z*z)/(s*Math.sqrt(2*Math.PI)); };
+S.pnorm = function(x,m,s){ m=m||0; s=s||1; return 0.5*(1+S.erf((x-m)/(s*Math.SQRT2))); };
+S.qnorm = function(p){ /* Acklam */
+  var a=[-3.969683028665376e+01,2.209460984245205e+02,-2.759285104469687e+02,1.383577518672690e+02,-3.066479806614716e+01,2.506628277459239e+00],
+      b=[-5.447609879822406e+01,1.615858368580409e+02,-1.556989798598866e+02,6.680131188771972e+01,-1.328068155288572e+01],
+      c=[-7.784894002430293e-03,-3.223964580411365e-01,-2.400758277161838e+00,-2.549732539343734e+00,4.374664141464968e+00,2.938163982698783e+00],
+      d=[7.784695709041462e-03,3.224671290700398e-01,2.445134137142996e+00,3.754408661907416e+00];
+  var q,r; if (p<=0) return -Infinity; if (p>=1) return Infinity;
+  if (p<0.02425){ q=Math.sqrt(-2*Math.log(p)); return (((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5])/((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1); }
+  if (p>1-0.02425){ q=Math.sqrt(-2*Math.log(1-p)); return -(((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5])/((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1); }
+  q=p-0.5; r=q*q; return (((((a[0]*r+a[1])*r+a[2])*r+a[3])*r+a[4])*r+a[5])*q/(((((b[0]*r+b[1])*r+b[2])*r+b[3])*r+b[4])*r+1); };
+S.lgamma = function(x){ var c=[76.18009172947146,-86.50532032941677,24.01409824083091,-1.231739572450155,0.1208650973866179e-2,-0.5395239384953e-5];
+  var y=x, t=x+5.5; t-=(x+0.5)*Math.log(t); var s=1.000000000190015; for (var j=0;j<6;j++) s+=c[j]/++y; return -t+Math.log(2.5066282746310005*s/x); };
+function betacf(a,b,x){ var MAXIT=200,EPS=3e-14,FPMIN=1e-300; var qab=a+b,qap=a+1,qam=a-1,c=1,d=1-qab*x/qap; if(Math.abs(d)<FPMIN)d=FPMIN; d=1/d; var h=d;
+  for (var m=1;m<=MAXIT;m++){ var m2=2*m, aa=m*(b-m)*x/((qam+m2)*(a+m2)); d=1+aa*d; if(Math.abs(d)<FPMIN)d=FPMIN; c=1+aa/c; if(Math.abs(c)<FPMIN)c=FPMIN; d=1/d; h*=d*c;
+    aa=-(a+m)*(qab+m)*x/((a+m2)*(qap+m2)); d=1+aa*d; if(Math.abs(d)<FPMIN)d=FPMIN; c=1+aa/c; if(Math.abs(c)<FPMIN)c=FPMIN; d=1/d; var del=d*c; h*=del; if(Math.abs(del-1)<EPS)break; }
+  return h; }
+S.ibeta = function(x,a,b){ if (x<=0) return 0; if (x>=1) return 1;
+  var bt=Math.exp(S.lgamma(a+b)-S.lgamma(a)-S.lgamma(b)+a*Math.log(x)+b*Math.log(1-x));
+  return x<(a+1)/(a+b+2) ? bt*betacf(a,b,x)/a : 1-bt*betacf(b,a,1-x)/b; };
+S.pt = function(t,df){ var x=df/(df+t*t); var tail=0.5*S.ibeta(x,df/2,0.5); return t>0? 1-tail : tail; };
+S.dt = function(t,df){ return Math.exp(S.lgamma((df+1)/2)-S.lgamma(df/2))/Math.sqrt(df*Math.PI)*Math.pow(1+t*t/df,-(df+1)/2); };
+S.qt = function(p,df){ var lo=-60,hi=60; for (var i=0;i<100;i++){ var mid=(lo+hi)/2; if (S.pt(mid,df)<p) lo=mid; else hi=mid; } return (lo+hi)/2; };
+S.choose = function(n,k){ var r=1; for (var i=1;i<=k;i++) r=r*(n-k+i)/i; return r; };
+S.dbinom = function(k,n,p){ return S.choose(n,k)*Math.pow(p,k)*Math.pow(1-p,n-k); };
+S.rnorm = function(m,s){ var u=0,v=0; while(u===0)u=Math.random(); while(v===0)v=Math.random(); return m + s*Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v); };
+S.welch = function(x,y){ var mx=S.mean(x),my=S.mean(y),vx=S.variance(x),vy=S.variance(y),nx=x.length,ny=y.length;
+  var se=Math.sqrt(vx/nx+vy/ny), t=(mx-my)/se; var df=Math.pow(vx/nx+vy/ny,2)/(Math.pow(vx/nx,2)/(nx-1)+Math.pow(vy/ny,2)/(ny-1));
+  return {t:t, df:df, p:2*(1-S.pt(Math.abs(t),df))}; };
+S.fmt = function(x,d){ if (!isFinite(x)) return String(x); d = d===undefined?2:d; var s=x.toFixed(d); return s==='-0'+(d?'.'+'0'.repeat(d):'')? s.slice(1): s; };
+S.sig = function(x,n){ n=n||4; if (x===0) return '0'; if (Math.abs(x)<1e-4) return x.toExponential(2); return String(+x.toPrecision(n)); };
+window.S = S;
+
+/* ---------- SVG helpers ---------- */
+var NS='http://www.w3.org/2000/svg';
+function el(tag, attrs, parent){ var e=document.createElementNS(NS,tag); for (var k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; }
+function txt(parent, x, y, s, cls, anchor){ var t=el('text',{x:x,y:y,'class':cls||'tick','text-anchor':anchor||'middle'},parent); t.textContent=s; return t; }
+function niceTicks(lo, hi, n){ var span=hi-lo; if (span<=0) return [lo]; var step=Math.pow(10,Math.floor(Math.log10(span/n))); var err=n/span*step;
+  if (err<=0.15) step*=10; else if (err<=0.35) step*=5; else if (err<=0.75) step*=2;
+  var out=[]; for (var v=Math.ceil(lo/step)*step; v<=hi+1e-9; v+=step) out.push(+v.toFixed(10)); return out; }
+/* Chart frame: returns {g, x(), y(), W, H} */
+function frame(svg, opts){
+  while (svg.firstChild) svg.removeChild(svg.firstChild);
+  var W=opts.W||640, H=opts.H||260, m=opts.m||{l:48,r:16,t:14,b:38};
+  svg.setAttribute('viewBox','0 0 '+W+' '+H);
+  var x=function(v){ return m.l + (v-opts.x0)/(opts.x1-opts.x0)*(W-m.l-m.r); };
+  var y=function(v){ return H-m.b - (v-opts.y0)/(opts.y1-opts.y0)*(H-m.t-m.b); };
+  var g=el('g',{},svg);
+  if (opts.ygrid!==false){ niceTicks(opts.y0,opts.y1,opts.ny||4).forEach(function(v){ el('line',{x1:m.l,x2:W-m.r,y1:y(v),y2:y(v),'class':'gridl'},g); if (opts.ylabels!==false) txt(g,m.l-6,y(v)+4,opts.yfmt?opts.yfmt(v):S.sig(v,3),'tick','end'); }); }
+  el('line',{x1:m.l,x2:W-m.r,y1:H-m.b,y2:H-m.b,'class':'ax'},g);
+  (opts.xticks || niceTicks(opts.x0,opts.x1,opts.nx||6)).forEach(function(v){ el('line',{x1:x(v),x2:x(v),y1:H-m.b,y2:H-m.b+4,'class':'ax'},g); txt(g,x(v),H-m.b+17,opts.xfmt?opts.xfmt(v):S.sig(v,4)); });
+  if (opts.xlab) txt(g,(m.l+W-m.r)/2,H-4,opts.xlab,'labm');
+  if (opts.ylab){ var t=txt(g,12,(m.t+H-m.b)/2,opts.ylab,'labm'); t.setAttribute('transform','rotate(-90 12 '+((m.t+H-m.b)/2)+')'); }
+  return {g:g, x:x, y:y, W:W, H:H, m:m};
+}
+function pathFrom(pts){ return pts.map(function(p,i){ return (i?'L':'M')+p[0].toFixed(2)+' '+p[1].toFixed(2); }).join(''); }
+/* histogram of values into bins: returns {edges, counts} */
+function bins(vals, lo, hi, k){ var w=(hi-lo)/k, c=new Array(k).fill(0); vals.forEach(function(v){ var i=Math.floor((v-lo)/w); if (i===k) i=k-1; if (i>=0&&i<k) c[i]++; }); var e=[]; for (var i=0;i<=k;i++) e.push(lo+i*w); return {edges:e, counts:c, w:w}; }
+window.G = {el:el, txt:txt, frame:frame, path:pathFrom, ticks:niceTicks, bins:bins};
+})();
+
+</script>
+<script>
+(function(){
+"use strict";
+/* ---------- variable sorter ---------- */
+var TYPES = ['Numeric: continuous','Numeric: discrete','Categorical','Text (unstructured)'];
+var ITEMS = [
+  ['Height in cm', 0, 'Can take any value in a range, e.g. 172.4.'],
+  ['Number of modules failed', 1, 'A count: 0, 1, 2… never 1.5.'],
+  ['Campus (London, Birmingham, Manchester)', 2, 'Labels with no numeric meaning.'],
+  ['UK postcode', 2, 'Contains numbers but you cannot average it. It is a label.'],
+  ['Degree classification (1st, 2:1, 2:2, 3rd)', 2, 'Categorical with an order: called ordinal.'],
+  ['Time to run a mile', 0, 'Time is measured, not counted, so it is continuous.'],
+  ['Student comments in a module survey', 3, 'Free text. Needs text analytics, not mean() or sd().'],
+  ['Number of calls to a helpline per day', 1, 'A count of events.']
+];
+var tb = document.getElementById('sorter-body');
+ITEMS.forEach(function(it, i){
+  var tr = document.createElement('tr');
+  var opts = '<option value="">Choose…</option>' + TYPES.map(function(t,j){ return '<option value="'+j+'">'+t+'</option>'; }).join('');
+  tr.innerHTML = '<td>'+it[0]+'</td><td><select id="srt'+i+'" aria-label="Type for '+it[0]+'">'+opts+'</select></td><td class="fbk" style="font-size:14px;color:var(--muted)"></td>';
+  tb.appendChild(tr);
+});
+document.getElementById('sorter-check').addEventListener('click', function(){
+  var score = 0;
+  ITEMS.forEach(function(it, i){
+    var sel = document.getElementById('srt'+i), fb = sel.closest('tr').querySelector('.fbk');
+    if (sel.value === '') { fb.textContent = 'Choose a type.'; fb.style.color='var(--muted)'; return; }
+    var ok = +sel.value === it[1]; if (ok) score++;
+    fb.innerHTML = (ok ? '<b style="color:var(--core)">Yes.</b> ' : '<b style="color:var(--bad)">'+TYPES[it[1]]+'.</b> ') + it[2];
+  });
+  document.getElementById('sorter-score').textContent = score + ' of ' + ITEMS.length + ' correct';
+});
+
+/* ---------- analytics continuum ---------- */
+(function(){
+  var svg = document.getElementById('continuum');
+  var W=640,H=250; svg.setAttribute('viewBox','0 0 '+W+' '+H);
+  var stages = [['Descriptive','What happened?','Hindsight'],['Diagnostic','Why did it happen?','Hindsight'],['Predictive','What will happen?','Insight / foresight'],['Prescriptive','What should we do?','Foresight']];
+  var cls = ['bar','bar','bar2','bar3'];
+  var bw = 132, gap = 18, x0 = 40, base = 200;
+  G.el('line',{x1:x0-10,y1:base,x2:W-10,y2:base,'class':'ax'},svg);
+  stages.forEach(function(s,i){
+    var h = 50 + i*38, x = x0 + i*(bw+gap);
+    G.el('rect',{x:x,y:base-h,width:bw,height:h,rx:6,'class':cls[i],opacity:0.88},svg);
+    G.txt(svg, x+bw/2, base-h+22, s[0], 'lab').setAttribute('style','fill:var(--paper);font-weight:700');
+    G.txt(svg, x+bw/2, base+20, s[1], 'lab');
+    G.txt(svg, x+bw/2, base+38, s[2], 'labm');
+  });
+  var a = G.el('path',{d:'M30 30 L610 30', 'class':'ax', 'marker-end':'url(#arr)'},svg);
+  var defs = G.el('defs',{},svg); var mk = G.el('marker',{id:'arr',viewBox:'0 0 10 10',refX:9,refY:5,markerWidth:7,markerHeight:7,orient:'auto'},defs);
+  G.el('path',{d:'M0 0 L10 5 L0 10 z',style:'fill:var(--line-strong)'},mk);
+  G.txt(svg, 320, 22, 'Difficulty and value increase →', 'labm');
+})();
+
+/* ---------- CRISP-DM ---------- */
+(function(){
+  var phases = [
+    ['Business understanding','What question are we answering, and for whom? Example: the exam board wants to know which students are at risk of failing.'],
+    ['Data understanding','What data do we have? Load it, look at the variables, summarise them, spot problems. Example: marks, attendance and campus for 400 students.'],
+    ['Data preparation','Clean and reshape: fix labels, handle missing values, create new variables. Usually the longest phase.'],
+    ['Modelling','Apply statistics or machine learning. Example: a model predicting pass or fail from attendance.'],
+    ['Evaluation','Does the model answer the business question well enough? If not, go back round the cycle.'],
+    ['Deployment','Put the result to use: a report, a dashboard, or a model running in a system. Then monitor it.']
+  ];
+  var svg = document.getElementById('crisp-svg'), info = document.getElementById('crisp-info');
+  var W=640,H=380,cx=320,cy=190,R=140; svg.setAttribute('viewBox','0 0 '+W+' '+H);
+  var defs = G.el('defs',{},svg); var mk = G.el('marker',{id:'carr',viewBox:'0 0 10 10',refX:8,refY:5,markerWidth:6,markerHeight:6,orient:'auto'},defs);
+  G.el('path',{d:'M0 0 L10 5 L0 10 z',style:'fill:var(--muted)'},mk);
+  G.el('circle',{cx:cx,cy:cy,r:R,style:'fill:none;stroke:var(--line-strong);stroke-dasharray:4 5'},svg);
+  // arrows along circle between nodes
+  for (var i=0;i<6;i++){
+    var a1=(-90+i*60+17)*Math.PI/180, a2=(-90+i*60+43)*Math.PI/180;
+    G.el('path',{d:'M'+(cx+R*Math.cos(a1))+' '+(cy+R*Math.sin(a1))+' A'+R+' '+R+' 0 0 1 '+(cx+R*Math.cos(a2))+' '+(cy+R*Math.sin(a2)),style:'fill:none;stroke:var(--muted);stroke-width:2','marker-end':'url(#carr)'},svg);
+  }
+  G.el('circle',{cx:cx,cy:cy,r:46,style:'fill:var(--accent-soft);stroke:var(--accent)'},svg);
+  G.txt(svg,cx,cy+5,'Data','lab').setAttribute('style','font-weight:700;fill:var(--accent)');
+  var nodes=[];
+  phases.forEach(function(p,i){
+    var ang=(-90+i*60)*Math.PI/180, x=cx+R*Math.cos(ang), y=cy+R*Math.sin(ang);
+    var g=G.el('g',{tabindex:0,role:'button','aria-label':p[0],style:'cursor:pointer'},svg);
+    var r=G.el('rect',{x:x-78,y:y-20,width:156,height:40,rx:20,style:'fill:var(--paper);stroke:var(--accent);stroke-width:1.5'},g);
+    var lines = p[0].split(' ');
+    if (lines.length>1){ G.txt(g,x,y-3,lines[0],'lab'); G.txt(g,x,y+12,lines.slice(1).join(' '),'lab'); } else G.txt(g,x,y+5,p[0],'lab');
+    G.txt(g, x-62, y+5, String(i+1), 'labm');
+    var pick=function(){ nodes.forEach(function(n){ n.setAttribute('style','fill:var(--paper);stroke:var(--accent);stroke-width:1.5'); }); r.setAttribute('style','fill:var(--accent-soft);stroke:var(--accent);stroke-width:3'); info.innerHTML='<b>'+(i+1)+'. '+p[0]+'.</b> '+p[1]; };
+    g.addEventListener('click',pick); g.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); pick(); } });
+    nodes.push(r); if (i===0) pick();
+  });
+})();
+
+/* ---------- wide / long ---------- */
+(function(){
+  var users=['User1','User2','User3'], pages=['Page1Views','Page2Views','Page3Views','Page4Views'];
+  var v=[[304,200,438,637],[501,302,384,278],[503,627,893,923]];
+  var long=false, box=document.getElementById('wl-table'), btn=document.getElementById('wl-toggle'), note=document.getElementById('wl-note');
+  function render(){
+    var h;
+    if (!long){
+      h='<table><thead><tr><th>User</th>'+pages.map(function(p){return '<th>'+p+'</th>';}).join('')+'</tr></thead><tbody>'+
+        users.map(function(u,i){ return '<tr><td>'+u+'</td>'+v[i].map(function(x){return '<td class="n">'+x+'</td>';}).join('')+'</tr>'; }).join('')+'</tbody></table>';
+      note.textContent='Wide: 3 rows × 5 columns. One row per user.'; btn.textContent='Transform to long';
+    } else {
+      var rows=[]; users.forEach(function(u,i){ pages.forEach(function(p,j){ rows.push('<tr><td>'+u+'</td><td>'+p+'</td><td class="n">'+v[i][j]+'</td></tr>'); }); });
+      h='<table><thead><tr><th>User</th><th>Page</th><th>n</th></tr></thead><tbody>'+rows.join('')+'</tbody></table>';
+      note.textContent='Long: 12 rows × 3 columns. One row per user-page pair. Same information.'; btn.textContent='Transform back to wide';
+    }
+    box.innerHTML=h;
+  }
+  btn.addEventListener('click',function(){ long=!long; render(); }); render();
+})();
+
+/* ---------- cleaning ---------- */
+(function(){
+  var raw=['Male','m','Female','MALE','M','F','f','male','FEMALE','fem','Mal'];
+  var vec=document.getElementById('clean-vec'), svg=document.getElementById('clean-svg'), code=document.getElementById('clean-code');
+  function draw(vals, cleaned){
+    vec.innerHTML = vals.map(function(s,i){ return '<div class="cell'+(cleaned?' on':'')+'"><span class="v">"'+s+'"</span><span class="i">['+(i+1)+']</span></div>'; }).join('');
+    var counts={}; vals.forEach(function(s){ counts[s]=(counts[s]||0)+1; });
+    var keys=Object.keys(counts).sort(), max=Math.max.apply(null, keys.map(function(k){return counts[k];}));
+    var f=G.frame(svg,{W:640,H:200,x0:0,x1:keys.length,y0:0,y1:Math.max(max,6),xticks:[],ny:3,ylab:'count',m:{l:44,r:10,t:10,b:44}});
+    var bw=(f.x(1)-f.x(0))*0.7;
+    keys.forEach(function(k,i){ var x=f.x(i+0.5); G.el('rect',{x:x-bw/2,y:f.y(counts[k]),width:bw,height:f.y(0)-f.y(counts[k]),'class':cleaned?(k==='M'?'bar':'bar2'):'barmuted'},f.g); G.txt(f.g,x,f.H-f.m.b+16,k,'tick'); });
+    code.innerHTML = cleaned
+      ? '<span class="p">&gt;</span> clean &lt;- toupper(substr(gender, 1, 1))\n<span class="p">&gt;</span> table(clean)\nclean\n F M \n'+(' '+counts.F+' '+counts.M)+'\n<span class="p"># 2 categories</span>'
+      : '<span class="p">&gt;</span> length(table(gender))\n[1] '+keys.length+'\n<span class="p"># R sees '+keys.length+' different categories</span>';
+  }
+  document.getElementById('clean-btn').addEventListener('click',function(){ draw(raw.map(function(s){ return s.charAt(0).toUpperCase(); }), true); });
+  document.getElementById('clean-reset').addEventListener('click',function(){ draw(raw,false); });
+  draw(raw,false);
+})();
+
+/* ---------- indexing explorer ---------- */
+(function(){
+  var marks=[55,44,30,60,59,80,85,73,71,25];
+  var inp=document.getElementById('ix-in'), vec=document.getElementById('ix-vec'), out=document.getElementById('ix-out');
+  function parse(s){
+    s=s.replace(/\s+/g,'');
+    var m;
+    if ((m=s.match(/^c\((.*)\)$/))) s=m[1];
+    if (s==='') throw new Error('empty');
+    var parts=s.split(','), idx=[];
+    parts.forEach(function(p){
+      var r=p.match(/^(-?\d+):(-?\d+)$/);
+      if (r){ var a=+r[1], b=+r[2], st=a<=b?1:-1; for (var k=a; st>0?k<=b:k>=b; k+=st) idx.push(k); }
+      else if (/^-?\d+$/.test(p)) idx.push(+p);
+      else throw new Error('bad');
+    });
+    return idx;
+  }
+  function run(){
+    var idx, res=[], sel={};
+    try { idx=parse(inp.value); } catch(e){ out.textContent='Type a number like 5, a range like 2:4, a vector like c(1, 3), or a negative like -1.'; render({}); return; }
+    var neg=idx.filter(function(i){return i<0;}), pos=idx.filter(function(i){return i>0;});
+    if (neg.length && pos.length){ out.textContent='Error in marks[...]: can\'t mix positive and negative subscripts'; render({}); return; }
+    if (neg.length){ var drop={}; neg.forEach(function(i){drop[-i]=1;}); marks.forEach(function(v,i){ if(!drop[i+1]){ res.push(v); sel[i+1]=1; } }); }
+    else pos.forEach(function(i){ res.push(i<=marks.length? marks[i-1] : 'NA'); if (i<=marks.length) sel[i]=1; });
+    render(sel);
+    out.innerHTML='<span class="p">&gt;</span> marks['+inp.value.trim()+']\n'+(res.length?'[1] '+res.join(' '):'numeric(0)')+(res.indexOf('NA')>=0?'\n<span class="p"># NA: there is no student at that position</span>':'');
+  }
+  function render(sel){
+    vec.innerHTML=marks.map(function(v,i){ return '<div class="cell'+(sel[i+1]?' on':'')+'"><span class="v">'+v+'</span><span class="i">['+(i+1)+']</span></div>'; }).join('');
+  }
+  inp.addEventListener('input',run);
+  document.querySelectorAll('[data-ix]').forEach(function(b){ b.addEventListener('click',function(){ inp.value=b.dataset.ix; run(); }); });
+  run();
+})();
+})();
+
+</script>
+</body>
+</html>

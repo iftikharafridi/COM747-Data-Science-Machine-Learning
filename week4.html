@@ -1,0 +1,785 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>COM747 Week 4 Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: single-column lab notebook, ~800px measure. Concept sections, then interactive "explorers", then tiered R tasks. */
+:root{
+  --bg:#f5f6f8; --paper:#ffffff; --ink:#1b2330; --muted:#5a6474; --line:#dce1e9; --line-strong:#c3cad6;
+  --accent:#2b5fa6; --accent-soft:#e5edf8;
+  --core:#2f7d5b; --core-soft:#e2f1e9;
+  --chal:#b26a00; --chal-soft:#fbefd9;
+  --str:#7a3fa0; --str-soft:#f1e7f8;
+  --bad:#b3372f; --bad-soft:#f9e3e1;
+  --code-bg:#eef2f7; --code-ink:#1c2a44;
+  --c1:#2b5fa6; --c2:#d0791a; --c3:#2f8a62; --c4:#8a4bb3; --shade:rgba(43,95,166,.28); --grid:#e6e9ef;
+  --f-display:"Source Serif 4", Georgia, "Times New Roman", serif;
+  --f-body:"Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, Consolas, monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#11151c; --paper:#1a2029; --ink:#e4e8ef; --muted:#9aa4b4; --line:#2b3340; --line-strong:#3c4656;
+  --accent:#7fa8e6; --accent-soft:#1e2b3f;
+  --core:#6cc79d; --core-soft:#173025; --chal:#e5a64a; --chal-soft:#33281a; --str:#c39be0; --str-soft:#2a2135;
+  --bad:#ef8a80; --bad-soft:#3a1f1d;
+  --code-bg:#0e131a; --code-ink:#d6e2f5;
+  --c1:#7fa8e6; --c2:#eb9c4c; --c3:#5fc394; --c4:#c39be0; --shade:rgba(127,168,230,.30); --grid:#262e3a;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#11151c; --paper:#1a2029; --ink:#e4e8ef; --muted:#9aa4b4; --line:#2b3340; --line-strong:#3c4656;
+  --accent:#7fa8e6; --accent-soft:#1e2b3f;
+  --core:#6cc79d; --core-soft:#173025; --chal:#e5a64a; --chal-soft:#33281a; --str:#c39be0; --str-soft:#2a2135;
+  --bad:#ef8a80; --bad-soft:#3a1f1d;
+  --code-bg:#0e131a; --code-ink:#d6e2f5;
+  --c1:#7fa8e6; --c2:#eb9c4c; --c3:#5fc394; --c4:#c39be0; --shade:rgba(127,168,230,.30); --grid:#262e3a;
+  color-scheme:dark}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.6;margin:0;padding-inline:16px;padding-block:0 72px}
+a{color:var(--accent)}
+.topnav{max-width:820px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;padding-block:14px;border-bottom:1px solid var(--line);font-size:15px}
+.topnav .brand{font-weight:700;margin-right:auto;color:var(--ink);text-decoration:none}
+.topnav a.wk{color:var(--muted);text-decoration:none;padding:2px 8px;border-radius:6px}
+.topnav a.wk:hover{color:var(--accent)}
+.topnav a.wk[aria-current="page"]{background:var(--accent-soft);color:var(--accent);font-weight:600}
+.wrap{max-width:820px;margin:0 auto;display:flex;flex-direction:column;gap:40px}
+header.hero{padding-block:32px 4px;display:flex;flex-direction:column;gap:10px}
+.eyebrow{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;line-height:1.2;margin:0}
+h1{font-size:clamp(30px,6vw,44px)}
+h2{font-size:27px}
+h3{font-size:20px}
+p{margin:0}
+.lead{color:var(--muted);font-size:18.5px;max-width:65ch}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font-size:13px;font-weight:600;border:1px solid var(--line-strong);border-radius:999px;padding:3px 10px;color:var(--muted)}
+.toc{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:15px;padding:12px 16px;background:var(--paper);border:1px solid var(--line);border-radius:10px}
+.toc a{text-decoration:none}
+section{display:flex;flex-direction:column;gap:16px;scroll-margin-top:16px}
+.sec-head{display:flex;flex-direction:column;gap:4px}
+.sec-num{font-family:var(--f-mono);font-size:13px;color:var(--accent);font-weight:600}
+.prose{display:flex;flex-direction:column;gap:12px;max-width:68ch}
+ul.list,ol.list{margin:0;padding-left:1.3em;display:flex;flex-direction:column;gap:4px}
+.lo-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.lo-list li{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:baseline}
+.lo{font-family:var(--f-mono);font-size:12px;font-weight:600;background:var(--accent-soft);color:var(--accent);padding:2px 8px;border-radius:4px;white-space:nowrap}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.grid2.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media (max-width:600px){.grid2.two{grid-template-columns:1fr}}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.card h3{font-size:18px}
+.card .k{font-size:13px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:700}
+.code{position:relative;background:var(--code-bg);border:1px solid var(--line);border-radius:8px;min-width:0}
+.code pre{margin:0;padding:14px 16px;overflow-x:auto;font-family:var(--f-mono);font-size:14px;color:var(--code-ink);line-height:1.55}
+.code .copy{position:absolute;top:8px;right:8px}
+.copy,.btn{font:600 13px var(--f-body);background:var(--paper);color:var(--muted);border:1px solid var(--line-strong);border-radius:6px;padding:5px 11px;cursor:pointer}
+.copy:hover,.btn:hover{color:var(--accent);border-color:var(--accent)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--paper)}
+.btn.primary:hover{opacity:.9;color:var(--paper)}
+code{font-family:var(--f-mono);font-size:.88em;background:var(--code-bg);padding:1px 5px;border-radius:4px}
+.callout{border-left:3px solid var(--accent);background:var(--accent-soft);padding:12px 16px;border-radius:0 8px 8px 0}
+.callout.warn{border-color:var(--chal);background:var(--chal-soft)}
+.callout.good{border-color:var(--core);background:var(--core-soft)}
+/* figures and explorers */
+figure{margin:0}
+.figure{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.figure figcaption,.caption{font-size:14.5px;color:var(--muted)}
+.figure svg{width:100%;height:auto;display:block;overflow:visible}
+.explorer{border-color:var(--line-strong)}
+.explorer .title{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.explorer .title h3{font-size:19px}
+.tagx{font:700 11px var(--f-body);letter-spacing:.09em;text-transform:uppercase;padding:3px 8px;border-radius:999px;background:var(--accent-soft);color:var(--accent)}
+.controls{display:flex;flex-wrap:wrap;gap:12px 18px;align-items:flex-end}
+.ctl{display:flex;flex-direction:column;gap:4px;font-size:14px;color:var(--muted);min-width:0}
+.ctl b{color:var(--ink);font-family:var(--f-mono);font-weight:600}
+.ctl input[type=range]{width:min(220px,70vw);accent-color:var(--accent)}
+.ctl input[type=number],.ctl input[type=text],.ctl select{font:15px var(--f-mono);padding:5px 8px;border:1px solid var(--line-strong);border-radius:6px;background:var(--bg);color:var(--ink);width:7.5em}
+.ctl input[type=text]{width:12em}
+.ctl select{width:auto;font-family:var(--f-body)}
+.console{background:var(--code-bg);border:1px solid var(--line);border-radius:8px;padding:10px 14px;font-family:var(--f-mono);font-size:14px;color:var(--code-ink);overflow-x:auto;white-space:pre;line-height:1.55}
+.console .p{color:var(--muted)}
+.kpis{display:flex;flex-wrap:wrap;gap:10px}
+.kpi{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 12px;display:flex;flex-direction:column;min-width:110px}
+.kpi span{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+.kpi b{font-family:var(--f-mono);font-size:19px;font-variant-numeric:tabular-nums}
+/* svg classes */
+.ax{stroke:var(--line-strong);stroke-width:1}
+.gridl{stroke:var(--grid);stroke-width:1}
+.tick{fill:var(--muted);font:12px var(--f-body)}
+.lab{fill:var(--ink);font:13px var(--f-body)}
+.labm{fill:var(--muted);font:12px var(--f-body)}
+.mono{font-family:var(--f-mono)}
+.curve{fill:none;stroke:var(--c1);stroke-width:2.2}
+.curve2{fill:none;stroke:var(--c2);stroke-width:2.2}
+.area{fill:var(--shade);stroke:none}
+.bar{fill:var(--c1)}
+.bar2{fill:var(--c2)}
+.bar3{fill:var(--c3)}
+.barmuted{fill:var(--line-strong)}
+.vline{stroke:var(--c2);stroke-width:2}
+.vline2{stroke:var(--c3);stroke-width:2;stroke-dasharray:5 4}
+.dot{fill:var(--c1)}
+/* vector cells */
+.vec{display:flex;flex-wrap:wrap;gap:4px}
+.cell{display:flex;flex-direction:column;align-items:center;min-width:46px;border:1px solid var(--line-strong);border-radius:6px;background:var(--paper);overflow:hidden;transition:background .15s,border-color .15s}
+.cell .v{font-family:var(--f-mono);font-size:15px;font-weight:600;padding:6px 6px 2px}
+.cell .i{font-family:var(--f-mono);font-size:11px;color:var(--muted);padding:0 6px 4px}
+.cell .t{font-family:var(--f-mono);font-size:10.5px;padding:2px 4px;width:100%;text-align:center;border-top:1px solid var(--line)}
+.cell.on{background:var(--core-soft);border-color:var(--core)}
+.cell.on .t{color:var(--core);font-weight:700}
+.cell.off{opacity:.55}
+.cell.off .t{color:var(--bad)}
+.cell.rec{border-style:dashed;opacity:.75}
+/* tiers and tasks */
+.tier{display:flex;flex-direction:column;gap:12px}
+.tier-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.tag{font:700 12px var(--f-body);letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:999px}
+.t-core .tag{background:var(--core-soft);color:var(--core)}
+.t-chal .tag{background:var(--chal-soft);color:var(--chal)}
+.t-str .tag{background:var(--str-soft);color:var(--str)}
+.note{color:var(--muted);font-size:15px}
+ol.tasks{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px}
+.task{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:14px 16px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.task-q{display:grid;grid-template-columns:2.4em 1fr;gap:4px}
+.task-q > span:last-child{min-width:0}
+.num{font-family:var(--f-mono);font-weight:600;color:var(--muted)}
+details{font-size:15px}
+summary{cursor:pointer;color:var(--accent);font-weight:600;width:max-content;max-width:100%}
+details > *:not(summary){margin-top:8px}
+summary:focus-visible,.copy:focus-visible,.btn:focus-visible,button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+/* tables */
+.tbl{overflow-x:auto;background:var(--paper);border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th,td{text-align:left;padding:8px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:none}
+th{font-weight:700;color:var(--muted);font-size:12.5px;text-transform:uppercase;letter-spacing:.06em;background:var(--bg)}
+td.m,th.m{font-family:var(--f-mono);font-size:14px;white-space:nowrap}
+td.n{text-align:right;font-variant-numeric:tabular-nums;font-family:var(--f-mono);font-size:14px}
+/* quiz */
+.quiz{display:flex;flex-direction:column;gap:14px}
+.q{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.q .opts{display:flex;flex-direction:column;gap:6px}
+.q button.opt{text-align:left;font:15px var(--f-body);background:var(--bg);color:var(--ink);border:1px solid var(--line-strong);border-radius:8px;padding:8px 12px;cursor:pointer}
+.q button.opt:hover{border-color:var(--accent)}
+.q button.opt.right{background:var(--core-soft);border-color:var(--core)}
+.q button.opt.wrong{background:var(--bad-soft);border-color:var(--bad)}
+.q .fb{font-size:15px;color:var(--muted)}
+.q .fb b.ok{color:var(--core)} .q .fb b.no{color:var(--bad)}
+/* rating */
+.rate{display:flex;flex-direction:column;gap:10px}
+.rate-row{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:10px 14px}
+.rate-row > span{min-width:0;flex:1 1 240px}
+.btns{display:flex;gap:6px}
+.btns button{font:600 14px var(--f-body);border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:6px;padding:6px 12px;cursor:pointer;min-width:44px}
+.btns button[aria-pressed="true"][data-v="1"]{background:var(--chal-soft);border-color:var(--chal);color:var(--chal)}
+.btns button[aria-pressed="true"][data-v="2"]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.btns button[aria-pressed="true"][data-v="3"]{background:var(--core-soft);border-color:var(--core);color:var(--core)}
+footer{max-width:820px;margin:48px auto 0;border-top:1px solid var(--line);padding-top:16px;color:var(--muted);font-size:14px;display:flex;flex-wrap:wrap;gap:8px 20px;justify-content:space-between}
+@media (max-width:520px){ body{font-size:16px} .card,.figure{padding:14px} .cell{min-width:40px} }
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+.wrap > *, section > *, .figure > *, .card > *{min-width:0;max-width:100%}
+p code, span code, li code, td code{overflow-wrap:anywhere}
+a.wkcard{text-decoration:none;color:var(--ink);transition:border-color .15s}
+a.wkcard:hover{border-color:var(--accent)}
+a.wkcard .go{color:var(--accent);font-weight:600;font-size:15px;margin-top:auto}
+@media (max-width:560px){
+  .figure svg .tick, .figure svg .labm{font-size:22px}
+  .figure svg .lab{font-size:23px}
+}
+
+</style>
+</head>
+<body data-page="week4">
+<nav class="topnav" aria-label="Weeks"><a class="brand" href="index.html">COM747 R Labs</a><a class="wk" href="week1.html">Week 1</a><a class="wk" href="week2.html">Week 2</a><a class="wk" href="week3.html">Week 3</a><a class="wk" href="week4.html" aria-current="page">Week 4</a></nav>
+<div class="wrap">
+<header class="hero">
+  <div class="eyebrow">COM747 Data Science &amp; Machine Learning · Week 4</div>
+  <h1>Inferential Statistics and Hypothesis Testing</h1>
+  <p class="lead">From a sample to a claim about the population. Measure how precise an estimate is, test whether a difference is real, and avoid the classic ways of fooling yourself with p-values.</p>
+  <div class="chips"><span class="chip">Lecture + lab</span><span class="chip">RStudio</span><span class="chip">Datasets: <a href="data/rundata.csv">rundata.csv</a> · <a href="data/student_data.csv">student_data.csv</a></span></div>
+</header>
+
+<nav class="toc" aria-label="On this page">
+  <a href="#question">The question</a><a href="#sample">Samples</a><a href="#ci">Confidence intervals</a><a href="#test">Hypothesis tests</a><a href="#ttests">t-tests</a><a href="#power">Errors and power</a><a href="#multiple">Multiple testing</a><a href="#chooser">Test chooser</a><a href="#tasks">R tasks</a><a href="#quiz">Quiz</a><a href="#exit">Exit check</a>
+</nav>
+
+<section id="question">
+  <div class="sec-head"><span class="sec-num">01</span><h2>Do female and male students get different grades?</h2></div>
+  <figure class="figure">
+    <svg id="q-svg" role="img" aria-label="Final grades by sex with means and 95% confidence intervals"></svg>
+    <figcaption>Final grade G3 for 208 female and 187 male students in <code>student_data.csv</code>, with each group's mean and 95% confidence interval. The means differ by about 0.95 of a grade. Is that real, or could another sample of students show no difference? That is the question inference answers.</figcaption>
+  </figure>
+  <ul class="lo-list">
+    <li><span class="lo">LO1</span><span>Explain sampling error and the standard error of the mean.</span></li>
+    <li><span class="lo">LO2</span><span>Calculate and interpret a confidence interval.</span></li>
+    <li><span class="lo">LO3</span><span>Carry out a hypothesis test and interpret the p-value.</span></li>
+    <li><span class="lo">LO4</span><span>Choose the right test: t-tests, Wilcoxon, prop.test, ANOVA, correlation.</span></li>
+    <li><span class="lo">LO5</span><span>Explain Type I and II errors, power, effect size and multiple testing.</span></li>
+  </ul>
+</section>
+
+<section id="sample">
+  <div class="sec-head"><span class="sec-num">02</span><h2>Population and sample</h2></div>
+  <div class="prose"><p>Almost every dataset is a <b>sample</b>, not the whole <b>population</b>. Statistics calculated from a sample (the sample mean) estimate population parameters (the true mean). Different samples give different estimates: that variation is <b>sampling error</b>. Bigger random samples give estimates closer to the truth: the <b>law of large numbers</b>.</p></div>
+  <div class="figure explorer">
+    <div class="title"><span class="tagx">Explorer</span><h3>Watch the sample mean settle</h3></div>
+    <p class="caption">Population: normal, true mean 50, SD 20. Each click draws a fresh sample, one value at a time, and plots the running mean.</p>
+    <div class="controls">
+      <label class="ctl" for="l-n"><span>sample size: <b id="l-nv">1000</b></span><input type="range" id="l-n" min="10" max="3000" step="10" value="1000"></label>
+      <button class="btn primary" type="button" id="l-go">Draw a new sample</button>
+    </div>
+    <svg id="l-svg" role="img" aria-label="Running mean converging to 50"></svg>
+    <div class="console" id="l-out"></div>
+  </div>
+  <div class="tbl"><table><thead><tr><th>Sampling method</th><th>How</th><th>Risk</th></tr></thead><tbody>
+    <tr><td>Simple random</td><td>Every member equally likely to be chosen</td><td>Small groups can be missed by chance</td></tr>
+    <tr><td>Stratified</td><td>Random sample within each group (e.g. each campus)</td><td>Needs the group sizes</td></tr>
+    <tr><td>Convenience</td><td>Whoever is easy to reach</td><td>Biased: may not represent the population</td></tr>
+  </tbody></table></div>
+</section>
+
+<section id="ci">
+  <div class="sec-head"><span class="sec-num">03</span><h2>Standard error and confidence intervals</h2></div>
+  <div class="grid2 two">
+    <div class="card"><span class="k">Standard error</span><p><code>SE = sd / sqrt(n)</code></p><p class="note">How far a sample mean typically lands from the true mean. Quadruple n to halve it.</p></div>
+    <div class="card"><span class="k">95% confidence interval</span><p><code>mean ± t × SE</code></p><p class="note">t ≈ 1.96 for large n. For small n use <code>qt(0.975, n - 1)</code>: 2.145 when n = 15.</p></div>
+  </div>
+  <div class="callout">Lecture example: mean 75, SD 18, n = 36. SE = 18 / 6 = 3. 95% CI = 75 ± 1.96 × 3 = <b>69.12 to 80.88</b>. Report it as "75 (95% CI 69.12, 80.88)".</div>
+  <div class="figure explorer">
+    <div class="title"><span class="tagx">Explorer</span><h3>Confidence interval calculator</h3></div>
+    <div class="controls">
+      <label class="ctl" for="ci-m">mean<input type="number" id="ci-m" value="75" step="any"></label>
+      <label class="ctl" for="ci-s">sd<input type="number" id="ci-s" value="18" step="any" min="0.01"></label>
+      <label class="ctl" for="ci-n">n<input type="number" id="ci-n" value="36" min="2" step="1"></label>
+      <label class="ctl" for="ci-l">confidence<select id="ci-l"><option value="0.90">90%</option><option value="0.95" selected>95%</option><option value="0.99">99%</option></select></label>
+      <label class="ctl" for="ci-d">critical value<select id="ci-d"><option value="z">z (normal)</option><option value="t">t (n − 1 df)</option></select></label>
+    </div>
+    <svg id="ci-svg" role="img" aria-label="Confidence interval drawn as a bar around the mean"></svg>
+    <div class="kpis"><div class="kpi"><span>SE</span><b id="ci-se"></b></div><div class="kpi"><span>critical value</span><b id="ci-cv"></b></div><div class="kpi"><span>margin of error</span><b id="ci-moe"></b></div><div class="kpi"><span>interval</span><b id="ci-int"></b></div></div>
+    <div class="console" id="ci-code"></div>
+  </div>
+  <div class="figure explorer">
+    <div class="title"><span class="tagx">Explorer</span><h3>What does "95% confident" mean?</h3></div>
+    <p class="caption">Each line is the 95% CI from a different random sample (n = 25) of a population whose true mean is 50. About 95% of them catch the true mean. Orange ones miss.</p>
+    <div class="controls"><label class="ctl" for="cs-l">confidence<select id="cs-l"><option value="0.8">80%</option><option value="0.95" selected>95%</option><option value="0.99">99%</option></select></label><button class="btn primary" type="button" id="cs-go">Draw 50 new samples</button><span class="note" id="cs-tot"></span></div>
+    <svg id="cs-svg" role="img" aria-label="Fifty confidence intervals around a true mean of 50"></svg>
+  </div>
+</section>
+
+<section id="test">
+  <div class="sec-head"><span class="sec-num">04</span><h2>The hypothesis-testing recipe</h2></div>
+  <ol class="tasks">
+    <li class="task"><div class="task-q"><span class="num">1</span><span><b>State the hypotheses.</b> H0: there is no difference (dogs are not faster than mice). H1: there is a difference.</span></div></li>
+    <li class="task"><div class="task-q"><span class="num">2</span><span><b>Choose alpha</b>, usually 0.05: the false-positive rate you will accept.</span></div></li>
+    <li class="task"><div class="task-q"><span class="num">3</span><span><b>Check assumptions.</b> Normality: <code>shapiro.test()</code>. Equal variances: largest ÷ smallest variance below 1.5, or <code>var.test()</code>.</span></div></li>
+    <li class="task"><div class="task-q"><span class="num">4</span><span><b>Run the test</b> to get a test statistic (t, χ², F) and a p-value.</span></div></li>
+    <li class="task"><div class="task-q"><span class="num">5</span><span><b>Decide and report.</b> If p &lt; alpha, reject H0. Always add the effect size and a confidence interval.</span></div></li>
+  </ol>
+  <div class="callout warn"><b>The p-value</b> is the probability of a result at least this extreme <i>if H0 were true</i>. It is not the probability that H0 is true, and a big p-value does not prove there is no effect.</div>
+  <div class="figure explorer">
+    <div class="title"><span class="tagx">Explorer</span><h3>From test statistic to p-value</h3></div>
+    <div class="controls">
+      <label class="ctl" for="p-t"><span>t statistic: <b id="p-tv">-2.07</b></span><input type="range" id="p-t" min="-5" max="5" step="0.01" value="-2.07"></label>
+      <label class="ctl" for="p-df">df<select id="p-df"><option>3</option><option>10</option><option>30</option><option selected>390</option></select></label>
+      <label class="ctl" for="p-tail">alternative<select id="p-tail"><option value="two">two.sided</option><option value="less">less</option><option value="greater">greater</option></select></label>
+      <label class="ctl" for="p-a">alpha<select id="p-a"><option>0.01</option><option selected>0.05</option><option>0.10</option></select></label>
+    </div>
+    <svg id="p-svg" role="img" aria-label="t distribution with tail areas shaded"></svg>
+    <div class="kpis"><div class="kpi"><span>p-value</span><b id="p-p"></b></div><div class="kpi"><span>decision</span><b id="p-dec" style="font-size:16px"></b></div></div>
+    <p class="caption">Default: the G3-by-sex Welch test (t = −2.07, df ≈ 390, p = 0.040). Shaded tails are the p-value. Orange lines mark the critical values for alpha.</p>
+  </div>
+</section>
+
+<section id="ttests">
+  <div class="sec-head"><span class="sec-num">05</span><h2>t-tests and friends on real data</h2></div>
+  <div class="tbl"><table><thead><tr><th>Question</th><th>R</th><th>Result</th></tr></thead><tbody>
+    <tr><td>Is the mean first run different from 30 km?</td><td class="m">t.test(rundata$FirstRun, mu = 30)</td><td>t = −1.32, p = 0.19. Not significant: no evidence the mean differs from 30.</td></tr>
+    <tr><td>Did the same runners go further the second time?</td><td class="m">t.test(FirstRun, SecondRun, paired = TRUE)</td><td>Mean difference 5.2 km (95% CI 4.8 to 5.7), p &lt; 0.001.</td></tr>
+    <tr><td>Do grades differ by sex?</td><td class="m">t.test(G3 ~ sex, data = students)</td><td>Welch t = −2.07, p = 0.040. Cohen's d = 0.21: a small effect.</td></tr>
+    <tr><td>Same, without assuming normality</td><td class="m">wilcox.test(G3 ~ sex, data = students)</td><td>p = 0.041</td></tr>
+    <tr><td>Same, after removing the 38 zeros</td><td class="m">t.test(G3 ~ sex, data = no_zeros)</td><td>p = 0.053. One cleaning decision flips the conclusion.</td></tr>
+    <tr><td>Website A: 25/30 liked it; B: 5/31</td><td class="m">prop.test(c(25, 5), c(30, 31))</td><td>83% vs 16%, χ² = 24.9, p &lt; 0.001</td></tr>
+    <tr><td>Does G3 differ across mother's job (5 groups)?</td><td class="m">summary(aov(G3 ~ Mjob, data = students))</td><td>F = 3.75, p = 0.005: at least one group differs.</td></tr>
+    <tr><td>Are first and second runs related?</td><td class="m">cor.test(FirstRun, SecondRun)</td><td>r = 0.98, p &lt; 0.001</td></tr>
+  </tbody></table></div>
+  <div class="callout"><b>Effect size, Cohen's d</b> = |mean1 − mean2| / pooled SD. 0.2 small, 0.5 medium, 0.8 large. A tiny effect can be "significant" with a big sample. Always report both.</div>
+</section>
+
+<section id="power">
+  <div class="sec-head"><span class="sec-num">06</span><h2>Errors, power and effect size</h2></div>
+  <figure class="figure">
+    <div class="tbl" style="border:none"><table>
+      <thead><tr><th></th><th>H0 is true (no real effect)</th><th>H0 is false (real effect)</th></tr></thead>
+      <tbody>
+        <tr><td><b>Reject H0</b></td><td style="background:var(--bad-soft)"><b>Type I error</b> · false positive · probability α<br><span class="note">Convicting an innocent person</span></td><td style="background:var(--core-soft)"><b>Correct</b> · true positive · power = 1 − β</td></tr>
+        <tr><td><b>Don't reject</b></td><td style="background:var(--core-soft)"><b>Correct</b> · true negative</td><td style="background:var(--chal-soft)"><b>Type II error</b> · false negative · probability β<br><span class="note">Acquitting a guilty person</span></td></tr>
+      </tbody></table></div>
+    <figcaption>The same four outcomes appear in a classifier's confusion matrix: TP, FP, TN, FN. Power is the test's sensitivity.</figcaption>
+  </figure>
+  <div class="figure explorer">
+    <div class="title"><span class="tagx">Explorer</span><h3>Power simulator</h3></div>
+    <p class="caption">This runs the lecture's experiment: 100 studies, each comparing two random groups with a Welch t-test. Power is the share of studies that find the real difference (p &lt; alpha).</p>
+    <div class="controls">
+      <label class="ctl" for="pw-n"><span>samples per group: <b id="pw-nv">200</b></span><input type="range" id="pw-n" min="5" max="600" step="5" value="200"></label>
+      <label class="ctl" for="pw-d"><span>difference in means: <b id="pw-dv">1</b></span><input type="range" id="pw-d" min="0" max="6" step="0.25" value="1"></label>
+      <label class="ctl" for="pw-a">alpha<select id="pw-a"><option>0.01</option><option selected>0.05</option><option>0.10</option></select></label>
+      <button class="btn primary" type="button" id="pw-go">Run 100 studies</button>
+    </div>
+    <p class="note">Group means 50 and 50 + difference, both SD 5.</p>
+    <svg id="pw-svg" role="img" aria-label="Histogram of p-values from 100 simulated studies"></svg>
+    <div class="kpis"><div class="kpi"><span>effect size d</span><b id="pw-es"></b></div><div class="kpi"><span>significant</span><b id="pw-sig"></b></div><div class="kpi"><span>theoretical power</span><b id="pw-th"></b></div></div>
+    <p class="caption">Try difference 0: about 5% of studies are still "significant". Those are Type I errors. Then try the lecture settings: n 200 with difference 1 (about 50%), n 500 (about 88%), n 50 with difference 5 (about 100%).</p>
+  </div>
+  <div class="code"><pre>power.t.test(power = 0.80, delta = 0.5, sd = 1, type = "two.sample")
+# n = 63.8 per group: you need 64 people in each group for an 80% chance
+# of detecting a medium effect (d = 0.5)</pre></div>
+</section>
+
+<section id="multiple">
+  <div class="sec-head"><span class="sec-num">07</span><h2>Multiple testing</h2></div>
+  <div class="prose"><p>Data mining runs many tests. With alpha = 0.05, each test where nothing is going on still has a 1 in 20 chance of a false positive, so the chance of at least one false discovery climbs quickly. The <b>Bonferroni correction</b> divides alpha by the number of tests.</p></div>
+  <div class="figure explorer">
+    <div class="title"><span class="tagx">Explorer</span><h3>How many tests before you find "something"?</h3></div>
+    <div class="controls"><label class="ctl" for="m-k"><span>number of tests: <b id="m-kv">20</b></span><input type="range" id="m-k" min="1" max="100" value="20"></label></div>
+    <svg id="m-svg" role="img" aria-label="Probability of at least one false positive as the number of tests grows"></svg>
+    <div class="kpis"><div class="kpi"><span>P(≥1 false positive)</span><b id="m-p"></b></div><div class="kpi"><span>with Bonferroni</span><b id="m-b"></b></div><div class="kpi"><span>Bonferroni alpha</span><b id="m-a"></b></div></div>
+  </div>
+  <div class="callout warn"><b>Beware:</b> p-hacking (trying analyses until p &lt; 0.05), removing outliers after seeing results, HARKing (hypothesising after results are known), and treating p = 0.049 and p = 0.051 as different worlds. Pre-register your plan.</div>
+</section>
+
+<section id="chooser">
+  <div class="sec-head"><span class="sec-num">08</span><h2>Which test should I use?</h2></div>
+  <div class="figure explorer">
+    <div class="title"><span class="tagx">Explorer</span><h3>Test chooser</h3></div>
+    <div class="controls">
+      <label class="ctl" for="tc-q">What are you comparing?<select id="tc-q">
+        <option value="one">One group's mean against a value</option>
+        <option value="paired">The same people measured twice</option>
+        <option value="two" selected>Two independent groups</option>
+        <option value="many">Three or more groups</option>
+        <option value="prop">Two proportions (counts)</option>
+        <option value="cor">Relationship between two numeric variables</option>
+      </select></label>
+      <label class="ctl" for="tc-n">Roughly normal (or n ≥ 30 per group)?<select id="tc-n"><option value="y">Yes</option><option value="n">No, or skewed / ordinal</option></select></label>
+    </div>
+    <div class="callout good" id="tc-out" aria-live="polite"></div>
+  </div>
+</section>
+
+<section id="tasks">
+  <div class="sec-head"><span class="sec-num">09</span><h2>Your R tasks</h2></div>
+  <div class="code"><pre>rundata  &lt;- read.csv("rundata.csv")
+students &lt;- read.csv("student_data.csv")</pre></div>
+  <div class="tier t-core">
+    <div class="tier-head"><span class="tag">Core</span><span class="note">LO1–LO2</span></div>
+    <ol class="tasks">
+      <li class="task"><div class="task-q"><span class="num">1</span><span>A sample has mean 75, SD 18 and n = 36. Calculate the standard error and the 95% confidence interval using 1.96.</span></div>
+        <details><summary>Check your answer</summary><div class="code"><pre>se &lt;- 18 / sqrt(36)       # 3
+75 + c(-1, 1) * 1.96 * se  # 69.12 80.88</pre></div></details></li>
+      <li class="task"><div class="task-q"><span class="num">2</span><span>Draw <code>rnorm(5, 50, 20)</code> and <code>rnorm(1000, 50, 20)</code>. Compare their means and SDs to the true values. What principle does this show?</span></div>
+        <details><summary>Check your answer</summary><p>The larger sample's mean and SD are much closer to 50 and 20: the law of large numbers. Small samples have large sampling error.</p></details></li>
+      <li class="task"><div class="task-q"><span class="num">3</span><span>Find the 95% CI for the mean of <code>heights &lt;- c(40, 42, 55, 40, 49, 46, 42, 50, 54, 44, 40, 42, 46, 48, 52, 45, 48, 44, 39, 38, 45)</code> by hand with <code>qt()</code>, then check with <code>t.test()</code>.</span></div>
+        <details><summary>Check your answer</summary><div class="code"><pre>n &lt;- length(heights); se &lt;- sd(heights) / sqrt(n)
+mean(heights) + c(-1, 1) * qt(0.975, n - 1) * se   # 42.96 47.42
+t.test(heights)$conf.int</pre></div></details></li>
+      <li class="task"><div class="task-q"><span class="num">4</span><span>What is the critical t value for a 95% CI with n = 15? With n = 100? Compare with 1.96.</span></div>
+        <details><summary>Check your answer</summary><div class="code"><pre>qt(0.975, 14)   # 2.145
+qt(0.975, 99)   # 1.984: close to 1.96 once n is large</pre></div></details></li>
+    </ol>
+  </div>
+  <div class="tier t-chal">
+    <div class="tier-head"><span class="tag">Challenge</span><span class="note">LO3–LO4</span></div>
+    <ol class="tasks">
+      <li class="task"><div class="task-q"><span class="num">5</span><span>Is there a statistically significant difference between how far people ran in their first and second runs? State H0 and H1, check the normality of the differences, run the right test, and write a one-sentence conclusion.</span></div>
+        <details><summary>Check your answer</summary><div class="code"><pre># H0: mean difference = 0. H1: mean difference ≠ 0
+shapiro.test(rundata$SecondRun - rundata$FirstRun)   # p = 0.83: normal
+t.test(rundata$FirstRun, rundata$SecondRun, paired = TRUE)
+# Runners ran on average 5.2 km further on their second run
+# (95% CI 4.8 to 5.7 km, paired t-test, p &lt; 0.001).</pre></div></details></li>
+      <li class="task"><div class="task-q"><span class="num">6</span><span>Test whether G3 differs by sex. Check the variance ratio first. Then calculate Cohen's d. Is the difference important as well as significant?</span></div>
+        <details><summary>Check your answer</summary><div class="code"><pre>v &lt;- tapply(students$G3, students$sex, var); max(v) / min(v)   # 1.06
+t.test(G3 ~ sex, data = students)                              # p = 0.040
+F &lt;- students$G3[students$sex == "F"]; M &lt;- students$G3[students$sex == "M"]
+abs(mean(F) - mean(M)) / sqrt((var(F) + var(M)) / 2)            # d = 0.21, small</pre></div></details></li>
+      <li class="task"><div class="task-q"><span class="num">7</span><span>25 of 30 people liked website A and 5 of 31 liked website B. Is the difference significant?</span></div>
+        <details><summary>Check your answer</summary><div class="code"><pre>prop.test(x = c(25, 5), n = c(30, 31))   # p &lt; 0.001</pre></div></details></li>
+      <li class="task"><div class="task-q"><span class="num">8</span><span>Which two runs correlate most strongly? Use <code>cor(rundata)</code>, then test that pair with <code>cor.test()</code>.</span></div>
+        <details><summary>Check your answer</summary><div class="code"><pre>cor(rundata)   # FirstRun–SecondRun r = 0.976 is highest
+cor.test(rundata$FirstRun, rundata$SecondRun)</pre></div></details></li>
+    </ol>
+  </div>
+  <div class="tier t-str">
+    <div class="tier-head"><span class="tag">Stretch</span><span class="note">LO5</span></div>
+    <ol class="tasks">
+      <li class="task"><div class="task-q"><span class="num">9</span><span>Write a function <code>power_sim(n, meanX, meanY, sd = 5)</code> that runs 1,000 simulated t-tests and returns the proportion with p &lt; 0.05. Reproduce the lecture: n = 200 and 500 with means 50 vs 51.</span></div>
+        <details><summary>Check your answer</summary><div class="code"><pre>power_sim &lt;- function(n, meanX, meanY, sd = 5, studies = 1000) {
+  p &lt;- replicate(studies, t.test(rnorm(n, meanX, sd), rnorm(n, meanY, sd))$p.value)
+  mean(p &lt; 0.05)
+}
+power_sim(200, 50, 51)   # about 0.51
+power_sim(500, 50, 51)   # about 0.88</pre></div></details></li>
+      <li class="task"><div class="task-q"><span class="num">10</span><span>How many people per group do you need for 90% power to detect d = 0.3?</span></div>
+        <details><summary>Check your answer</summary><div class="code"><pre>power.t.test(power = 0.90, delta = 0.3, sd = 1)   # n ≈ 235 per group</pre></div></details></li>
+      <li class="task"><div class="task-q"><span class="num">11</span><span>Run 20 t-tests on pure noise: <code>t.test(rnorm(30), rnorm(30))</code>. How many are "significant"? Apply <code>p.adjust(p, "bonferroni")</code>. How many survive?</span></div>
+        <details><summary>Check your answer</summary><div class="code"><pre>p &lt;- replicate(20, t.test(rnorm(30), rnorm(30))$p.value)
+sum(p &lt; 0.05)                                  # often 1 or 2: all false positives
+sum(p.adjust(p, method = "bonferroni") &lt; 0.05) # usually 0</pre></div></details></li>
+      <li class="task"><div class="task-q"><span class="num">12</span><span>Does G3 differ by mother's job (<code>Mjob</code>)? Run an ANOVA, then a Bonferroni-corrected pairwise follow-up.</span></div>
+        <details><summary>Check your answer</summary><div class="code"><pre>summary(aov(G3 ~ Mjob, data = students))   # p = 0.005
+pairwise.t.test(students$G3, students$Mjob, p.adjust.method = "bonferroni")</pre></div></details></li>
+    </ol>
+  </div>
+</section>
+
+<section id="quiz">
+  <div class="sec-head"><span class="sec-num">10</span><h2>Check yourself</h2></div>
+  <div class="quiz">
+    <div class="q" data-answer="1" data-why="SE = sd / sqrt(n). Four times the sample size halves the SE.">
+      <p><b>1.</b> You quadruple the sample size. The standard error…</p>
+      <div class="opts"><button class="opt">quarters</button><button class="opt">halves</button><button class="opt">stays the same</button></div><p class="fb"></p></div>
+    <div class="q" data-answer="2" data-why="The p-value assumes H0 is true and asks how surprising the data would be.">
+      <p><b>2.</b> p = 0.03 means…</p>
+      <div class="opts"><button class="opt">There is a 3% chance H0 is true</button><button class="opt">The effect is large</button><button class="opt">If H0 were true, a result this extreme would happen about 3% of the time</button></div><p class="fb"></p></div>
+    <div class="q" data-answer="0" data-why="The same runners are measured twice, so the observations are paired.">
+      <p><b>3.</b> Comparing the same runners' first and second runs needs…</p>
+      <div class="opts"><button class="opt">A paired t-test</button><button class="opt">An independent t-test</button><button class="opt">prop.test()</button></div><p class="fb"></p></div>
+    <div class="q" data-answer="1" data-why="A false negative: there was a real effect but the test missed it.">
+      <p><b>4.</b> A drug really works but your study finds p = 0.20. This is a…</p>
+      <div class="opts"><button class="opt">Type I error</button><button class="opt">Type II error</button><button class="opt">Correct decision</button></div><p class="fb"></p></div>
+    <div class="q" data-answer="2" data-why="Bonferroni: 0.05 / 10 = 0.005.">
+      <p><b>5.</b> You run 10 tests. The Bonferroni-corrected alpha is…</p>
+      <div class="opts"><button class="opt">0.5</button><button class="opt">0.05</button><button class="opt">0.005</button></div><p class="fb"></p></div>
+    <div class="q" data-answer="0" data-why="Power increases with sample size, effect size and alpha. A one-sided test also adds power.">
+      <p><b>6.</b> Which increases the power of a test?</p>
+      <div class="opts"><button class="opt">A larger sample</button><button class="opt">A smaller alpha</button><button class="opt">A smaller effect</button></div><p class="fb"></p></div>
+  </div>
+</section>
+
+<section id="glossary">
+  <div class="sec-head"><span class="sec-num">11</span><h2>Key terms</h2></div>
+  <div class="tbl"><table><thead><tr><th>Term</th><th>Meaning</th></tr></thead><tbody>
+    <tr><td>Sampling error</td><td>The difference between a sample statistic and the true population value.</td></tr>
+    <tr><td>Standard error</td><td>The SD of sample means: sd / √n.</td></tr>
+    <tr><td>Confidence interval</td><td>A range that would contain the true value in 95% of repeated studies.</td></tr>
+    <tr><td>Degrees of freedom</td><td>Sample size minus parameters estimated; n − 1 for one mean.</td></tr>
+    <tr><td>H0 / H1</td><td>Null hypothesis (no effect) / alternative hypothesis.</td></tr>
+    <tr><td>p-value</td><td>Chance of a result at least this extreme if H0 were true.</td></tr>
+    <tr><td>Alpha</td><td>The Type I error rate you accept; the cut-off for p.</td></tr>
+    <tr><td>Power</td><td>Chance of detecting a real effect: 1 − β.</td></tr>
+    <tr><td>Cohen's d</td><td>Difference in means in pooled-SD units: an effect size.</td></tr>
+    <tr><td>Bonferroni</td><td>Divide alpha by the number of tests.</td></tr>
+  </tbody></table></div>
+</section>
+
+<section id="exit">
+  <div class="sec-head"><span class="sec-num">12</span><h2>Exit self-check</h2></div>
+  <p class="note">1 = I need help · 2 = nearly there · 3 = confident. Your choices stay on this device.</p>
+  <div class="rate">
+    <div class="rate-row"><span><span class="lo">LO1</span> I can explain sampling error and the standard error.</span><div class="btns" data-k="lo1"><button data-v="1">1</button><button data-v="2">2</button><button data-v="3">3</button></div></div>
+    <div class="rate-row"><span><span class="lo">LO2</span> I can calculate and interpret a confidence interval.</span><div class="btns" data-k="lo2"><button data-v="1">1</button><button data-v="2">2</button><button data-v="3">3</button></div></div>
+    <div class="rate-row"><span><span class="lo">LO3</span> I can run a hypothesis test and interpret p.</span><div class="btns" data-k="lo3"><button data-v="1">1</button><button data-v="2">2</button><button data-v="3">3</button></div></div>
+    <div class="rate-row"><span><span class="lo">LO4</span> I can choose the right test.</span><div class="btns" data-k="lo4"><button data-v="1">1</button><button data-v="2">2</button><button data-v="3">3</button></div></div>
+    <div class="rate-row"><span><span class="lo">LO5</span> I can explain errors, power, effect size and Bonferroni.</span><div class="btns" data-k="lo5"><button data-v="1">1</button><button data-v="2">2</button><button data-v="3">3</button></div></div>
+  </div>
+  <div class="callout"><b>Next week:</b> regression. From "are these two variables related?" to "predict one from the other".</div>
+</section>
+
+</div>
+<footer><span>COM747 Data Science &amp; Machine Learning · QA Higher Education / Ulster University</span><span>Keep RStudio open beside this page.</span></footer>
+<script>
+/* Shared helpers for COM747 student pages: copy buttons, quizzes, self-ratings, stats maths, SVG charts */
+(function(){
+"use strict";
+/* ---------- copy buttons ---------- */
+document.querySelectorAll('.code').forEach(function(box){
+  if (box.dataset.nocopy !== undefined) return;
+  var pre = box.querySelector('pre'); if (!pre) return;
+  var btn = document.createElement('button'); btn.type='button'; btn.className='copy'; btn.textContent='Copy';
+  box.appendChild(btn);
+  btn.addEventListener('click', function(){
+    var text = pre.innerText;
+    var done = function(){ btn.textContent='Copied'; setTimeout(function(){btn.textContent='Copy';},1500); };
+    var fallback = function(){ var r=document.createRange(); r.selectNodeContents(pre); var s=window.getSelection(); s.removeAllRanges(); s.addRange(r); btn.textContent='Press Ctrl+C'; };
+    try { navigator.clipboard.writeText(text).then(done, fallback); } catch(e){ fallback(); }
+  });
+});
+/* ---------- quizzes: <div class="q" data-answer="1" data-why="..."> ---------- */
+document.querySelectorAll('.q').forEach(function(q){
+  var ans = +q.dataset.answer; var fb = q.querySelector('.fb');
+  var opts = q.querySelectorAll('button.opt');
+  opts.forEach(function(b, i){
+    b.type='button';
+    b.addEventListener('click', function(){
+      opts.forEach(function(o){ o.classList.remove('right','wrong'); });
+      if (i === ans){ b.classList.add('right'); fb.innerHTML = '<b class="ok">Correct.</b> ' + (q.dataset.why||''); }
+      else { b.classList.add('wrong'); fb.innerHTML = '<b class="no">Not quite.</b> Try another option.'; }
+    });
+  });
+});
+/* ---------- self-rating ---------- */
+var key = 'com747-' + (document.body.dataset.page || 'page');
+var saved = {};
+try { saved = JSON.parse(localStorage.getItem(key) || '{}'); } catch(e){}
+document.querySelectorAll('.btns').forEach(function(group){
+  var k = group.dataset.k;
+  var set = function(v){ group.querySelectorAll('button').forEach(function(b){ b.setAttribute('aria-pressed', String(b.dataset.v === v)); }); };
+  group.querySelectorAll('button').forEach(function(b){ b.type='button'; b.setAttribute('aria-pressed','false'); });
+  if (saved[k]) set(saved[k]);
+  group.addEventListener('click', function(e){
+    var b = e.target.closest('button'); if(!b) return;
+    set(b.dataset.v); saved[k]=b.dataset.v;
+    try { localStorage.setItem(key, JSON.stringify(saved)); } catch(e){}
+  });
+});
+
+/* ---------- stats maths ---------- */
+var S = {};
+S.mean = function(a){ var s=0; for (var i=0;i<a.length;i++) s+=a[i]; return s/a.length; };
+S.variance = function(a){ var m=S.mean(a), s=0; for (var i=0;i<a.length;i++) s+=(a[i]-m)*(a[i]-m); return s/(a.length-1); };
+S.sd = function(a){ return Math.sqrt(S.variance(a)); };
+S.median = function(a){ var b=a.slice().sort(function(x,y){return x-y;}); var n=b.length; return n%2? b[(n-1)/2] : (b[n/2-1]+b[n/2])/2; };
+S.erf = function(x){ /* Abramowitz-Stegun 7.1.26, |err|<1.5e-7 */
+  var s = x<0?-1:1; x=Math.abs(x);
+  var t=1/(1+0.3275911*x);
+  var y=1-(((((1.061405429*t-1.453152027)*t)+1.421413741)*t-0.284496736)*t+0.254829592)*t*Math.exp(-x*x);
+  return s*y; };
+S.dnorm = function(x,m,s){ m=m||0; s=s||1; var z=(x-m)/s; return Math.exp(-0.5*z*z)/(s*Math.sqrt(2*Math.PI)); };
+S.pnorm = function(x,m,s){ m=m||0; s=s||1; return 0.5*(1+S.erf((x-m)/(s*Math.SQRT2))); };
+S.qnorm = function(p){ /* Acklam */
+  var a=[-3.969683028665376e+01,2.209460984245205e+02,-2.759285104469687e+02,1.383577518672690e+02,-3.066479806614716e+01,2.506628277459239e+00],
+      b=[-5.447609879822406e+01,1.615858368580409e+02,-1.556989798598866e+02,6.680131188771972e+01,-1.328068155288572e+01],
+      c=[-7.784894002430293e-03,-3.223964580411365e-01,-2.400758277161838e+00,-2.549732539343734e+00,4.374664141464968e+00,2.938163982698783e+00],
+      d=[7.784695709041462e-03,3.224671290700398e-01,2.445134137142996e+00,3.754408661907416e+00];
+  var q,r; if (p<=0) return -Infinity; if (p>=1) return Infinity;
+  if (p<0.02425){ q=Math.sqrt(-2*Math.log(p)); return (((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5])/((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1); }
+  if (p>1-0.02425){ q=Math.sqrt(-2*Math.log(1-p)); return -(((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5])/((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1); }
+  q=p-0.5; r=q*q; return (((((a[0]*r+a[1])*r+a[2])*r+a[3])*r+a[4])*r+a[5])*q/(((((b[0]*r+b[1])*r+b[2])*r+b[3])*r+b[4])*r+1); };
+S.lgamma = function(x){ var c=[76.18009172947146,-86.50532032941677,24.01409824083091,-1.231739572450155,0.1208650973866179e-2,-0.5395239384953e-5];
+  var y=x, t=x+5.5; t-=(x+0.5)*Math.log(t); var s=1.000000000190015; for (var j=0;j<6;j++) s+=c[j]/++y; return -t+Math.log(2.5066282746310005*s/x); };
+function betacf(a,b,x){ var MAXIT=200,EPS=3e-14,FPMIN=1e-300; var qab=a+b,qap=a+1,qam=a-1,c=1,d=1-qab*x/qap; if(Math.abs(d)<FPMIN)d=FPMIN; d=1/d; var h=d;
+  for (var m=1;m<=MAXIT;m++){ var m2=2*m, aa=m*(b-m)*x/((qam+m2)*(a+m2)); d=1+aa*d; if(Math.abs(d)<FPMIN)d=FPMIN; c=1+aa/c; if(Math.abs(c)<FPMIN)c=FPMIN; d=1/d; h*=d*c;
+    aa=-(a+m)*(qab+m)*x/((a+m2)*(qap+m2)); d=1+aa*d; if(Math.abs(d)<FPMIN)d=FPMIN; c=1+aa/c; if(Math.abs(c)<FPMIN)c=FPMIN; d=1/d; var del=d*c; h*=del; if(Math.abs(del-1)<EPS)break; }
+  return h; }
+S.ibeta = function(x,a,b){ if (x<=0) return 0; if (x>=1) return 1;
+  var bt=Math.exp(S.lgamma(a+b)-S.lgamma(a)-S.lgamma(b)+a*Math.log(x)+b*Math.log(1-x));
+  return x<(a+1)/(a+b+2) ? bt*betacf(a,b,x)/a : 1-bt*betacf(b,a,1-x)/b; };
+S.pt = function(t,df){ var x=df/(df+t*t); var tail=0.5*S.ibeta(x,df/2,0.5); return t>0? 1-tail : tail; };
+S.dt = function(t,df){ return Math.exp(S.lgamma((df+1)/2)-S.lgamma(df/2))/Math.sqrt(df*Math.PI)*Math.pow(1+t*t/df,-(df+1)/2); };
+S.qt = function(p,df){ var lo=-60,hi=60; for (var i=0;i<100;i++){ var mid=(lo+hi)/2; if (S.pt(mid,df)<p) lo=mid; else hi=mid; } return (lo+hi)/2; };
+S.choose = function(n,k){ var r=1; for (var i=1;i<=k;i++) r=r*(n-k+i)/i; return r; };
+S.dbinom = function(k,n,p){ return S.choose(n,k)*Math.pow(p,k)*Math.pow(1-p,n-k); };
+S.rnorm = function(m,s){ var u=0,v=0; while(u===0)u=Math.random(); while(v===0)v=Math.random(); return m + s*Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v); };
+S.welch = function(x,y){ var mx=S.mean(x),my=S.mean(y),vx=S.variance(x),vy=S.variance(y),nx=x.length,ny=y.length;
+  var se=Math.sqrt(vx/nx+vy/ny), t=(mx-my)/se; var df=Math.pow(vx/nx+vy/ny,2)/(Math.pow(vx/nx,2)/(nx-1)+Math.pow(vy/ny,2)/(ny-1));
+  return {t:t, df:df, p:2*(1-S.pt(Math.abs(t),df))}; };
+S.fmt = function(x,d){ if (!isFinite(x)) return String(x); d = d===undefined?2:d; var s=x.toFixed(d); return s==='-0'+(d?'.'+'0'.repeat(d):'')? s.slice(1): s; };
+S.sig = function(x,n){ n=n||4; if (x===0) return '0'; if (Math.abs(x)<1e-4) return x.toExponential(2); return String(+x.toPrecision(n)); };
+window.S = S;
+
+/* ---------- SVG helpers ---------- */
+var NS='http://www.w3.org/2000/svg';
+function el(tag, attrs, parent){ var e=document.createElementNS(NS,tag); for (var k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; }
+function txt(parent, x, y, s, cls, anchor){ var t=el('text',{x:x,y:y,'class':cls||'tick','text-anchor':anchor||'middle'},parent); t.textContent=s; return t; }
+function niceTicks(lo, hi, n){ var span=hi-lo; if (span<=0) return [lo]; var step=Math.pow(10,Math.floor(Math.log10(span/n))); var err=n/span*step;
+  if (err<=0.15) step*=10; else if (err<=0.35) step*=5; else if (err<=0.75) step*=2;
+  var out=[]; for (var v=Math.ceil(lo/step)*step; v<=hi+1e-9; v+=step) out.push(+v.toFixed(10)); return out; }
+/* Chart frame: returns {g, x(), y(), W, H} */
+function frame(svg, opts){
+  while (svg.firstChild) svg.removeChild(svg.firstChild);
+  var W=opts.W||640, H=opts.H||260, m=opts.m||{l:48,r:16,t:14,b:38};
+  svg.setAttribute('viewBox','0 0 '+W+' '+H);
+  var x=function(v){ return m.l + (v-opts.x0)/(opts.x1-opts.x0)*(W-m.l-m.r); };
+  var y=function(v){ return H-m.b - (v-opts.y0)/(opts.y1-opts.y0)*(H-m.t-m.b); };
+  var g=el('g',{},svg);
+  if (opts.ygrid!==false){ niceTicks(opts.y0,opts.y1,opts.ny||4).forEach(function(v){ el('line',{x1:m.l,x2:W-m.r,y1:y(v),y2:y(v),'class':'gridl'},g); if (opts.ylabels!==false) txt(g,m.l-6,y(v)+4,opts.yfmt?opts.yfmt(v):S.sig(v,3),'tick','end'); }); }
+  el('line',{x1:m.l,x2:W-m.r,y1:H-m.b,y2:H-m.b,'class':'ax'},g);
+  (opts.xticks || niceTicks(opts.x0,opts.x1,opts.nx||6)).forEach(function(v){ el('line',{x1:x(v),x2:x(v),y1:H-m.b,y2:H-m.b+4,'class':'ax'},g); txt(g,x(v),H-m.b+17,opts.xfmt?opts.xfmt(v):S.sig(v,4)); });
+  if (opts.xlab) txt(g,(m.l+W-m.r)/2,H-4,opts.xlab,'labm');
+  if (opts.ylab){ var t=txt(g,12,(m.t+H-m.b)/2,opts.ylab,'labm'); t.setAttribute('transform','rotate(-90 12 '+((m.t+H-m.b)/2)+')'); }
+  return {g:g, x:x, y:y, W:W, H:H, m:m};
+}
+function pathFrom(pts){ return pts.map(function(p,i){ return (i?'L':'M')+p[0].toFixed(2)+' '+p[1].toFixed(2); }).join(''); }
+/* histogram of values into bins: returns {edges, counts} */
+function bins(vals, lo, hi, k){ var w=(hi-lo)/k, c=new Array(k).fill(0); vals.forEach(function(v){ var i=Math.floor((v-lo)/w); if (i===k) i=k-1; if (i>=0&&i<k) c[i]++; }); var e=[]; for (var i=0;i<=k;i++) e.push(lo+i*w); return {edges:e, counts:c, w:w}; }
+window.G = {el:el, txt:txt, frame:frame, path:pathFrom, ticks:niceTicks, bins:bins};
+})();
+
+</script>
+<script>
+(function(){
+"use strict";
+var STU={"G1":[5,5,7,15,6,15,12,6,16,14,10,10,14,10,14,14,13,8,6,8,13,12,15,13,10,6,12,15,11,10,9,17,17,8,12,8,15,15,12,14,7,12,19,8,10,8,11,19,15,7,12,11,11,8,10,8,14,14,9,15,10,10,8,10,10,16,13,7,8,16,13,10,8,12,11,9,11,11,8,5,10,11,7,15,9,7,8,13,11,8,7,16,7,11,11,7,11,8,11,7,7,16,10,7,16,10,7,16,10,14,18,7,10,18,9,15,11,13,9,14,16,16,13,14,8,13,7,7,7,18,12,8,10,12,9,11,10,4,14,16,7,9,9,14,5,8,6,10,7,8,6,12,10,5,11,11,16,9,17,10,7,5,7,10,5,12,10,14,6,14,6,13,13,8,10,10,13,6,10,10,9,12,16,9,12,12,11,15,8,8,11,8,7,8,13,14,17,9,18,9,16,8,9,7,10,10,7,11,9,7,8,12,12,6,8,14,6,6,7,9,6,6,16,12,13,9,16,12,10,12,13,11,11,14,9,11,14,13,13,7,12,10,6,13,7,18,12,6,3,13,6,7,6,8,8,7,14,11,15,10,17,8,13,10,9,17,9,12,10,6,9,15,11,15,10,12,10,9,9,10,8,11,12,8,10,12,18,13,15,15,12,15,12,18,14,14,10,10,14,16,12,11,15,17,15,14,17,8,15,12,9,14,13,13,15,13,8,9,11,11,13,11,11,12,16,9,14,11,10,14,9,12,7,8,10,16,14,7,16,9,11,10,16,9,11,13,16,10,13,11,8,13,8,8,13,10,12,12,10,18,13,13,11,16,12,10,13,7,11,14,7,14,13,6,19,8,15,8,15,10,15,7,11,6,6,10,6,7,7,6,9,14,10,11,8],"G3":[6,6,10,15,10,15,11,6,19,15,9,12,14,11,16,14,14,10,5,10,15,15,16,12,8,8,11,15,11,11,12,17,16,12,15,6,18,15,11,13,11,12,18,11,9,6,11,20,14,7,13,13,10,11,13,10,15,15,9,16,11,11,9,9,10,15,12,6,8,16,15,10,5,14,11,10,10,11,10,5,12,11,6,15,10,8,6,14,10,7,8,18,6,10,14,10,15,10,14,8,5,17,14,6,18,11,8,18,13,16,19,10,13,19,9,16,14,13,8,13,15,15,13,13,8,12,11,9,0,18,0,0,12,11,0,0,0,0,12,15,0,9,11,13,0,11,0,11,0,10,0,14,10,0,12,8,13,10,15,12,0,7,0,10,7,12,10,16,0,14,0,16,10,0,9,9,11,6,9,11,8,12,17,8,12,11,11,15,9,10,13,9,8,10,14,15,16,10,18,10,16,10,10,6,11,9,7,13,10,7,8,13,14,8,10,15,4,8,8,10,6,0,17,13,14,7,15,12,9,12,14,11,9,13,6,10,13,12,11,0,12,12,0,12,0,18,13,8,5,15,8,10,8,8,12,8,13,11,14,0,18,8,12,9,0,17,10,11,10,0,9,14,11,14,10,12,9,9,8,10,8,10,12,10,11,11,19,12,14,15,11,15,13,18,14,11,0,8,14,16,11,10,14,18,13,12,18,8,12,10,0,13,11,11,13,11,0,9,10,11,13,9,11,15,15,11,16,10,9,14,8,14,0,0,0,15,13,0,17,10,11,0,15,0,10,14,16,9,15,13,8,13,8,8,11,9,13,11,10,16,13,12,10,15,12,10,13,0,10,11,9,12,11,5,19,10,15,10,15,10,14,7,10,0,5,10,6,0,8,0,9,16,7,10,9],"sex":"FFFFFMMFMMFFMMMFFFMMMMMMFFMMMMMMMMMFMMFFFMMMFFFMMFFFMFFFFMMFFFFFFFMFFFMMFMFMMFMFMMFMFFFFMMFFFFMFMFFFMMMFMFFMMFMFFMMMMMMMFMFMFMFFMMFFFFMFMFMFMMFFMFFFMMMMFMFMMFMMMMMMMMMFFFMMMFFMFMMMMMFFFMMMFMFFMMMFMMFFFFFFFFFFFFFMFMFFFMFFFFFMFFFMMFFMMMMMMFFMMMMMFMMMMMMMMMMMFMMFFMMFFMMFMFFFFMFFFMFMMMFFFMFFMMMFFFMMFFFMFMFFMFMMMFFFMFFFFFFFFFFFFMMMFFMFFFFFFFFFFMMFFFMMFMMMMMMFFFMFFMFFFMMFFFFMFFFFFFFFMMMMMFFFFFMMMMM","internet":"NYYYNYYNYYYYYYYYYNYYYYYYYYYYYYYYYYYNYYYNYYYYYYYYNYYYNYYYYNYYNYYYYYYYYYYYYNYYYYYYYYYYYYNYYNYYNYYYYNYYYYYYYNYYYYYYYYYYNYYYYYYYYYYNYYYYYYNYNYNYYYYYYYYYYYYNYYNNNNNYYYNYNNYYYYYYYYYYYYYYYYNYYYYYYNYYYYYYYYYYYNNYYYYYNYYYYYNYYYNYYNYYYYYYYYYYYYYYYYNYYYYYYYYYYYYYYNYYYYYYYYNNYYYYYYYYNNYYYYYYYYNYYYYYYYYYYNYYYYYYYYYYYYNYNYNYYYYYYYYYYNYYYYYYYYYYYYNYNYYYYYYYYYYYYYYYYYYNYNYYNNYYNNYYYYNYNYYYYYYYYYYNNNYYYNNYNYY"};
+function curvePts(f, fn, x0, x1, n){ var p=[]; for (var i=0;i<=n;i++){ var x=x0+(x1-x0)*i/n; p.push([f.x(x), f.y(fn(x))]); } return p; }
+function areaPath(f, fn, a, b, n){ var p=[[f.x(a),f.y(0)]]; for (var i=0;i<=n;i++){ var x=a+(b-a)*i/n; p.push([f.x(x),f.y(fn(x))]); } p.push([f.x(b),f.y(0)]); return G.path(p)+'Z'; }
+function ci(arr, level){ var n=arr.length, m=S.mean(arr), se=S.sd(arr)/Math.sqrt(n), t=S.qt(1-(1-level)/2,n-1); return [m, m-t*se, m+t*se]; }
+
+/* ---------- question: G3 by sex ---------- */
+(function(){
+  var svg=document.getElementById('q-svg'), groups={F:[],M:[]};
+  STU.G3.forEach(function(v,i){ groups[STU.sex[i]].push(v); });
+  var f=G.frame(svg,{W:640,H:250,x0:0,x1:20,y0:0,y1:2,ygrid:false,xlab:'G3 (final grade out of 20)',m:{l:80,r:20,t:14,b:38}});
+  [['F','Female',1.45,'var(--c2)'],['M','Male',0.55,'var(--c1)']].forEach(function(g){
+    var v=groups[g[0]], c=ci(v,0.95), y=f.y(g[2]);
+    v.forEach(function(x){ G.el('circle',{cx:f.x(x+(Math.random()-0.5)*0.5),cy:y+(Math.random()-0.5)*44,r:2.6,style:'fill:'+g[3]+';opacity:.35'},f.g); });
+    G.el('line',{x1:f.x(c[1]),x2:f.x(c[2]),y1:y,y2:y,style:'stroke:var(--ink);stroke-width:3'},f.g);
+    [c[1],c[2]].forEach(function(x){ G.el('line',{x1:f.x(x),x2:f.x(x),y1:y-9,y2:y+9,style:'stroke:var(--ink);stroke-width:2'},f.g); });
+    G.el('circle',{cx:f.x(c[0]),cy:y,r:6,style:'fill:var(--paper);stroke:var(--ink);stroke-width:2.5'},f.g);
+    G.txt(f.g,f.m.l-10,y-4,g[1],'lab','end').setAttribute('style','font-weight:700;fill:'+g[3]);
+    G.txt(f.g,f.m.l-10,y+12,'mean '+S.fmt(c[0],2),'labm','end');
+  });
+})();
+
+/* ---------- law of large numbers ---------- */
+(function(){
+  var nS=document.getElementById('l-n'), svg=document.getElementById('l-svg'), out=document.getElementById('l-out');
+  function run(){
+    var n=+nS.value; document.getElementById('l-nv').textContent=n;
+    var s=0, pts=[], lo=50, hi=50;
+    for (var i=1;i<=n;i++){ s+=S.rnorm(50,20); var m=s/i; pts.push([i,m]); if (i>=5){ lo=Math.min(lo,m); hi=Math.max(hi,m); } }
+    var pad=Math.max(5,(hi-lo)*0.1);
+    var f=G.frame(svg,{W:640,H:240,x0:0,x1:Math.log10(n),y0:Math.max(0,Math.min(lo,45)-pad),y1:Math.max(hi,55)+pad,xticks:[0,1,2,3].filter(function(v){return v<=Math.log10(n);}),xfmt:function(v){return String(Math.pow(10,v));},xlab:'sample size (log scale)',ylab:'running mean',ny:4});
+    G.el('line',{x1:f.x(0),x2:f.x(Math.log10(n)),y1:f.y(50),y2:f.y(50),style:'stroke:var(--c2);stroke-width:2;stroke-dasharray:6 4'},f.g);
+    var y0=Math.max(0,Math.min(lo,45)-pad), y1=Math.max(hi,55)+pad;
+    G.el('path',{d:G.path(pts.map(function(p){return [f.x(Math.log10(p[0])),f.y(Math.min(y1,Math.max(y0,p[1])))];})),'class':'curve'},f.g);
+    G.txt(f.g,f.x(Math.log10(n))-4,f.y(50)-8,'true mean 50','labm','end').setAttribute('style','fill:var(--c2)');
+    var m5=pts[Math.min(4,n-1)][1];
+    out.innerHTML='mean of first 5 values: '+S.fmt(m5,2)+'\nmean of all '+n+' values: '+S.fmt(pts[n-1][1],2)+'\n<span class="p"># standard error for n = '+n+': 20 / sqrt('+n+') = '+S.fmt(20/Math.sqrt(n),2)+'</span>';
+  }
+  nS.addEventListener('change',run); document.getElementById('l-go').addEventListener('click',run); run();
+})();
+
+/* ---------- CI calculator ---------- */
+(function(){
+  var ids=['ci-m','ci-s','ci-n','ci-l','ci-d'], e={}; ids.forEach(function(i){ e[i]=document.getElementById(i); });
+  var svg=document.getElementById('ci-svg');
+  function draw(){
+    var m=+e['ci-m'].value, s=Math.max(+e['ci-s'].value,1e-6), n=Math.max(2,Math.round(+e['ci-n'].value)), L=+e['ci-l'].value, useT=e['ci-d'].value==='t';
+    var se=s/Math.sqrt(n), cv=useT? S.qt(1-(1-L)/2,n-1) : S.qnorm(1-(1-L)/2), moe=cv*se, lo=m-moe, hi=m+moe;
+    var f=G.frame(svg,{W:640,H:190,x0:m-4.5*se,x1:m+4.5*se,y0:0,y1:1,ygrid:false,xlab:'sampling distribution of the mean (SE = '+S.fmt(se,2)+')',m:{l:20,r:20,t:14,b:38}});
+    var fn=function(x){ return S.dnorm(x,m,se)/S.dnorm(m,m,se)*0.75; };
+    G.el('path',{d:areaPath(f,fn,lo,hi,200),'class':'area'},f.g);
+    G.el('path',{d:G.path(curvePts(f,fn,m-4.5*se,m+4.5*se,300)),'class':'curve'},f.g);
+    var y=f.y(0.88);
+    G.el('line',{x1:f.x(lo),x2:f.x(hi),y1:y,y2:y,style:'stroke:var(--c2);stroke-width:4'},f.g);
+    [lo,hi].forEach(function(x,i){ G.el('line',{x1:f.x(x),x2:f.x(x),y1:y-8,y2:f.y(0),style:'stroke:var(--c2);stroke-width:1.5;stroke-dasharray:3 3'},f.g); G.txt(f.g,f.x(x)+(i?6:-6),y+4,S.fmt(x,2),'lab mono',i?'start':'end').setAttribute('style','fill:var(--c2);font-weight:700'); });
+    G.el('circle',{cx:f.x(m),cy:y,r:5,style:'fill:var(--paper);stroke:var(--ink);stroke-width:2'},f.g);
+    document.getElementById('ci-se').textContent=S.fmt(se,3);
+    document.getElementById('ci-cv').textContent=S.fmt(cv,3);
+    document.getElementById('ci-moe').textContent=S.fmt(moe,2);
+    document.getElementById('ci-int').textContent=S.fmt(lo,2)+' to '+S.fmt(hi,2);
+    var cvc = useT? 'qt('+(1-(1-L)/2)+', df = '+(n-1)+')' : 'qnorm('+(1-(1-L)/2)+')';
+    document.getElementById('ci-code').innerHTML='<span class="p">&gt;</span> se &lt;- '+s+' / sqrt('+n+')\n<span class="p">&gt;</span> '+m+' + c(-1, 1) * '+cvc+' * se\n[1] '+S.sig(lo,6)+' '+S.sig(hi,6);
+  }
+  ids.forEach(function(i){ e[i].addEventListener('input',draw); e[i].addEventListener('change',draw); }); draw();
+})();
+
+/* ---------- CI simulation ---------- */
+(function(){
+  var svg=document.getElementById('cs-svg'), lv=document.getElementById('cs-l'), tot=document.getElementById('cs-tot');
+  function run(){
+    var L=+lv.value, rows=[], miss=0;
+    for (var k=0;k<50;k++){ var a=[]; for (var i=0;i<25;i++) a.push(S.rnorm(50,20)); var c=ci(a,L); var m= c[1]>50||c[2]<50; if (m) miss++; rows.push([c,m]); }
+    var f=G.frame(svg,{W:640,H:420,x0:25,x1:75,y0:0,y1:51,ygrid:false,xlab:'value',m:{l:16,r:16,t:10,b:38}});
+    G.el('line',{x1:f.x(50),x2:f.x(50),y1:f.y(51),y2:f.y(0),style:'stroke:var(--ink);stroke-width:1.5;stroke-dasharray:5 4'},f.g);
+    rows.forEach(function(r,i){ var y=f.y(i+1), col=r[1]?'var(--c2)':'var(--c1)';
+      G.el('line',{x1:f.x(Math.max(25,r[0][1])),x2:f.x(Math.min(75,r[0][2])),y1:y,y2:y,style:'stroke:'+col+';stroke-width:'+(r[1]?3:2)},f.g);
+      G.el('circle',{cx:f.x(r[0][0]),cy:y,r:2.2,style:'fill:'+col},f.g); });
+    tot.textContent=(50-miss)+' of 50 intervals contain the true mean ('+S.fmt((50-miss)/50*100,0)+'%)';
+  }
+  lv.addEventListener('change',run); document.getElementById('cs-go').addEventListener('click',run); run();
+})();
+
+/* ---------- p-value ---------- */
+(function(){
+  var tS=document.getElementById('p-t'), dfS=document.getElementById('p-df'), tail=document.getElementById('p-tail'), aS=document.getElementById('p-a'), svg=document.getElementById('p-svg');
+  function draw(){
+    var t=+tS.value, df=+dfS.value, a=+aS.value, tl=tail.value; document.getElementById('p-tv').textContent=S.fmt(t,2);
+    var fn=function(x){ return S.dt(x,df); };
+    var f=G.frame(svg,{W:640,H:230,x0:-5,x1:5,y0:0,y1:0.45,ygrid:false,xticks:[-4,-3,-2,-1,0,1,2,3,4],xlab:'t',m:{l:16,r:16,t:20,b:38}});
+    var p;
+    if (tl==='two'){ var at=Math.abs(t); p=2*(1-S.pt(at,df)); G.el('path',{d:areaPath(f,fn,-5,-at,150),'class':'area'},f.g); G.el('path',{d:areaPath(f,fn,at,5,150),'class':'area'},f.g); }
+    else if (tl==='less'){ p=S.pt(t,df); G.el('path',{d:areaPath(f,fn,-5,t,200),'class':'area'},f.g); }
+    else { p=1-S.pt(t,df); G.el('path',{d:areaPath(f,fn,t,5,200),'class':'area'},f.g); }
+    G.el('path',{d:G.path(curvePts(f,fn,-5,5,300)),'class':'curve'},f.g);
+    var crit = tl==='two'? [S.qt(1-a/2,df), -S.qt(1-a/2,df)] : tl==='less'? [S.qt(a,df)] : [S.qt(1-a,df)];
+    crit.forEach(function(c){ G.el('line',{x1:f.x(c),x2:f.x(c),y1:f.y(0),y2:f.y(0.2),style:'stroke:var(--c2);stroke-width:2'},f.g); G.txt(f.g,f.x(c),f.y(0.2)-5,S.fmt(c,2),'labm').setAttribute('style','fill:var(--c2)'); });
+    G.el('line',{x1:f.x(t),x2:f.x(t),y1:f.y(0),y2:f.y(0.42),style:'stroke:var(--ink);stroke-width:2;stroke-dasharray:4 3'},f.g);
+    G.txt(f.g,f.x(t),14,'t = '+S.fmt(t,2),'lab').setAttribute('style','font-weight:700');
+    document.getElementById('p-p').textContent=p<0.0001?'< 0.0001':S.fmt(p,4);
+    var dec=document.getElementById('p-dec');
+    dec.textContent = p<a ? 'Reject H0 (p < '+a+')' : 'Fail to reject H0';
+    dec.style.color = p<a ? 'var(--core)' : 'var(--muted)';
+  }
+  [tS,dfS,tail,aS].forEach(function(e){ e.addEventListener('input',draw); e.addEventListener('change',draw); }); draw();
+})();
+
+/* ---------- power simulator ---------- */
+(function(){
+  var nS=document.getElementById('pw-n'), dS=document.getElementById('pw-d'), aS=document.getElementById('pw-a'), svg=document.getElementById('pw-svg');
+  function labels(){ document.getElementById('pw-nv').textContent=nS.value; document.getElementById('pw-dv').textContent=dS.value; }
+  function run(){
+    labels();
+    var n=+nS.value, diff=+dS.value, a=+aS.value, sd=5, ps=[];
+    for (var k=0;k<100;k++){ var x=[],y=[]; for (var i=0;i<n;i++){ x.push(S.rnorm(50,sd)); y.push(S.rnorm(50+diff,sd)); } ps.push(S.welch(x,y).p); }
+    var sig=ps.filter(function(p){return p<a;}).length, d=diff/sd;
+    var b=G.bins(ps,0,1,20), ymax=Math.max(10,Math.max.apply(null,b.counts));
+    var f=G.frame(svg,{W:640,H:230,x0:0,x1:1,y0:0,y1:ymax*1.1,xlab:'p-value',ylab:'studies',ny:4,xticks:[0,0.05,0.2,0.4,0.6,0.8,1]});
+    b.counts.forEach(function(c,i){ G.el('rect',{x:f.x(b.edges[i])+0.5,y:f.y(c),width:f.x(b.edges[i+1])-f.x(b.edges[i])-1,height:f.y(0)-f.y(c),'class':b.edges[i+1]<=a+1e-9?'bar3':'barmuted'},f.g); });
+    G.el('line',{x1:f.x(a),x2:f.x(a),y1:f.y(0),y2:f.y(ymax*1.05),style:'stroke:var(--c2);stroke-width:2'},f.g);
+    G.txt(f.g,f.x(a)+6,f.y(ymax*1.0),'alpha = '+a,'labm','start').setAttribute('style','fill:var(--c2)');
+    var th = S.pnorm(d*Math.sqrt(n/2) - S.qnorm(1-a/2)) + S.pnorm(-d*Math.sqrt(n/2) - S.qnorm(1-a/2));
+    document.getElementById('pw-es').textContent=S.fmt(d,2);
+    document.getElementById('pw-sig').textContent=sig+' / 100';
+    document.getElementById('pw-th').textContent=S.fmt(th*100,0)+'%';
+  }
+  nS.addEventListener('input',labels); dS.addEventListener('input',labels);
+  nS.addEventListener('change',run); dS.addEventListener('change',run); aS.addEventListener('change',run);
+  document.getElementById('pw-go').addEventListener('click',run); run();
+})();
+
+/* ---------- multiple testing ---------- */
+(function(){
+  var kS=document.getElementById('m-k'), svg=document.getElementById('m-svg');
+  function draw(){
+    var k=+kS.value; document.getElementById('m-kv').textContent=k;
+    var f=G.frame(svg,{W:640,H:230,x0:1,x1:100,y0:0,y1:1,xlab:'number of independent tests',ylab:'P(at least one false positive)',ny:4,yfmt:function(v){return Math.round(v*100)+'%';},m:{l:52,r:16,t:14,b:38}});
+    var raw=[], bon=[]; for (var i=1;i<=100;i++){ raw.push([f.x(i),f.y(1-Math.pow(0.95,i))]); bon.push([f.x(i),f.y(1-Math.pow(1-0.05/i,i))]); }
+    G.el('path',{d:G.path(raw),'class':'curve2'},f.g); G.el('path',{d:G.path(bon),'class':'curve'},f.g);
+    var pr=1-Math.pow(0.95,k), pb=1-Math.pow(1-0.05/k,k);
+    G.el('circle',{cx:f.x(k),cy:f.y(pr),r:5,style:'fill:var(--c2)'},f.g); G.el('circle',{cx:f.x(k),cy:f.y(pb),r:5,style:'fill:var(--c1)'},f.g);
+    G.txt(f.g,f.x(96),f.y(0.97)+16,'alpha = 0.05 each','labm','end').setAttribute('style','fill:var(--c2)');
+    G.txt(f.g,f.x(96),f.y(0.05)-8,'Bonferroni','labm','end').setAttribute('style','fill:var(--c1)');
+    document.getElementById('m-p').textContent=S.fmt(pr*100,0)+'%';
+    document.getElementById('m-b').textContent=S.fmt(pb*100,1)+'%';
+    document.getElementById('m-a').textContent=S.sig(0.05/k,3);
+  }
+  kS.addEventListener('input',draw); draw();
+})();
+
+/* ---------- test chooser ---------- */
+(function(){
+  var q=document.getElementById('tc-q'), n=document.getElementById('tc-n'), out=document.getElementById('tc-out');
+  var T={
+    one:{y:['One-sample t-test','t.test(x, mu = 30)'], n:['Wilcoxon signed-rank test','wilcox.test(x, mu = 30)']},
+    paired:{y:['Paired t-test','t.test(before, after, paired = TRUE)'], n:['Wilcoxon signed-rank test (paired)','wilcox.test(before, after, paired = TRUE)']},
+    two:{y:['Welch two-sample t-test','t.test(y ~ group, data = df)'], n:['Mann–Whitney U (Wilcoxon rank-sum) test','wilcox.test(y ~ group, data = df)']},
+    many:{y:['One-way ANOVA, then pairwise tests','summary(aov(y ~ group, data = df))\npairwise.t.test(df$y, df$group, p.adjust.method = "bonferroni")'], n:['Kruskal–Wallis test','kruskal.test(y ~ group, data = df)']},
+    prop:{y:['Chi-square test of proportions','prop.test(x = c(25, 5), n = c(30, 31))'], n:['Chi-square test of proportions (or fisher.test for small counts)','prop.test(x = c(25, 5), n = c(30, 31))\nfisher.test(matrix(c(25, 5, 5, 26), 2))']},
+    cor:{y:['Pearson correlation','cor.test(x, y)'], n:['Spearman rank correlation','cor.test(x, y, method = "spearman")']}
+  };
+  function show(){ var r=T[q.value][n.value]; out.innerHTML='<b>'+r[0]+'</b><div class="code" style="margin-top:8px"><pre>'+r[1].replace(/</g,'&lt;')+'</pre></div>'; n.disabled = q.value==='prop'; }
+  q.addEventListener('change',show); n.addEventListener('change',show); show();
+})();
+})();
+
+</script>
+</body>
+</html>

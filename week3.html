@@ -1,0 +1,818 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>COM747 Week 3 Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: single-column lab notebook, ~800px measure. Concept sections, then interactive "explorers", then tiered R tasks. */
+:root{
+  --bg:#f5f6f8; --paper:#ffffff; --ink:#1b2330; --muted:#5a6474; --line:#dce1e9; --line-strong:#c3cad6;
+  --accent:#2b5fa6; --accent-soft:#e5edf8;
+  --core:#2f7d5b; --core-soft:#e2f1e9;
+  --chal:#b26a00; --chal-soft:#fbefd9;
+  --str:#7a3fa0; --str-soft:#f1e7f8;
+  --bad:#b3372f; --bad-soft:#f9e3e1;
+  --code-bg:#eef2f7; --code-ink:#1c2a44;
+  --c1:#2b5fa6; --c2:#d0791a; --c3:#2f8a62; --c4:#8a4bb3; --shade:rgba(43,95,166,.28); --grid:#e6e9ef;
+  --f-display:"Source Serif 4", Georgia, "Times New Roman", serif;
+  --f-body:"Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, Consolas, monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#11151c; --paper:#1a2029; --ink:#e4e8ef; --muted:#9aa4b4; --line:#2b3340; --line-strong:#3c4656;
+  --accent:#7fa8e6; --accent-soft:#1e2b3f;
+  --core:#6cc79d; --core-soft:#173025; --chal:#e5a64a; --chal-soft:#33281a; --str:#c39be0; --str-soft:#2a2135;
+  --bad:#ef8a80; --bad-soft:#3a1f1d;
+  --code-bg:#0e131a; --code-ink:#d6e2f5;
+  --c1:#7fa8e6; --c2:#eb9c4c; --c3:#5fc394; --c4:#c39be0; --shade:rgba(127,168,230,.30); --grid:#262e3a;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#11151c; --paper:#1a2029; --ink:#e4e8ef; --muted:#9aa4b4; --line:#2b3340; --line-strong:#3c4656;
+  --accent:#7fa8e6; --accent-soft:#1e2b3f;
+  --core:#6cc79d; --core-soft:#173025; --chal:#e5a64a; --chal-soft:#33281a; --str:#c39be0; --str-soft:#2a2135;
+  --bad:#ef8a80; --bad-soft:#3a1f1d;
+  --code-bg:#0e131a; --code-ink:#d6e2f5;
+  --c1:#7fa8e6; --c2:#eb9c4c; --c3:#5fc394; --c4:#c39be0; --shade:rgba(127,168,230,.30); --grid:#262e3a;
+  color-scheme:dark}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.6;margin:0;padding-inline:16px;padding-block:0 72px}
+a{color:var(--accent)}
+.topnav{max-width:820px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;padding-block:14px;border-bottom:1px solid var(--line);font-size:15px}
+.topnav .brand{font-weight:700;margin-right:auto;color:var(--ink);text-decoration:none}
+.topnav a.wk{color:var(--muted);text-decoration:none;padding:2px 8px;border-radius:6px}
+.topnav a.wk:hover{color:var(--accent)}
+.topnav a.wk[aria-current="page"]{background:var(--accent-soft);color:var(--accent);font-weight:600}
+.wrap{max-width:820px;margin:0 auto;display:flex;flex-direction:column;gap:40px}
+header.hero{padding-block:32px 4px;display:flex;flex-direction:column;gap:10px}
+.eyebrow{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;line-height:1.2;margin:0}
+h1{font-size:clamp(30px,6vw,44px)}
+h2{font-size:27px}
+h3{font-size:20px}
+p{margin:0}
+.lead{color:var(--muted);font-size:18.5px;max-width:65ch}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font-size:13px;font-weight:600;border:1px solid var(--line-strong);border-radius:999px;padding:3px 10px;color:var(--muted)}
+.toc{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:15px;padding:12px 16px;background:var(--paper);border:1px solid var(--line);border-radius:10px}
+.toc a{text-decoration:none}
+section{display:flex;flex-direction:column;gap:16px;scroll-margin-top:16px}
+.sec-head{display:flex;flex-direction:column;gap:4px}
+.sec-num{font-family:var(--f-mono);font-size:13px;color:var(--accent);font-weight:600}
+.prose{display:flex;flex-direction:column;gap:12px;max-width:68ch}
+ul.list,ol.list{margin:0;padding-left:1.3em;display:flex;flex-direction:column;gap:4px}
+.lo-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.lo-list li{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:baseline}
+.lo{font-family:var(--f-mono);font-size:12px;font-weight:600;background:var(--accent-soft);color:var(--accent);padding:2px 8px;border-radius:4px;white-space:nowrap}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.grid2.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media (max-width:600px){.grid2.two{grid-template-columns:1fr}}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.card h3{font-size:18px}
+.card .k{font-size:13px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:700}
+.code{position:relative;background:var(--code-bg);border:1px solid var(--line);border-radius:8px;min-width:0}
+.code pre{margin:0;padding:14px 16px;overflow-x:auto;font-family:var(--f-mono);font-size:14px;color:var(--code-ink);line-height:1.55}
+.code .copy{position:absolute;top:8px;right:8px}
+.copy,.btn{font:600 13px var(--f-body);background:var(--paper);color:var(--muted);border:1px solid var(--line-strong);border-radius:6px;padding:5px 11px;cursor:pointer}
+.copy:hover,.btn:hover{color:var(--accent);border-color:var(--accent)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--paper)}
+.btn.primary:hover{opacity:.9;color:var(--paper)}
+code{font-family:var(--f-mono);font-size:.88em;background:var(--code-bg);padding:1px 5px;border-radius:4px}
+.callout{border-left:3px solid var(--accent);background:var(--accent-soft);padding:12px 16px;border-radius:0 8px 8px 0}
+.callout.warn{border-color:var(--chal);background:var(--chal-soft)}
+.callout.good{border-color:var(--core);background:var(--core-soft)}
+/* figures and explorers */
+figure{margin:0}
+.figure{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.figure figcaption,.caption{font-size:14.5px;color:var(--muted)}
+.figure svg{width:100%;height:auto;display:block;overflow:visible}
+.explorer{border-color:var(--line-strong)}
+.explorer .title{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.explorer .title h3{font-size:19px}
+.tagx{font:700 11px var(--f-body);letter-spacing:.09em;text-transform:uppercase;padding:3px 8px;border-radius:999px;background:var(--accent-soft);color:var(--accent)}
+.controls{display:flex;flex-wrap:wrap;gap:12px 18px;align-items:flex-end}
+.ctl{display:flex;flex-direction:column;gap:4px;font-size:14px;color:var(--muted);min-width:0}
+.ctl b{color:var(--ink);font-family:var(--f-mono);font-weight:600}
+.ctl input[type=range]{width:min(220px,70vw);accent-color:var(--accent)}
+.ctl input[type=number],.ctl input[type=text],.ctl select{font:15px var(--f-mono);padding:5px 8px;border:1px solid var(--line-strong);border-radius:6px;background:var(--bg);color:var(--ink);width:7.5em}
+.ctl input[type=text]{width:12em}
+.ctl select{width:auto;font-family:var(--f-body)}
+.console{background:var(--code-bg);border:1px solid var(--line);border-radius:8px;padding:10px 14px;font-family:var(--f-mono);font-size:14px;color:var(--code-ink);overflow-x:auto;white-space:pre;line-height:1.55}
+.console .p{color:var(--muted)}
+.kpis{display:flex;flex-wrap:wrap;gap:10px}
+.kpi{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 12px;display:flex;flex-direction:column;min-width:110px}
+.kpi span{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+.kpi b{font-family:var(--f-mono);font-size:19px;font-variant-numeric:tabular-nums}
+/* svg classes */
+.ax{stroke:var(--line-strong);stroke-width:1}
+.gridl{stroke:var(--grid);stroke-width:1}
+.tick{fill:var(--muted);font:12px var(--f-body)}
+.lab{fill:var(--ink);font:13px var(--f-body)}
+.labm{fill:var(--muted);font:12px var(--f-body)}
+.mono{font-family:var(--f-mono)}
+.curve{fill:none;stroke:var(--c1);stroke-width:2.2}
+.curve2{fill:none;stroke:var(--c2);stroke-width:2.2}
+.area{fill:var(--shade);stroke:none}
+.bar{fill:var(--c1)}
+.bar2{fill:var(--c2)}
+.bar3{fill:var(--c3)}
+.barmuted{fill:var(--line-strong)}
+.vline{stroke:var(--c2);stroke-width:2}
+.vline2{stroke:var(--c3);stroke-width:2;stroke-dasharray:5 4}
+.dot{fill:var(--c1)}
+/* vector cells */
+.vec{display:flex;flex-wrap:wrap;gap:4px}
+.cell{display:flex;flex-direction:column;align-items:center;min-width:46px;border:1px solid var(--line-strong);border-radius:6px;background:var(--paper);overflow:hidden;transition:background .15s,border-color .15s}
+.cell .v{font-family:var(--f-mono);font-size:15px;font-weight:600;padding:6px 6px 2px}
+.cell .i{font-family:var(--f-mono);font-size:11px;color:var(--muted);padding:0 6px 4px}
+.cell .t{font-family:var(--f-mono);font-size:10.5px;padding:2px 4px;width:100%;text-align:center;border-top:1px solid var(--line)}
+.cell.on{background:var(--core-soft);border-color:var(--core)}
+.cell.on .t{color:var(--core);font-weight:700}
+.cell.off{opacity:.55}
+.cell.off .t{color:var(--bad)}
+.cell.rec{border-style:dashed;opacity:.75}
+/* tiers and tasks */
+.tier{display:flex;flex-direction:column;gap:12px}
+.tier-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.tag{font:700 12px var(--f-body);letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:999px}
+.t-core .tag{background:var(--core-soft);color:var(--core)}
+.t-chal .tag{background:var(--chal-soft);color:var(--chal)}
+.t-str .tag{background:var(--str-soft);color:var(--str)}
+.note{color:var(--muted);font-size:15px}
+ol.tasks{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px}
+.task{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:14px 16px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.task-q{display:grid;grid-template-columns:2.4em 1fr;gap:4px}
+.task-q > span:last-child{min-width:0}
+.num{font-family:var(--f-mono);font-weight:600;color:var(--muted)}
+details{font-size:15px}
+summary{cursor:pointer;color:var(--accent);font-weight:600;width:max-content;max-width:100%}
+details > *:not(summary){margin-top:8px}
+summary:focus-visible,.copy:focus-visible,.btn:focus-visible,button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+/* tables */
+.tbl{overflow-x:auto;background:var(--paper);border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th,td{text-align:left;padding:8px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:none}
+th{font-weight:700;color:var(--muted);font-size:12.5px;text-transform:uppercase;letter-spacing:.06em;background:var(--bg)}
+td.m,th.m{font-family:var(--f-mono);font-size:14px;white-space:nowrap}
+td.n{text-align:right;font-variant-numeric:tabular-nums;font-family:var(--f-mono);font-size:14px}
+/* quiz */
+.quiz{display:flex;flex-direction:column;gap:14px}
+.q{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.q .opts{display:flex;flex-direction:column;gap:6px}
+.q button.opt{text-align:left;font:15px var(--f-body);background:var(--bg);color:var(--ink);border:1px solid var(--line-strong);border-radius:8px;padding:8px 12px;cursor:pointer}
+.q button.opt:hover{border-color:var(--accent)}
+.q button.opt.right{background:var(--core-soft);border-color:var(--core)}
+.q button.opt.wrong{background:var(--bad-soft);border-color:var(--bad)}
+.q .fb{font-size:15px;color:var(--muted)}
+.q .fb b.ok{color:var(--core)} .q .fb b.no{color:var(--bad)}
+/* rating */
+.rate{display:flex;flex-direction:column;gap:10px}
+.rate-row{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:10px 14px}
+.rate-row > span{min-width:0;flex:1 1 240px}
+.btns{display:flex;gap:6px}
+.btns button{font:600 14px var(--f-body);border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:6px;padding:6px 12px;cursor:pointer;min-width:44px}
+.btns button[aria-pressed="true"][data-v="1"]{background:var(--chal-soft);border-color:var(--chal);color:var(--chal)}
+.btns button[aria-pressed="true"][data-v="2"]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.btns button[aria-pressed="true"][data-v="3"]{background:var(--core-soft);border-color:var(--core);color:var(--core)}
+footer{max-width:820px;margin:48px auto 0;border-top:1px solid var(--line);padding-top:16px;color:var(--muted);font-size:14px;display:flex;flex-wrap:wrap;gap:8px 20px;justify-content:space-between}
+@media (max-width:520px){ body{font-size:16px} .card,.figure{padding:14px} .cell{min-width:40px} }
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+.wrap > *, section > *, .figure > *, .card > *{min-width:0;max-width:100%}
+p code, span code, li code, td code{overflow-wrap:anywhere}
+a.wkcard{text-decoration:none;color:var(--ink);transition:border-color .15s}
+a.wkcard:hover{border-color:var(--accent)}
+a.wkcard .go{color:var(--accent);font-weight:600;font-size:15px;margin-top:auto}
+@media (max-width:560px){
+  .figure svg .tick, .figure svg .labm{font-size:22px}
+  .figure svg .lab{font-size:23px}
+}
+
+</style>
+</head>
+<body data-page="week3">
+<nav class="topnav" aria-label="Weeks"><a class="brand" href="index.html">COM747 R Labs</a><a class="wk" href="week1.html">Week 1</a><a class="wk" href="week2.html">Week 2</a><a class="wk" href="week3.html" aria-current="page">Week 3</a><a class="wk" href="week4.html">Week 4</a></nav>
+<div class="wrap">
+<header class="hero">
+  <div class="eyebrow">COM747 Data Science &amp; Machine Learning · Week 3</div>
+  <h1>Probability Distributions and EDA</h1>
+  <p class="lead">How likely is a value, and what shape is the data? Use distributions to turn data into probabilities, compare values on different scales, and explore a real dataset before modelling it.</p>
+  <div class="chips"><span class="chip">Lecture + lab</span><span class="chip">RStudio</span><span class="chip">Datasets: <a href="data/rundata.csv">rundata.csv</a> · <a href="data/student_data.csv">student_data.csv</a></span></div>
+</header>
+
+<nav class="toc" aria-label="On this page">
+  <a href="#question">The question</a><a href="#discrete">Discrete</a><a href="#bins">Histograms</a><a href="#normal">Normal</a><a href="#shape">Shape</a><a href="#z">z-scores</a><a href="#clt">CLT</a><a href="#eda">EDA</a><a href="#tasks">R tasks</a><a href="#quiz">Quiz</a><a href="#exit">Exit check</a>
+</nav>
+
+<section id="question">
+  <div class="sec-head"><span class="sec-num">01</span><h2>A student scores 70. Is that good?</h2></div>
+  <figure class="figure">
+    <svg id="hook-svg" role="img" aria-label="The same mark of 70 in two classes with different distributions"></svg>
+    <figcaption>The same 70 is in the <b>top 7%</b> of Class A (mean 55, SD 10) but in the <b>bottom 16%</b> of Class B (mean 75, SD 5). A value only means something relative to its distribution.</figcaption>
+  </figure>
+  <ul class="lo-list">
+    <li><span class="lo">LO1</span><span>Distinguish discrete and continuous random variables and their distributions.</span></li>
+    <li><span class="lo">LO2</span><span>Draw and interpret histograms, density plots and box plots.</span></li>
+    <li><span class="lo">LO3</span><span>Calculate normal probabilities with <code>pnorm()</code> and <code>qnorm()</code>.</span></li>
+    <li><span class="lo">LO4</span><span>Describe shape (skewness, kurtosis) and standardise data with z-scores.</span></li>
+    <li><span class="lo">LO5</span><span>Explain the central limit theorem and test for normality.</span></li>
+  </ul>
+</section>
+
+<section id="discrete">
+  <div class="sec-head"><span class="sec-num">02</span><h2>Random variables</h2></div>
+  <div class="grid2 two">
+    <div class="card"><span class="k">Discrete · counted</span><p>Number of heads in 10 flips, students in a class, calls per day. Each value has its own probability: <code>dbinom()</code>, <code>dpois()</code>.</p></div>
+    <div class="card"><span class="k">Continuous · measured</span><p>Time to run a mile, height, distance. P(X = exactly 50) is 0, so we ask about ranges: the <b>area under a curve</b>.</p></div>
+  </div>
+  <div class="figure explorer">
+    <div class="title"><span class="tagx">Explorer</span><h3>Coin flips: a discrete distribution</h3></div>
+    <div class="controls">
+      <label class="ctl" for="cf-n"><span>Number of flips: <b id="cf-nv">2</b></span><input type="range" id="cf-n" min="1" max="20" value="2"></label>
+      <label class="ctl" for="cf-k"><span>Cumulative P(X ≤ <b id="cf-kv">1</b>)</span><input type="range" id="cf-k" min="0" max="2" value="1"></label>
+    </div>
+    <svg id="cf-svg" role="img" aria-label="Bar chart of the binomial distribution"></svg>
+    <div class="console" id="cf-out"></div>
+  </div>
+</section>
+
+<section id="bins">
+  <div class="sec-head"><span class="sec-num">03</span><h2>Histograms: binning continuous data</h2></div>
+  <div class="prose"><p>A histogram groups values into <b>bins</b> and counts them. The number of bins changes the story. Sturges' rule suggests about log₂(n) + 1 bins; for 99 runners that is 8.</p></div>
+  <div class="figure explorer">
+    <div class="title"><span class="tagx">Explorer</span><h3>Choose the bins for rundata$FirstRun</h3></div>
+    <div class="controls">
+      <label class="ctl" for="b-k"><span>bins: <b id="b-kv">8</b></span><input type="range" id="b-k" min="2" max="40" value="8"></label>
+      <label class="ctl" for="b-d"><span>overlay density</span><select id="b-d"><option value="1">yes</option><option value="0">no</option></select></label>
+      <button class="btn" type="button" id="b-st">Sturges (8)</button>
+    </div>
+    <svg id="b-svg" role="img" aria-label="Histogram of first-run distances"></svg>
+    <div class="console" id="b-code"></div>
+  </div>
+</section>
+
+<section id="normal">
+  <div class="sec-head"><span class="sec-num">04</span><h2>The normal distribution</h2></div>
+  <div class="prose"><p>Many measurements are roughly bell-shaped. A normal distribution is completely described by its <b>mean</b> (centre) and <b>SD</b> (spread). Probability is the shaded <b>area</b> under the curve; the whole area is 1.</p></div>
+  <div class="tbl"><table><thead><tr><th>Function</th><th>Answers</th><th>Example</th></tr></thead><tbody>
+    <tr><td class="m">pnorm(q, mean, sd)</td><td>P(X ≤ q): area to the left</td><td class="m">pnorm(30, 50, 25) → 0.212</td></tr>
+    <tr><td class="m">1 - pnorm(q, …)</td><td>P(X &gt; q): area to the right</td><td class="m">1 - pnorm(70, 55, 30) → 0.309</td></tr>
+    <tr><td class="m">qnorm(p, mean, sd)</td><td>The value with area p to its left</td><td class="m">qnorm(0.9, 55, 15) → 74.2</td></tr>
+    <tr><td class="m">dnorm(x, mean, sd)</td><td>Height of the curve (not a probability)</td><td class="m">used to draw the curve</td></tr>
+    <tr><td class="m">rnorm(n, mean, sd)</td><td>n random values</td><td class="m">rnorm(100, 50, 20)</td></tr>
+  </tbody></table></div>
+
+  <div class="figure explorer">
+    <div class="title"><span class="tagx">Explorer</span><h3>Normal probability calculator</h3></div>
+    <p class="caption">Like <code>pnormGC()</code> from the tigerstats package. Change the values and read the R code you would type.</p>
+    <div class="controls">
+      <label class="ctl" for="n-m">mean<input type="number" id="n-m" value="50" step="any"></label>
+      <label class="ctl" for="n-s">sd<input type="number" id="n-s" value="20" step="any" min="0.01"></label>
+      <label class="ctl" for="n-r">region<select id="n-r"><option value="between" selected>between</option><option value="below">below</option><option value="above">above</option><option value="outside">outside</option></select></label>
+      <label class="ctl" for="n-a">a<input type="number" id="n-a" value="49" step="any"></label>
+      <label class="ctl" for="n-b">b<input type="number" id="n-b" value="51" step="any"></label>
+    </div>
+    <div class="controls"><span class="note">Examples:</span>
+      <button class="btn" type="button" data-n="50,20,between,49,51">Drive to work 49–51</button>
+      <button class="btn" type="button" data-n="50,25,below,30,">CDF at 30</button>
+      <button class="btn" type="button" data-n="55,30,above,70,">Marks above 70</button>
+      <button class="btn" type="button" data-n="55,30,below,40,">Marks below 40</button>
+      <button class="btn" type="button" data-n="0,1,between,-1.96,1.96">±1.96 SD</button>
+    </div>
+    <svg id="n-svg" role="img" aria-label="Normal curve with the selected region shaded"></svg>
+    <div class="kpis"><div class="kpi"><span>probability</span><b id="n-p"></b></div><div class="kpi"><span>percent</span><b id="n-pc"></b></div></div>
+    <div class="console" id="n-code"></div>
+  </div>
+
+  <figure class="figure">
+    <svg id="emp-svg" role="img" aria-label="Empirical rule: 68, 95 and 99.7 percent within 1, 2 and 3 SD"></svg>
+    <figcaption>The empirical rule: about 68% of values lie within 1 SD of the mean, 95% within 2 SD (1.96 exactly), 99.7% within 3 SD. Check it: <code>pnorm(1) - pnorm(-1)</code>.</figcaption>
+  </figure>
+</section>
+
+<section id="shape">
+  <div class="sec-head"><span class="sec-num">05</span><h2>Shape: skewness and kurtosis</h2></div>
+  <div class="grid2 two">
+    <div class="card"><span class="k">Skewness · symmetry</span><p>0 for a normal distribution. Positive: long right tail (salaries, house prices). Negative: long left tail (an easy exam).</p></div>
+    <div class="card"><span class="k">Kurtosis · tails</span><p>3 for a normal distribution. Above 3: heavy tails, more extreme values (leptokurtic). Below 3: light tails (platykurtic).</p></div>
+  </div>
+  <div class="figure explorer">
+    <div class="title"><span class="tagx">Explorer</span><h3>Skew a distribution</h3></div>
+    <div class="controls"><label class="ctl" for="sk-s"><span>skewness: <b id="sk-v">1.0</b></span><input type="range" id="sk-s" min="-2" max="2" step="0.1" value="1"></label></div>
+    <svg id="sk-svg" role="img" aria-label="Skewed distribution with mean and median marked"></svg>
+    <p class="caption">The <span style="color:var(--c2);font-weight:700">mean</span> is dragged towards the long tail; the <span style="color:var(--c3);font-weight:700">median</span> stays nearer the peak. For skewed data report <b>median and IQR</b> and use non-parametric tests. A <code>log()</code> transform often makes right-skewed data close to normal.</p>
+  </div>
+  <div class="tbl"><table><thead><tr><th></th><th>Parametric</th><th>Non-parametric</th></tr></thead><tbody>
+    <tr><td>Assumes</td><td>Roughly normal data</td><td>No distribution shape</td></tr>
+    <tr><td>Summary</td><td>Mean ± SD</td><td>Median ± IQR</td></tr>
+    <tr><td>Compare two groups</td><td>t-test</td><td>Wilcoxon / Mann–Whitney</td></tr>
+    <tr><td>Relationship</td><td>Pearson correlation</td><td>Spearman correlation</td></tr>
+  </tbody></table></div>
+</section>
+
+<section id="z">
+  <div class="sec-head"><span class="sec-num">06</span><h2>Standardisation and z-scores</h2></div>
+  <div class="prose"><p>A z-score says how many standard deviations a value is from the mean: <code>z = (x − mean) / sd</code>. It is <b>metric agnostic</b>, so scores on different scales (a quiz out of 15, an exam out of 100) become comparable and can be added into a composite score. In R, <code>scale(x)</code> standardises a whole vector.</p></div>
+  <div class="figure explorer">
+    <div class="title"><span class="tagx">Explorer</span><h3>z-score converter</h3></div>
+    <div class="controls">
+      <label class="ctl" for="z-x">value x<input type="number" id="z-x" value="84" step="any"></label>
+      <label class="ctl" for="z-m">mean<input type="number" id="z-m" value="91" step="any"></label>
+      <label class="ctl" for="z-s">sd<input type="number" id="z-s" value="8.33" step="any" min="0.01"></label>
+    </div>
+    <svg id="z-svg" role="img" aria-label="Standard normal curve with the z-score marked"></svg>
+    <div class="kpis">
+      <div class="kpi"><span>z</span><b id="z-z"></b></div>
+      <div class="kpi"><span>percentile</span><b id="z-p"></b></div>
+      <div class="kpi"><span>sigma 16z+50</span><b id="z-sg"></b></div>
+      <div class="kpi"><span>Hull 14z+50</span><b id="z-h"></b></div>
+      <div class="kpi"><span>T 10z+50</span><b id="z-t"></b></div>
+    </div>
+    <p class="caption">Defaults: a weight of 84 kg from <code>set.seed(1); weight &lt;- round(rnorm(50, 90, 10))</code> (mean 91, SD 8.33). The sigma, Hull and T scales turn z into positive scores for reports.</p>
+  </div>
+  <div class="callout"><b>Min–max normalisation</b> rescales to 0–1 instead: <code>(x - min(x)) / (max(x) - min(x))</code>. Machine learning methods that use distances (k-NN, k-means) need one of these.</div>
+</section>
+
+<section id="clt">
+  <div class="sec-head"><span class="sec-num">07</span><h2>The central limit theorem</h2></div>
+  <div class="prose"><p>Take many random samples of size n and calculate each sample's mean. When n is large (a common rule: n ≥ 30), the <b>means</b> follow a normal distribution, even if the population does not. This is why so many statistical tests assume normality.</p></div>
+  <div class="figure explorer">
+    <div class="title"><span class="tagx">Explorer</span><h3>Sample means become normal</h3></div>
+    <div class="controls">
+      <label class="ctl" for="c-pop">population<select id="c-pop"><option value="exp">Skewed (waiting times)</option><option value="unif">Uniform (0 to 100)</option><option value="bi">Bimodal (two groups)</option></select></label>
+      <label class="ctl" for="c-n"><span>sample size n: <b id="c-nv">2</b></span><input type="range" id="c-n" min="1" max="60" value="2"></label>
+      <button class="btn primary" type="button" id="c-go">Draw 2,000 samples</button>
+    </div>
+    <div class="grid2 two">
+      <div><p class="caption">Population</p><svg id="c-pop-svg" role="img" aria-label="Population histogram"></svg></div>
+      <div><p class="caption">2,000 sample means</p><svg id="c-mean-svg" role="img" aria-label="Histogram of sample means with normal curve"></svg></div>
+    </div>
+    <div class="console" id="c-out"></div>
+  </div>
+  <div class="callout warn"><b>Is my variable normal?</b> Look first (histogram, <code>qqnorm()</code>), then test: <code>shapiro.test(x)</code>. H0: the data are normal. p &lt; 0.05 means reject normality. <code>rundata$FirstRun</code>: p = 0.37 (normal is reasonable). <code>student_data$G3</code>: p &lt; 0.001 (not normal).</div>
+</section>
+
+<section id="eda">
+  <div class="sec-head"><span class="sec-num">08</span><h2>Exploratory data analysis on real data</h2></div>
+  <div class="prose"><p><a href="data/student_data.csv">student_data.csv</a> has 395 students and 33 variables (UCI Student Performance). <code>G1</code>, <code>G2</code> and <code>G3</code> are grades out of 20 for each period; <code>G3</code> is the final grade.</p></div>
+  <figure class="figure">
+    <svg id="eda-hist" role="img" aria-label="Histogram of final grade G3"></svg>
+    <figcaption>Final grade G3. Mostly bell-shaped, but with a spike of <b>38 zeros</b>. All 38 of those students had a non-zero G1 grade, so these are likely students who left rather than real scores of zero. Spotting this is what EDA is for.</figcaption>
+  </figure>
+  <figure class="figure">
+    <svg id="eda-scatter" role="img" aria-label="Scatter plot of G1 against G3"></svg>
+    <figcaption>First-period grade G1 against final grade G3 (r = 0.80). The zeros sit along the bottom edge. Points are jittered slightly so they don't overlap.</figcaption>
+  </figure>
+  <div class="code"><pre>students &lt;- read.csv("student_data.csv")
+hist(students$G3, breaks = 0:20)
+boxplot(G3 ~ sex, data = students)
+tapply(students$G3, students$sex, mean)   # F 9.97, M 10.91
+sum(students$G3 == 0)                     # 38
+cor(students$G1, students$G3)             # 0.80</pre></div>
+</section>
+
+<section id="tasks">
+  <div class="sec-head"><span class="sec-num">09</span><h2>Your R tasks</h2></div>
+  <div class="tier t-core">
+    <div class="tier-head"><span class="tag">Core</span><span class="note">LO1, LO3</span></div>
+    <ol class="tasks">
+      <li class="task"><div class="task-q"><span class="num">1</span><span>Two coin flips. Use <code>dbinom()</code> to get P(0, 1, 2 heads) and <code>pbinom()</code> for P(X ≤ 1).</span></div>
+        <details><summary>Check your answer</summary><div class="code"><pre>dbinom(0:2, size = 2, prob = 0.5)   # 0.25 0.50 0.25
+pbinom(1, size = 2, prob = 0.5)     # 0.75</pre></div></details></li>
+      <li class="task"><div class="task-q"><span class="num">2</span><span>Driving time to work has mean 50 minutes and SD 20. Find P(49 &lt; X &lt; 51).</span></div>
+        <details><summary>Hint</summary><p>Area between two values = <code>pnorm(upper) - pnorm(lower)</code>.</p></details>
+        <details><summary>Check your answer</summary><div class="code"><pre>pnorm(51, 50, 20) - pnorm(49, 50, 20)   # 0.0399</pre></div></details></li>
+      <li class="task"><div class="task-q"><span class="num">3</span><span>Marks are normal with mean 55 and SD 30. What proportion of students score between 40 and 70? Above 70? Below 40?</span></div>
+        <details><summary>Check your answer</summary><div class="code"><pre>pnorm(70, 55, 30) - pnorm(40, 55, 30)   # 0.383
+1 - pnorm(70, 55, 30)                   # 0.309
+pnorm(40, 55, 30)                       # 0.309 (symmetric!)</pre></div></details></li>
+      <li class="task"><div class="task-q"><span class="num">4</span><span>Marks have mean 55 and SD 15. What mark do you need to be in the top 10%?</span></div>
+        <details><summary>Check your answer</summary><div class="code"><pre>qnorm(0.90, mean = 55, sd = 15)   # 74.2</pre></div></details></li>
+    </ol>
+  </div>
+  <div class="tier t-chal">
+    <div class="tier-head"><span class="tag">Challenge</span><span class="note">LO2, LO4 with rundata.csv</span></div>
+    <ol class="tasks">
+      <li class="task"><div class="task-q"><span class="num">5</span><span><code>speed &lt;- c(20, 24, 27, 28, 29, 30, 32, 33, 34, 36, 38, 39, 40, 40)</code>. Using its mean and SD, find P(29 &lt; X &lt; 33) and P(X &gt; 30).</span></div>
+        <details><summary>Check your answer</summary><div class="code"><pre>m &lt;- mean(speed); s &lt;- sd(speed)       # 32.14, 6.18
+pnorm(33, m, s) - pnorm(29, m, s)       # 0.250
+1 - pnorm(30, m, s)                     # 0.636</pre></div></details></li>
+      <li class="task"><div class="task-q"><span class="num">6</span><span>Draw histograms of <code>rundata$FirstRun</code> with 3, 8 and 40 breaks side by side using <code>par(mfrow = c(1, 3))</code>. Which is most useful?</span></div>
+        <details><summary>Check your answer</summary><div class="code"><pre>par(mfrow = c(1, 3))
+for (b in c(3, 8, 40)) hist(rundata$FirstRun, breaks = b, main = b)
+par(mfrow = c(1, 1))</pre></div></details></li>
+      <li class="task"><div class="task-q"><span class="num">7</span><span>Plot the density of FirstRun and SecondRun on the same axes with a legend. Then test FirstRun for normality.</span></div>
+        <details><summary>Check your answer</summary><div class="code"><pre>plot(density(rundata$FirstRun), col = "red", xlim = c(0, 80))
+lines(density(rundata$SecondRun), col = "blue")
+legend("topright", c("First", "Second"), col = c("red", "blue"), lwd = 1)
+shapiro.test(rundata$FirstRun)   # p = 0.37: normality is reasonable</pre></div></details></li>
+      <li class="task"><div class="task-q"><span class="num">8</span><span>Standardise FirstRun with <code>scale()</code>. Check the mean and SD of the result. What is the z-score of the runner who ran 48.38 km?</span></div>
+        <details><summary>Check your answer</summary><div class="code"><pre>z &lt;- as.numeric(scale(rundata$FirstRun))
+round(mean(z), 4); sd(z)                                   # 0 and 1
+(48.38 - mean(rundata$FirstRun)) / sd(rundata$FirstRun)   # 2.06</pre></div></details></li>
+    </ol>
+  </div>
+  <div class="tier t-str">
+    <div class="tier-head"><span class="tag">Stretch</span><span class="note">LO5 and EDA with student_data.csv</span></div>
+    <ol class="tasks">
+      <li class="task"><div class="task-q"><span class="num">9</span><span>Write your own <code>skewness()</code> function and apply it to <code>student_data$G3</code>. Is it skewed? Which way, and why?</span></div>
+        <details><summary>Check your answer</summary><div class="code"><pre>skewness &lt;- function(x) { m &lt;- mean(x); n &lt;- length(x)
+  (sum((x - m)^3) / n) / (sum((x - m)^2) / n)^1.5 }
+skewness(students$G3)   # -0.73: left-skewed, pulled by the 38 zeros</pre></div></details></li>
+      <li class="task"><div class="task-q"><span class="num">10</span><span>Simulate the CLT: draw 2,000 sample means of size 30 from <code>rexp(100000, 1/20)</code>. Plot a histogram. What are the mean and SD of the sample means?</span></div>
+        <details><summary>Check your answer</summary><div class="code"><pre>pop &lt;- rexp(100000, rate = 1/20)
+means &lt;- replicate(2000, mean(sample(pop, 30)))
+hist(means)
+mean(means); sd(means)   # about 20 and 20 / sqrt(30) = 3.65</pre></div></details></li>
+      <li class="task"><div class="task-q"><span class="num">11</span><span>Compare G3 between students with and without home internet: box plot, medians and normality. Remove the zeros and repeat. Does your conclusion change?</span></div>
+        <details><summary>Check your answer</summary><div class="code"><pre>boxplot(G3 ~ internet, data = students)
+tapply(students$G3, students$internet, median)
+nz &lt;- students[students$G3 &gt; 0, ]
+tapply(nz$G3, nz$internet, median)</pre></div></details></li>
+      <li class="task"><div class="task-q"><span class="num">12</span><span>Turn G3 into bands with <code>cut()</code>: Fail (0–9), Pass (10–13), Good (14–20). Count each band and draw a bar chart.</span></div>
+        <details><summary>Check your answer</summary><div class="code"><pre>students$band &lt;- cut(students$G3, breaks = c(-1, 9, 13, 20),
+                     labels = c("Fail", "Pass", "Good"))
+table(students$band)    # Fail 130, Pass 165, Good 100
+barplot(table(students$band))</pre></div></details></li>
+    </ol>
+  </div>
+</section>
+
+<section id="quiz">
+  <div class="sec-head"><span class="sec-num">10</span><h2>Check yourself</h2></div>
+  <div class="quiz">
+    <div class="q" data-answer="2" data-why="For a continuous variable the probability of any exact value is 0; only ranges have area.">
+      <p><b>1.</b> Driving times are normal with mean 50. What is P(X = exactly 50)?</p>
+      <div class="opts"><button class="opt">0.5</button><button class="opt">The height of the curve at 50</button><button class="opt">0</button></div><p class="fb"></p></div>
+    <div class="q" data-answer="0" data-why="pnorm gives the area to the left, so the area to the right is 1 minus it.">
+      <p><b>2.</b> Which gives P(X &gt; 70) for mean 55, SD 30?</p>
+      <div class="opts"><button class="opt">1 - pnorm(70, 55, 30)</button><button class="opt">pnorm(70, 55, 30)</button><button class="opt">qnorm(70, 55, 30)</button></div><p class="fb"></p></div>
+    <div class="q" data-answer="1" data-why="z = (60 − 50) / 5 = 2, two standard deviations above the mean.">
+      <p><b>3.</b> A value of 60 from a distribution with mean 50 and SD 5 has a z-score of…</p>
+      <div class="opts"><button class="opt">10</button><button class="opt">2</button><button class="opt">0.5</button></div><p class="fb"></p></div>
+    <div class="q" data-answer="1" data-why="A long right tail pulls the mean above the median: positive skew.">
+      <p><b>4.</b> Salaries: mean £34k, median £30k. The distribution is probably…</p>
+      <div class="opts"><button class="opt">Left-skewed</button><button class="opt">Right-skewed</button><button class="opt">Symmetric</button></div><p class="fb"></p></div>
+    <div class="q" data-answer="2" data-why="The CLT is about the distribution of sample means, not the raw data.">
+      <p><b>5.</b> The central limit theorem says that for large n…</p>
+      <div class="opts"><button class="opt">All data become normal</button><button class="opt">The population mean equals the median</button><button class="opt">The means of samples are approximately normal</button></div><p class="fb"></p></div>
+    <div class="q" data-answer="0" data-why="H0 is normality; p &lt; 0.05 rejects it.">
+      <p><b>6.</b> <code>shapiro.test(x)</code> gives p = 0.001. You conclude…</p>
+      <div class="opts"><button class="opt">x is probably not normal</button><button class="opt">x is normal</button><button class="opt">x has no outliers</button></div><p class="fb"></p></div>
+  </div>
+</section>
+
+<section id="glossary">
+  <div class="sec-head"><span class="sec-num">11</span><h2>Key terms</h2></div>
+  <div class="tbl"><table><thead><tr><th>Term</th><th>Meaning</th></tr></thead><tbody>
+    <tr><td>Random variable</td><td>A variable whose values come from a random process.</td></tr>
+    <tr><td>Probability distribution</td><td>Links every outcome (or range) with its probability.</td></tr>
+    <tr><td>Cumulative probability</td><td>P(X ≤ x): the chance of a value up to x. <code>pnorm()</code>, <code>pbinom()</code>.</td></tr>
+    <tr><td>Bin</td><td>An interval used to group continuous values in a histogram.</td></tr>
+    <tr><td>Density</td><td>A smooth curve whose area between two values is a probability.</td></tr>
+    <tr><td>z-score</td><td>Distance from the mean in standard deviations.</td></tr>
+    <tr><td>Skewness / kurtosis</td><td>Asymmetry (0 if normal) / heaviness of the tails (3 if normal).</td></tr>
+    <tr><td>Central limit theorem</td><td>Means of large samples are approximately normal.</td></tr>
+    <tr><td>EDA</td><td>Exploratory data analysis: summarising and plotting data before modelling.</td></tr>
+  </tbody></table></div>
+</section>
+
+<section id="exit">
+  <div class="sec-head"><span class="sec-num">12</span><h2>Exit self-check</h2></div>
+  <p class="note">1 = I need help · 2 = nearly there · 3 = confident. Your choices stay on this device.</p>
+  <div class="rate">
+    <div class="rate-row"><span><span class="lo">LO1</span> I can tell discrete from continuous distributions.</span><div class="btns" data-k="lo1"><button data-v="1">1</button><button data-v="2">2</button><button data-v="3">3</button></div></div>
+    <div class="rate-row"><span><span class="lo">LO2</span> I can draw and read histograms, densities and box plots.</span><div class="btns" data-k="lo2"><button data-v="1">1</button><button data-v="2">2</button><button data-v="3">3</button></div></div>
+    <div class="rate-row"><span><span class="lo">LO3</span> I can use pnorm() and qnorm().</span><div class="btns" data-k="lo3"><button data-v="1">1</button><button data-v="2">2</button><button data-v="3">3</button></div></div>
+    <div class="rate-row"><span><span class="lo">LO4</span> I can calculate and explain z-scores and skewness.</span><div class="btns" data-k="lo4"><button data-v="1">1</button><button data-v="2">2</button><button data-v="3">3</button></div></div>
+    <div class="rate-row"><span><span class="lo">LO5</span> I can explain the CLT and test for normality.</span><div class="btns" data-k="lo5"><button data-v="1">1</button><button data-v="2">2</button><button data-v="3">3</button></div></div>
+  </div>
+  <div class="callout"><b>Next week:</b> the width of the sample-means histogram becomes the <b>standard error</b>, which gives us confidence intervals and hypothesis tests.</div>
+</section>
+
+</div>
+<footer><span>COM747 Data Science &amp; Machine Learning · QA Higher Education / Ulster University</span><span>Keep RStudio open beside this page.</span></footer>
+<script>
+/* Shared helpers for COM747 student pages: copy buttons, quizzes, self-ratings, stats maths, SVG charts */
+(function(){
+"use strict";
+/* ---------- copy buttons ---------- */
+document.querySelectorAll('.code').forEach(function(box){
+  if (box.dataset.nocopy !== undefined) return;
+  var pre = box.querySelector('pre'); if (!pre) return;
+  var btn = document.createElement('button'); btn.type='button'; btn.className='copy'; btn.textContent='Copy';
+  box.appendChild(btn);
+  btn.addEventListener('click', function(){
+    var text = pre.innerText;
+    var done = function(){ btn.textContent='Copied'; setTimeout(function(){btn.textContent='Copy';},1500); };
+    var fallback = function(){ var r=document.createRange(); r.selectNodeContents(pre); var s=window.getSelection(); s.removeAllRanges(); s.addRange(r); btn.textContent='Press Ctrl+C'; };
+    try { navigator.clipboard.writeText(text).then(done, fallback); } catch(e){ fallback(); }
+  });
+});
+/* ---------- quizzes: <div class="q" data-answer="1" data-why="..."> ---------- */
+document.querySelectorAll('.q').forEach(function(q){
+  var ans = +q.dataset.answer; var fb = q.querySelector('.fb');
+  var opts = q.querySelectorAll('button.opt');
+  opts.forEach(function(b, i){
+    b.type='button';
+    b.addEventListener('click', function(){
+      opts.forEach(function(o){ o.classList.remove('right','wrong'); });
+      if (i === ans){ b.classList.add('right'); fb.innerHTML = '<b class="ok">Correct.</b> ' + (q.dataset.why||''); }
+      else { b.classList.add('wrong'); fb.innerHTML = '<b class="no">Not quite.</b> Try another option.'; }
+    });
+  });
+});
+/* ---------- self-rating ---------- */
+var key = 'com747-' + (document.body.dataset.page || 'page');
+var saved = {};
+try { saved = JSON.parse(localStorage.getItem(key) || '{}'); } catch(e){}
+document.querySelectorAll('.btns').forEach(function(group){
+  var k = group.dataset.k;
+  var set = function(v){ group.querySelectorAll('button').forEach(function(b){ b.setAttribute('aria-pressed', String(b.dataset.v === v)); }); };
+  group.querySelectorAll('button').forEach(function(b){ b.type='button'; b.setAttribute('aria-pressed','false'); });
+  if (saved[k]) set(saved[k]);
+  group.addEventListener('click', function(e){
+    var b = e.target.closest('button'); if(!b) return;
+    set(b.dataset.v); saved[k]=b.dataset.v;
+    try { localStorage.setItem(key, JSON.stringify(saved)); } catch(e){}
+  });
+});
+
+/* ---------- stats maths ---------- */
+var S = {};
+S.mean = function(a){ var s=0; for (var i=0;i<a.length;i++) s+=a[i]; return s/a.length; };
+S.variance = function(a){ var m=S.mean(a), s=0; for (var i=0;i<a.length;i++) s+=(a[i]-m)*(a[i]-m); return s/(a.length-1); };
+S.sd = function(a){ return Math.sqrt(S.variance(a)); };
+S.median = function(a){ var b=a.slice().sort(function(x,y){return x-y;}); var n=b.length; return n%2? b[(n-1)/2] : (b[n/2-1]+b[n/2])/2; };
+S.erf = function(x){ /* Abramowitz-Stegun 7.1.26, |err|<1.5e-7 */
+  var s = x<0?-1:1; x=Math.abs(x);
+  var t=1/(1+0.3275911*x);
+  var y=1-(((((1.061405429*t-1.453152027)*t)+1.421413741)*t-0.284496736)*t+0.254829592)*t*Math.exp(-x*x);
+  return s*y; };
+S.dnorm = function(x,m,s){ m=m||0; s=s||1; var z=(x-m)/s; return Math.exp(-0.5*z*z)/(s*Math.sqrt(2*Math.PI)); };
+S.pnorm = function(x,m,s){ m=m||0; s=s||1; return 0.5*(1+S.erf((x-m)/(s*Math.SQRT2))); };
+S.qnorm = function(p){ /* Acklam */
+  var a=[-3.969683028665376e+01,2.209460984245205e+02,-2.759285104469687e+02,1.383577518672690e+02,-3.066479806614716e+01,2.506628277459239e+00],
+      b=[-5.447609879822406e+01,1.615858368580409e+02,-1.556989798598866e+02,6.680131188771972e+01,-1.328068155288572e+01],
+      c=[-7.784894002430293e-03,-3.223964580411365e-01,-2.400758277161838e+00,-2.549732539343734e+00,4.374664141464968e+00,2.938163982698783e+00],
+      d=[7.784695709041462e-03,3.224671290700398e-01,2.445134137142996e+00,3.754408661907416e+00];
+  var q,r; if (p<=0) return -Infinity; if (p>=1) return Infinity;
+  if (p<0.02425){ q=Math.sqrt(-2*Math.log(p)); return (((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5])/((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1); }
+  if (p>1-0.02425){ q=Math.sqrt(-2*Math.log(1-p)); return -(((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5])/((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1); }
+  q=p-0.5; r=q*q; return (((((a[0]*r+a[1])*r+a[2])*r+a[3])*r+a[4])*r+a[5])*q/(((((b[0]*r+b[1])*r+b[2])*r+b[3])*r+b[4])*r+1); };
+S.lgamma = function(x){ var c=[76.18009172947146,-86.50532032941677,24.01409824083091,-1.231739572450155,0.1208650973866179e-2,-0.5395239384953e-5];
+  var y=x, t=x+5.5; t-=(x+0.5)*Math.log(t); var s=1.000000000190015; for (var j=0;j<6;j++) s+=c[j]/++y; return -t+Math.log(2.5066282746310005*s/x); };
+function betacf(a,b,x){ var MAXIT=200,EPS=3e-14,FPMIN=1e-300; var qab=a+b,qap=a+1,qam=a-1,c=1,d=1-qab*x/qap; if(Math.abs(d)<FPMIN)d=FPMIN; d=1/d; var h=d;
+  for (var m=1;m<=MAXIT;m++){ var m2=2*m, aa=m*(b-m)*x/((qam+m2)*(a+m2)); d=1+aa*d; if(Math.abs(d)<FPMIN)d=FPMIN; c=1+aa/c; if(Math.abs(c)<FPMIN)c=FPMIN; d=1/d; h*=d*c;
+    aa=-(a+m)*(qab+m)*x/((a+m2)*(qap+m2)); d=1+aa*d; if(Math.abs(d)<FPMIN)d=FPMIN; c=1+aa/c; if(Math.abs(c)<FPMIN)c=FPMIN; d=1/d; var del=d*c; h*=del; if(Math.abs(del-1)<EPS)break; }
+  return h; }
+S.ibeta = function(x,a,b){ if (x<=0) return 0; if (x>=1) return 1;
+  var bt=Math.exp(S.lgamma(a+b)-S.lgamma(a)-S.lgamma(b)+a*Math.log(x)+b*Math.log(1-x));
+  return x<(a+1)/(a+b+2) ? bt*betacf(a,b,x)/a : 1-bt*betacf(b,a,1-x)/b; };
+S.pt = function(t,df){ var x=df/(df+t*t); var tail=0.5*S.ibeta(x,df/2,0.5); return t>0? 1-tail : tail; };
+S.dt = function(t,df){ return Math.exp(S.lgamma((df+1)/2)-S.lgamma(df/2))/Math.sqrt(df*Math.PI)*Math.pow(1+t*t/df,-(df+1)/2); };
+S.qt = function(p,df){ var lo=-60,hi=60; for (var i=0;i<100;i++){ var mid=(lo+hi)/2; if (S.pt(mid,df)<p) lo=mid; else hi=mid; } return (lo+hi)/2; };
+S.choose = function(n,k){ var r=1; for (var i=1;i<=k;i++) r=r*(n-k+i)/i; return r; };
+S.dbinom = function(k,n,p){ return S.choose(n,k)*Math.pow(p,k)*Math.pow(1-p,n-k); };
+S.rnorm = function(m,s){ var u=0,v=0; while(u===0)u=Math.random(); while(v===0)v=Math.random(); return m + s*Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v); };
+S.welch = function(x,y){ var mx=S.mean(x),my=S.mean(y),vx=S.variance(x),vy=S.variance(y),nx=x.length,ny=y.length;
+  var se=Math.sqrt(vx/nx+vy/ny), t=(mx-my)/se; var df=Math.pow(vx/nx+vy/ny,2)/(Math.pow(vx/nx,2)/(nx-1)+Math.pow(vy/ny,2)/(ny-1));
+  return {t:t, df:df, p:2*(1-S.pt(Math.abs(t),df))}; };
+S.fmt = function(x,d){ if (!isFinite(x)) return String(x); d = d===undefined?2:d; var s=x.toFixed(d); return s==='-0'+(d?'.'+'0'.repeat(d):'')? s.slice(1): s; };
+S.sig = function(x,n){ n=n||4; if (x===0) return '0'; if (Math.abs(x)<1e-4) return x.toExponential(2); return String(+x.toPrecision(n)); };
+window.S = S;
+
+/* ---------- SVG helpers ---------- */
+var NS='http://www.w3.org/2000/svg';
+function el(tag, attrs, parent){ var e=document.createElementNS(NS,tag); for (var k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; }
+function txt(parent, x, y, s, cls, anchor){ var t=el('text',{x:x,y:y,'class':cls||'tick','text-anchor':anchor||'middle'},parent); t.textContent=s; return t; }
+function niceTicks(lo, hi, n){ var span=hi-lo; if (span<=0) return [lo]; var step=Math.pow(10,Math.floor(Math.log10(span/n))); var err=n/span*step;
+  if (err<=0.15) step*=10; else if (err<=0.35) step*=5; else if (err<=0.75) step*=2;
+  var out=[]; for (var v=Math.ceil(lo/step)*step; v<=hi+1e-9; v+=step) out.push(+v.toFixed(10)); return out; }
+/* Chart frame: returns {g, x(), y(), W, H} */
+function frame(svg, opts){
+  while (svg.firstChild) svg.removeChild(svg.firstChild);
+  var W=opts.W||640, H=opts.H||260, m=opts.m||{l:48,r:16,t:14,b:38};
+  svg.setAttribute('viewBox','0 0 '+W+' '+H);
+  var x=function(v){ return m.l + (v-opts.x0)/(opts.x1-opts.x0)*(W-m.l-m.r); };
+  var y=function(v){ return H-m.b - (v-opts.y0)/(opts.y1-opts.y0)*(H-m.t-m.b); };
+  var g=el('g',{},svg);
+  if (opts.ygrid!==false){ niceTicks(opts.y0,opts.y1,opts.ny||4).forEach(function(v){ el('line',{x1:m.l,x2:W-m.r,y1:y(v),y2:y(v),'class':'gridl'},g); if (opts.ylabels!==false) txt(g,m.l-6,y(v)+4,opts.yfmt?opts.yfmt(v):S.sig(v,3),'tick','end'); }); }
+  el('line',{x1:m.l,x2:W-m.r,y1:H-m.b,y2:H-m.b,'class':'ax'},g);
+  (opts.xticks || niceTicks(opts.x0,opts.x1,opts.nx||6)).forEach(function(v){ el('line',{x1:x(v),x2:x(v),y1:H-m.b,y2:H-m.b+4,'class':'ax'},g); txt(g,x(v),H-m.b+17,opts.xfmt?opts.xfmt(v):S.sig(v,4)); });
+  if (opts.xlab) txt(g,(m.l+W-m.r)/2,H-4,opts.xlab,'labm');
+  if (opts.ylab){ var t=txt(g,12,(m.t+H-m.b)/2,opts.ylab,'labm'); t.setAttribute('transform','rotate(-90 12 '+((m.t+H-m.b)/2)+')'); }
+  return {g:g, x:x, y:y, W:W, H:H, m:m};
+}
+function pathFrom(pts){ return pts.map(function(p,i){ return (i?'L':'M')+p[0].toFixed(2)+' '+p[1].toFixed(2); }).join(''); }
+/* histogram of values into bins: returns {edges, counts} */
+function bins(vals, lo, hi, k){ var w=(hi-lo)/k, c=new Array(k).fill(0); vals.forEach(function(v){ var i=Math.floor((v-lo)/w); if (i===k) i=k-1; if (i>=0&&i<k) c[i]++; }); var e=[]; for (var i=0;i<=k;i++) e.push(lo+i*w); return {edges:e, counts:c, w:w}; }
+window.G = {el:el, txt:txt, frame:frame, path:pathFrom, ticks:niceTicks, bins:bins};
+})();
+
+</script>
+<script>
+(function(){
+"use strict";
+var RUN={"FirstRun":[7.47,24.16,35.06,30.71,31.03,25.74,35.85,22.38,34.3,34.24,27.93,17.54,21.48,17.37,30.06,48.38,16.29,29.24,33.1,30.08,24.36,25.52,38.49,34.84,42.0,32.71,19.52,30.96,13.05,29.73,25.03,30.2,46.78,29.34,34.18,34.81,31.58,20.19,7.79,23.3,17.39,2.64,29.59,28.59,24.32,34.07,22.02,49.26,19.16,23.79,26.27,28.05,43.36,27.65,18.14,31.87,28.95,35.29,20.91,34.71,46.92,33.05,26.61,23.8,40.92,45.16,56.14,30.89,37.47,34.17,37.61,20.01,13.54,25.62,28.96,24.42,31.76,33.51,32.23,32.54,13.87,7.93,28.84,20.11,19.0,25.5,25.39,23.78,37.26,26.95,35.74,21.08,47.78,27.74,34.71,18.91,36.19,32.93,33.36],"SecondRun":[11.2,29.16,41.84,34.04,37.64,30.67,39.62,26.06,36.06,38.46,34.84,19.11,24.22,25.76,35.83,54.83,16.73,32.18,42.0,33.79,31.0,29.49,44.47,38.54,44.02,36.74,22.69,36.53,16.42,36.03,30.48,36.83,53.01,34.43,38.82,38.54,35.45,25.91,8.48,28.6,21.33,7.91,34.55,32.61,33.8,39.76,25.41,54.92,24.82,30.1,31.67,39.38,47.84,31.88,20.67,34.0,30.69,40.88,25.7,42.86,54.54,36.31,36.38,31.23,48.27,50.66,58.1,38.75,42.18,42.25,40.95,24.73,19.06,32.85,35.68,29.18,36.64,40.88,36.26,39.19,19.86,18.42,36.62,22.6,24.73,32.71,26.94,32.66,42.52,30.92,40.83,23.46,52.83,36.17,40.46,22.19,40.84,41.04,40.71],"FinalRun":[23.4,38.91,47.85,40.38,41.04,35.08,43.45,33.6,42.51,45.25,41.97,19.85,27.14,29.02,38.41,65.03,18.35,40.79,44.08,40.83,39.05,31.28,45.55,45.38,50.94,44.23,33.1,38.38,19.67,44.12,37.42,47.25,63.83,44.56,45.88,43.74,42.11,32.64,17.21,36.79,28.71,22.04,39.39,38.01,40.71,45.27,28.0,63.72,27.43,39.94,37.37,47.76,56.8,41.63,28.69,41.87,36.91,46.02,31.92,51.14,64.83,40.38,43.9,40.68,57.8,55.27,66.67,47.7,52.34,50.81,48.31,35.75,26.93,40.72,48.11,34.14,45.16,51.66,43.67,46.62,25.96,26.59,55.14,28.83,31.7,41.18,38.1,44.61,47.37,40.71,51.89,28.67,62.17,41.58,47.8,29.0,47.21,49.57,48.78]}, STU={"G1":[5,5,7,15,6,15,12,6,16,14,10,10,14,10,14,14,13,8,6,8,13,12,15,13,10,6,12,15,11,10,9,17,17,8,12,8,15,15,12,14,7,12,19,8,10,8,11,19,15,7,12,11,11,8,10,8,14,14,9,15,10,10,8,10,10,16,13,7,8,16,13,10,8,12,11,9,11,11,8,5,10,11,7,15,9,7,8,13,11,8,7,16,7,11,11,7,11,8,11,7,7,16,10,7,16,10,7,16,10,14,18,7,10,18,9,15,11,13,9,14,16,16,13,14,8,13,7,7,7,18,12,8,10,12,9,11,10,4,14,16,7,9,9,14,5,8,6,10,7,8,6,12,10,5,11,11,16,9,17,10,7,5,7,10,5,12,10,14,6,14,6,13,13,8,10,10,13,6,10,10,9,12,16,9,12,12,11,15,8,8,11,8,7,8,13,14,17,9,18,9,16,8,9,7,10,10,7,11,9,7,8,12,12,6,8,14,6,6,7,9,6,6,16,12,13,9,16,12,10,12,13,11,11,14,9,11,14,13,13,7,12,10,6,13,7,18,12,6,3,13,6,7,6,8,8,7,14,11,15,10,17,8,13,10,9,17,9,12,10,6,9,15,11,15,10,12,10,9,9,10,8,11,12,8,10,12,18,13,15,15,12,15,12,18,14,14,10,10,14,16,12,11,15,17,15,14,17,8,15,12,9,14,13,13,15,13,8,9,11,11,13,11,11,12,16,9,14,11,10,14,9,12,7,8,10,16,14,7,16,9,11,10,16,9,11,13,16,10,13,11,8,13,8,8,13,10,12,12,10,18,13,13,11,16,12,10,13,7,11,14,7,14,13,6,19,8,15,8,15,10,15,7,11,6,6,10,6,7,7,6,9,14,10,11,8],"G3":[6,6,10,15,10,15,11,6,19,15,9,12,14,11,16,14,14,10,5,10,15,15,16,12,8,8,11,15,11,11,12,17,16,12,15,6,18,15,11,13,11,12,18,11,9,6,11,20,14,7,13,13,10,11,13,10,15,15,9,16,11,11,9,9,10,15,12,6,8,16,15,10,5,14,11,10,10,11,10,5,12,11,6,15,10,8,6,14,10,7,8,18,6,10,14,10,15,10,14,8,5,17,14,6,18,11,8,18,13,16,19,10,13,19,9,16,14,13,8,13,15,15,13,13,8,12,11,9,0,18,0,0,12,11,0,0,0,0,12,15,0,9,11,13,0,11,0,11,0,10,0,14,10,0,12,8,13,10,15,12,0,7,0,10,7,12,10,16,0,14,0,16,10,0,9,9,11,6,9,11,8,12,17,8,12,11,11,15,9,10,13,9,8,10,14,15,16,10,18,10,16,10,10,6,11,9,7,13,10,7,8,13,14,8,10,15,4,8,8,10,6,0,17,13,14,7,15,12,9,12,14,11,9,13,6,10,13,12,11,0,12,12,0,12,0,18,13,8,5,15,8,10,8,8,12,8,13,11,14,0,18,8,12,9,0,17,10,11,10,0,9,14,11,14,10,12,9,9,8,10,8,10,12,10,11,11,19,12,14,15,11,15,13,18,14,11,0,8,14,16,11,10,14,18,13,12,18,8,12,10,0,13,11,11,13,11,0,9,10,11,13,9,11,15,15,11,16,10,9,14,8,14,0,0,0,15,13,0,17,10,11,0,15,0,10,14,16,9,15,13,8,13,8,8,11,9,13,11,10,16,13,12,10,15,12,10,13,0,10,11,9,12,11,5,19,10,15,10,15,10,14,7,10,0,5,10,6,0,8,0,9,16,7,10,9],"sex":"FFFFFMMFMMFFMMMFFFMMMMMMFFMMMMMMMMMFMMFFFMMMFFFMMFFFMFFFFMMFFFFFFFMFFFMMFMFMMFMFMMFMFFFFMMFFFFMFMFFFMMMFMFFMMFMFFMMMMMMMFMFMFMFFMMFFFFMFMFMFMMFFMFFFMMMMFMFMMFMMMMMMMMMFFFMMMFFMFMMMMMFFFMMMFMFFMMMFMMFFFFFFFFFFFFFMFMFFFMFFFFFMFFFMMFFMMMMMMFFMMMMMFMMMMMMMMMMMFMMFFMMFFMMFMFFFFMFFFMFMMMFFFMFFMMMFFFMMFFFMFMFFMFMMMFFFMFFFFFFFFFFFFMMMFFMFFFFFFFFFFMMFFFMMFMMMMMMFFFMFFMFFFMMFFFFMFFFFFFFFMMMMMFFFFFMMMMM","internet":"NYYYNYYNYYYYYYYYYNYYYYYYYYYYYYYYYYYNYYYNYYYYYYYYNYYYNYYYYNYYNYYYYYYYYYYYYNYYYYYYYYYYYYNYYNYYNYYYYNYYYYYYYNYYYYYYYYYYNYYYYYYYYYYNYYYYYYNYNYNYYYYYYYYYYYYNYYNNNNNYYYNYNNYYYYYYYYYYYYYYYYNYYYYYYNYYYYYYYYYYYNNYYYYYNYYYYYNYYYNYYNYYYYYYYYYYYYYYYYNYYYYYYYYYYYYYYNYYYYYYYYNNYYYYYYYYNNYYYYYYYYNYYYYYYYYYYNYYYYYYYYYYYYNYNYNYYYYYYYYYYNYYYYYYYYYYYYNYNYYYYYYYYYYYYYYYYYYNYNYYNNYYNNYYYYNYNYYYYYYYYYYNNNYYYNNYNYY"};
+function curvePts(f, fn, x0, x1, n){ var p=[]; for (var i=0;i<=n;i++){ var x=x0+(x1-x0)*i/n; p.push([f.x(x), f.y(fn(x))]); } return p; }
+function areaPath(f, fn, a, b, n){ var p=[[f.x(a),f.y(0)]]; for (var i=0;i<=n;i++){ var x=a+(b-a)*i/n; p.push([f.x(x),f.y(fn(x))]); } p.push([f.x(b),f.y(0)]); return G.path(p)+'Z'; }
+
+/* ---------- hook: 70 in two classes ---------- */
+(function(){
+  var svg=document.getElementById('hook-svg');
+  var f=G.frame(svg,{W:640,H:220,x0:20,x1:100,y0:0,y1:0.085,ygrid:false,xlab:'mark',m:{l:16,r:16,t:24,b:38}});
+  var A=function(x){return S.dnorm(x,55,10);}, B=function(x){return S.dnorm(x,75,5);};
+  G.el('path',{d:areaPath(f,A,70,100,120),style:'fill:var(--c1);opacity:.25'},f.g);
+  G.el('path',{d:areaPath(f,B,20,70,200),style:'fill:var(--c2);opacity:.25'},f.g);
+  G.el('path',{d:G.path(curvePts(f,A,20,100,200)),'class':'curve'},f.g);
+  G.el('path',{d:G.path(curvePts(f,B,20,100,200)),'class':'curve2'},f.g);
+  G.el('line',{x1:f.x(70),x2:f.x(70),y1:14,y2:f.y(0),style:'stroke:var(--ink);stroke-width:2;stroke-dasharray:5 4'},f.g);
+  G.txt(f.g,f.x(70),12,'70','lab').setAttribute('style','font-weight:700');
+  G.txt(f.g,f.x(33),f.y(0.05),'Class A','lab').setAttribute('style','fill:var(--c1);font-weight:700');
+  G.txt(f.g,f.x(33),f.y(0.05)+16,'top 7% above 70','labm');
+  G.txt(f.g,f.x(90),f.y(0.07),'Class B','lab').setAttribute('style','fill:var(--c2);font-weight:700');
+  G.txt(f.g,f.x(90),f.y(0.07)+16,'16% below 70','labm');
+})();
+
+/* ---------- coin flips ---------- */
+(function(){
+  var n=document.getElementById('cf-n'), k=document.getElementById('cf-k'), svg=document.getElementById('cf-svg'), out=document.getElementById('cf-out');
+  function draw(){
+    var N=+n.value; k.max=N; if (+k.value>N) k.value=N; var K=+k.value;
+    document.getElementById('cf-nv').textContent=N; document.getElementById('cf-kv').textContent=K;
+    var p=[], cum=0; for (var i=0;i<=N;i++){ p.push(S.dbinom(i,N,0.5)); if(i<=K) cum+=p[i]; }
+    var ymax=Math.max.apply(null,p)*1.15;
+    var f=G.frame(svg,{W:640,H:230,x0:-0.5,x1:N+0.5,y0:0,y1:ymax,xticks:N<=20?Array.from({length:N+1},function(_,i){return i;}):null,xlab:'number of heads',ylab:'probability',ny:4});
+    var bw=(f.x(1)-f.x(0))*0.75;
+    p.forEach(function(v,i){ G.el('rect',{x:f.x(i)-bw/2,y:f.y(v),width:bw,height:f.y(0)-f.y(v),rx:2,'class':i<=K?'bar':'barmuted'},f.g);
+      if (N<=6) G.txt(f.g,f.x(i),f.y(v)-6,S.fmt(v,3),'labm'); });
+    out.innerHTML='<span class="p">&gt;</span> dbinom(0:'+N+', size = '+N+', prob = 0.5)\n'+wrap(p.map(function(v){return S.sig(v,3);}))+
+      '\n<span class="p">&gt;</span> pbinom('+K+', size = '+N+', prob = 0.5)    <span class="p"># blue bars added up</span>\n[1] '+S.sig(cum,4);
+  }
+  function wrap(a){ return '[1] '+a.join(' '); }
+  n.addEventListener('input',draw); k.addEventListener('input',draw); draw();
+})();
+
+/* ---------- histogram bins ---------- */
+(function(){
+  var v=RUN.FirstRun, kS=document.getElementById('b-k'), dS=document.getElementById('b-d'), svg=document.getElementById('b-svg'), code=document.getElementById('b-code');
+  var m=S.mean(v), sd=S.sd(v), h=1.06*sd*Math.pow(v.length,-0.2);
+  function dens(x){ var s=0; for (var i=0;i<v.length;i++) s+=S.dnorm(x,v[i],h); return s/v.length; }
+  function draw(){
+    var k=+kS.value; document.getElementById('b-kv').textContent=k;
+    var lo=0, hi=60, b=G.bins(v,lo,hi,k);
+    var dmax=Math.max.apply(null,b.counts)/(v.length*b.w);
+    var f=G.frame(svg,{W:640,H:260,x0:lo,x1:hi,y0:0,y1:Math.max(dmax,0.045)*1.1,xlab:'FirstRun (km)',ylab:'density',ny:4});
+    b.counts.forEach(function(c,i){ var d=c/(v.length*b.w); G.el('rect',{x:f.x(b.edges[i])+0.5,y:f.y(d),width:Math.max(0,f.x(b.edges[i+1])-f.x(b.edges[i])-1),height:f.y(0)-f.y(d),'class':'bar',opacity:0.8},f.g); });
+    if (dS.value==='1') G.el('path',{d:G.path(curvePts(f,dens,lo,hi,200)),'class':'curve2'},f.g);
+    code.innerHTML='<span class="p">&gt;</span> hist(rundata$FirstRun, breaks = '+k+', freq = FALSE)'+(dS.value==='1'?'\n<span class="p">&gt;</span> lines(density(rundata$FirstRun))':'')+
+      '\n<span class="p"># '+(k<5?'too few bins: the shape is hidden':k>20?'too many bins: mostly noise':'a reasonable choice')+'</span>';
+  }
+  kS.addEventListener('input',draw); dS.addEventListener('change',draw);
+  document.getElementById('b-st').addEventListener('click',function(){ kS.value=8; draw(); }); draw();
+})();
+
+/* ---------- normal probability calculator ---------- */
+(function(){
+  var ids=['n-m','n-s','n-r','n-a','n-b'], el={}; ids.forEach(function(i){ el[i]=document.getElementById(i); });
+  var svg=document.getElementById('n-svg');
+  function draw(){
+    var m=+el['n-m'].value, s=Math.max(+el['n-s'].value,1e-6), r=el['n-r'].value, a=+el['n-a'].value, b=+el['n-b'].value;
+    var two = r==='between'||r==='outside';
+    el['n-b'].disabled=!two;
+    if (two && a>b){ var t=a; a=b; b=t; }
+    var x0=m-4*s, x1=m+4*s, fn=function(x){return S.dnorm(x,m,s);};
+    var f=G.frame(svg,{W:640,H:250,x0:x0,x1:x1,y0:0,y1:fn(m)*1.12,ygrid:false,xlab:'x',m:{l:16,r:16,t:16,b:38}});
+    var cl=function(x){return Math.min(Math.max(x,x0),x1);};
+    var p, code;
+    if (r==='between'){ p=S.pnorm(b,m,s)-S.pnorm(a,m,s); G.el('path',{d:areaPath(f,fn,cl(a),cl(b),200),'class':'area'},f.g); code='pnorm('+b+', '+m+', '+s+') - pnorm('+a+', '+m+', '+s+')'; }
+    else if (r==='below'){ p=S.pnorm(a,m,s); G.el('path',{d:areaPath(f,fn,x0,cl(a),200),'class':'area'},f.g); code='pnorm('+a+', mean = '+m+', sd = '+s+')'; }
+    else if (r==='above'){ p=1-S.pnorm(a,m,s); G.el('path',{d:areaPath(f,fn,cl(a),x1,200),'class':'area'},f.g); code='1 - pnorm('+a+', mean = '+m+', sd = '+s+')'; }
+    else { p=1-(S.pnorm(b,m,s)-S.pnorm(a,m,s)); G.el('path',{d:areaPath(f,fn,x0,cl(a),200),'class':'area'},f.g); G.el('path',{d:areaPath(f,fn,cl(b),x1,200),'class':'area'},f.g); code='1 - (pnorm('+b+', '+m+', '+s+') - pnorm('+a+', '+m+', '+s+'))'; }
+    G.el('path',{d:G.path(curvePts(f,fn,x0,x1,300)),'class':'curve'},f.g);
+    G.el('line',{x1:f.x(m),x2:f.x(m),y1:f.y(0),y2:f.y(fn(m)),style:'stroke:var(--muted);stroke-dasharray:3 3'},f.g);
+    [a].concat(two?[b]:[]).forEach(function(v,i){ if (v>=x0&&v<=x1){ G.el('line',{x1:f.x(v),x2:f.x(v),y1:f.y(0),y2:f.y(fn(m)*1.05),'class':'vline'},f.g); var an=two?(i===0?'end':'start'):'middle'; G.txt(f.g,f.x(v)+(an==='end'?-3:an==='start'?3:0),f.y(fn(m)*1.05)-4,String(v),'labm',an).setAttribute('style','fill:var(--c2);font-weight:700'); } });
+    document.getElementById('n-p').textContent=S.fmt(p,4);
+    document.getElementById('n-pc').textContent=S.fmt(p*100,1)+'%';
+    var tg = r==='between'||r==='outside' ? 'c('+a+', '+b+')' : String(a);
+    document.getElementById('n-code').innerHTML='<span class="p">&gt;</span> '+code+'\n[1] '+S.sig(p,7)+
+      '\n<span class="p"># tigerstats: pnormGC('+tg+', region = "'+r+'", mean = '+m+', sd = '+s+', graph = TRUE)</span>';
+  }
+  ids.forEach(function(i){ el[i].addEventListener('input',draw); el[i].addEventListener('change',draw); });
+  document.querySelectorAll('[data-n]').forEach(function(btn){ btn.addEventListener('click',function(){ var p=btn.dataset.n.split(','); el['n-m'].value=p[0]; el['n-s'].value=p[1]; el['n-r'].value=p[2]; el['n-a'].value=p[3]; if(p[4]!=='') el['n-b'].value=p[4]; draw(); }); });
+  draw();
+})();
+
+/* ---------- empirical rule ---------- */
+(function(){
+  var svg=document.getElementById('emp-svg');
+  var f=G.frame(svg,{W:640,H:250,x0:-4,x1:4,y0:0,y1:0.6,ygrid:false,xticks:[-3,-2,-1,0,1,2,3],xfmt:function(v){return v===0?'mean':(v>0?'+':'−')+Math.abs(v)+' SD';},m:{l:16,r:16,t:16,b:38}});
+  var fn=function(x){return S.dnorm(x);};
+  [[3,0.10],[2,0.18],[1,0.30]].forEach(function(k){ G.el('path',{d:areaPath(f,fn,-k[0],k[0],200),style:'fill:var(--c1);opacity:'+k[1]},f.g); });
+  G.el('path',{d:G.path(curvePts(f,fn,-4,4,300)),'class':'curve'},f.g);
+  [[1,'68%',0.30],[2,'95%',0.45],[3,'99.7%',0.55]].forEach(function(k){ var y=f.y(k[2]);
+    G.el('line',{x1:f.x(-k[0]),x2:f.x(k[0]),y1:y,y2:y,style:'stroke:var(--ink);stroke-width:1'},f.g);
+    [-k[0],k[0]].forEach(function(x){ G.el('line',{x1:f.x(x),x2:f.x(x),y1:y-4,y2:y+4,style:'stroke:var(--ink)'},f.g); });
+    var t=G.txt(f.g,f.x(0),y-5,k[1],'lab'); t.setAttribute('style','font-weight:700'); });
+})();
+
+/* ---------- skewness ---------- */
+(function(){
+  var sl=document.getElementById('sk-s'), svg=document.getElementById('sk-svg');
+  function gpdf(x,k){ if (x<=0) return 0; return Math.exp((k-1)*Math.log(x)-x-S.lgamma(k)); }
+  function draw(){
+    var s=+sl.value; document.getElementById('sk-v').textContent=S.fmt(s,1);
+    var fn;
+    if (Math.abs(s)<0.05) fn=function(x){return S.dnorm(x);};
+    else { var k=4/(s*s), rk=Math.sqrt(k), sign=s>0?1:-1; fn=function(x){ var y=sign*x; return rk*gpdf(k+rk*y,k); }; }
+    var xs=[], ys=[], N=800, x0=-4, x1=4, dx=(x1-x0)/N, ymax=0;
+    for (var i=0;i<=N;i++){ var x=x0+i*dx; xs.push(x); var y=fn(x); ys.push(y); if (y>ymax) ymax=y; }
+    var tot=0, cum=[], mu=0; for (var j=0;j<=N;j++){ tot+=ys[j]*dx; cum.push(tot); mu+=xs[j]*ys[j]*dx; } mu/=tot;
+    var med=xs[0]; for (var q=0;q<=N;q++){ if (cum[q]>=tot/2){ med=xs[q]; break; } }
+    var f=G.frame(svg,{W:640,H:230,x0:x0,x1:x1,y0:0,y1:Math.min(ymax*1.12,1.2),ygrid:false,xticks:[],m:{l:16,r:16,t:22,b:16}});
+    var pts=xs.map(function(x,i){return [f.x(x),f.y(ys[i])];});
+    G.el('path',{d:G.path([[f.x(x0),f.y(0)]].concat(pts).concat([[f.x(x1),f.y(0)]]))+'Z',style:'fill:var(--shade)'},f.g);
+    G.el('path',{d:G.path(pts),'class':'curve'},f.g);
+    G.el('line',{x1:f.x(mu),x2:f.x(mu),y1:18,y2:f.y(0),'class':'vline'},f.g);
+    G.el('line',{x1:f.x(med),x2:f.x(med),y1:18,y2:f.y(0),'class':'vline2'},f.g);
+    var mr=mu>=med;
+    G.txt(f.g,f.x(mu)+(mr?6:-6),14,'mean','labm',mr?'start':'end').setAttribute('style','fill:var(--c2);font-weight:700');
+    G.txt(f.g,f.x(med)+(mr?-6:6),14,'median','labm',mr?'end':'start').setAttribute('style','fill:var(--c3);font-weight:700');
+    G.txt(f.g,f.x(s>0?2.6:-2.6),f.y(ymax*0.6),s>0.05?'long right tail →':s<-0.05?'← long left tail':'symmetric','labm');
+  }
+  sl.addEventListener('input',draw); draw();
+})();
+
+/* ---------- z-score ---------- */
+(function(){
+  var X=document.getElementById('z-x'), M=document.getElementById('z-m'), SD=document.getElementById('z-s'), svg=document.getElementById('z-svg');
+  function draw(){
+    var x=+X.value, m=+M.value, s=Math.max(+SD.value,1e-6), z=(x-m)/s, zc=Math.max(-4,Math.min(4,z));
+    var f=G.frame(svg,{W:640,H:200,x0:-4,x1:4,y0:0,y1:0.45,ygrid:false,xticks:[-3,-2,-1,0,1,2,3],xlab:'z',m:{l:16,r:16,t:20,b:38}});
+    var fn=function(t){return S.dnorm(t);};
+    G.el('path',{d:areaPath(f,fn,-4,zc,200),'class':'area'},f.g);
+    G.el('path',{d:G.path(curvePts(f,fn,-4,4,300)),'class':'curve'},f.g);
+    G.el('line',{x1:f.x(zc),x2:f.x(zc),y1:16,y2:f.y(0),'class':'vline'},f.g);
+    G.txt(f.g,f.x(zc),12,'z = '+S.fmt(z,2),'labm').setAttribute('style','fill:var(--c2);font-weight:700');
+    document.getElementById('z-z').textContent=S.fmt(z,3);
+    document.getElementById('z-p').textContent=S.fmt(S.pnorm(z)*100,1)+'%';
+    document.getElementById('z-sg').textContent=S.fmt(16*z+50,1);
+    document.getElementById('z-h').textContent=S.fmt(14*z+50,1);
+    document.getElementById('z-t').textContent=S.fmt(10*z+50,1);
+  }
+  [X,M,SD].forEach(function(e){ e.addEventListener('input',draw); }); draw();
+})();
+
+/* ---------- CLT ---------- */
+(function(){
+  var popSel=document.getElementById('c-pop'), nS=document.getElementById('c-n'), out=document.getElementById('c-out');
+  var gens={ exp:function(){ return -20*Math.log(1-Math.random()); }, unif:function(){ return Math.random()*100; }, bi:function(){ return Math.random()<0.5? S.rnorm(30,8) : S.rnorm(75,8); } };
+  var ranges={ exp:[0,120], unif:[0,100], bi:[0,105] };
+  var pops={}; Object.keys(gens).forEach(function(k){ var a=[]; for (var i=0;i<20000;i++) a.push(gens[k]()); pops[k]=a; });
+  function hist(svg, vals, lo, hi, k, cls, overlay){
+    var b=G.bins(vals,lo,hi,k), dm=0; b.counts.forEach(function(c){ dm=Math.max(dm,c/(vals.length*b.w)); });
+    var f=G.frame(svg,{W:320,H:200,x0:lo,x1:hi,y0:0,y1:dm*1.15,ylabels:false,nx:4,m:{l:10,r:10,t:10,b:30}});
+    b.counts.forEach(function(c,i){ var d=c/(vals.length*b.w); G.el('rect',{x:f.x(b.edges[i]),y:f.y(d),width:Math.max(0,f.x(b.edges[i+1])-f.x(b.edges[i])-0.6),height:f.y(0)-f.y(d),'class':cls},f.g); });
+    if (overlay) G.el('path',{d:G.path(curvePts(f,overlay,lo,hi,200)),'class':'curve2'},f.g);
+  }
+  function run(){
+    var key=popSel.value, n=+nS.value, pop=pops[key], r=ranges[key];
+    document.getElementById('c-nv').textContent=n;
+    hist(document.getElementById('c-pop-svg'), pop, r[0], r[1], 40, 'barmuted');
+    var means=[]; for (var i=0;i<2000;i++){ var s=0; for (var j=0;j<n;j++) s+=pop[Math.floor(Math.random()*pop.length)]; means.push(s/n); }
+    var mu=S.mean(pop), sig=S.sd(pop), se=sig/Math.sqrt(n);
+    hist(document.getElementById('c-mean-svg'), means, r[0], r[1], 40, 'bar', function(x){ return S.dnorm(x,mu,se); });
+    out.innerHTML='population mean '+S.fmt(mu,1)+', sd '+S.fmt(sig,1)+'\nmean of sample means '+S.fmt(S.mean(means),1)+', sd of sample means '+S.fmt(S.sd(means),2)+
+      '\n<span class="p"># theory: sd / sqrt(n) = '+S.fmt(sig,1)+' / sqrt('+n+') = '+S.fmt(se,2)+'  (the standard error, Week 4)</span>';
+  }
+  popSel.addEventListener('change',run); nS.addEventListener('input',run); document.getElementById('c-go').addEventListener('click',run); run();
+})();
+
+/* ---------- EDA ---------- */
+(function(){
+  var g3=STU.G3, g1=STU.G1;
+  var svg=document.getElementById('eda-hist'), counts=new Array(21).fill(0); g3.forEach(function(v){ counts[v]++; });
+  var f=G.frame(svg,{W:640,H:240,x0:-0.5,x1:20.5,y0:0,y1:60,xticks:[0,5,10,15,20],xlab:'G3 (final grade out of 20)',ylab:'students',ny:4});
+  var bw=(f.x(1)-f.x(0))*0.85;
+  counts.forEach(function(c,i){ G.el('rect',{x:f.x(i)-bw/2,y:f.y(c),width:bw,height:f.y(0)-f.y(c),rx:2,'class':i===0?'bar2':'bar'},f.g); });
+  G.txt(f.g,f.x(0)+8,f.y(38)-8,'38 zeros','labm','start').setAttribute('style','fill:var(--c2);font-weight:700');
+  G.el('line',{x1:f.x(S.mean(g3)),x2:f.x(S.mean(g3)),y1:f.y(0),y2:f.y(58),'class':'vline2'},f.g);
+  G.txt(f.g,f.x(S.mean(g3))+6,f.y(55),'mean 10.4','labm','start');
+  var s2=document.getElementById('eda-scatter');
+  var f2=G.frame(s2,{W:640,H:280,x0:0,x1:20,y0:0,y1:20,xlab:'G1',ylab:'G3',ny:4});
+  g1.forEach(function(v,i){ var jx=(Math.random()-0.5)*0.6, jy=(Math.random()-0.5)*0.6;
+    G.el('circle',{cx:f2.x(v+jx),cy:f2.y(Math.max(0,g3[i]+jy)),r:3.2,style:'fill:'+(g3[i]===0?'var(--c2)':'var(--c1)')+';opacity:.55'},f2.g); });
+})();
+})();
+
+</script>
+</body>
+</html>
