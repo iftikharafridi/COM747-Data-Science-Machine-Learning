@@ -1,0 +1,761 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>COM747 Week 8 Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: single-column lab notebook, ~800px measure. Concept sections, then interactive "explorers", then tiered R tasks. */
+:root{
+  --bg:#f5f6f8; --paper:#ffffff; --ink:#1b2330; --muted:#5a6474; --line:#dce1e9; --line-strong:#c3cad6;
+  --accent:#2b5fa6; --accent-soft:#e5edf8;
+  --core:#2f7d5b; --core-soft:#e2f1e9;
+  --chal:#b26a00; --chal-soft:#fbefd9;
+  --str:#7a3fa0; --str-soft:#f1e7f8;
+  --bad:#b3372f; --bad-soft:#f9e3e1;
+  --code-bg:#eef2f7; --code-ink:#1c2a44;
+  --c1:#2b5fa6; --c2:#d0791a; --c3:#2f8a62; --c4:#8a4bb3; --shade:rgba(43,95,166,.28); --grid:#e6e9ef;
+  --f-display:"Source Serif 4", Georgia, "Times New Roman", serif;
+  --f-body:"Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, Consolas, monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#11151c; --paper:#1a2029; --ink:#e4e8ef; --muted:#9aa4b4; --line:#2b3340; --line-strong:#3c4656;
+  --accent:#7fa8e6; --accent-soft:#1e2b3f;
+  --core:#6cc79d; --core-soft:#173025; --chal:#e5a64a; --chal-soft:#33281a; --str:#c39be0; --str-soft:#2a2135;
+  --bad:#ef8a80; --bad-soft:#3a1f1d;
+  --code-bg:#0e131a; --code-ink:#d6e2f5;
+  --c1:#7fa8e6; --c2:#eb9c4c; --c3:#5fc394; --c4:#c39be0; --shade:rgba(127,168,230,.30); --grid:#262e3a;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#11151c; --paper:#1a2029; --ink:#e4e8ef; --muted:#9aa4b4; --line:#2b3340; --line-strong:#3c4656;
+  --accent:#7fa8e6; --accent-soft:#1e2b3f;
+  --core:#6cc79d; --core-soft:#173025; --chal:#e5a64a; --chal-soft:#33281a; --str:#c39be0; --str-soft:#2a2135;
+  --bad:#ef8a80; --bad-soft:#3a1f1d;
+  --code-bg:#0e131a; --code-ink:#d6e2f5;
+  --c1:#7fa8e6; --c2:#eb9c4c; --c3:#5fc394; --c4:#c39be0; --shade:rgba(127,168,230,.30); --grid:#262e3a;
+  color-scheme:dark}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.6;margin:0;padding-inline:16px;padding-block:0 72px}
+a{color:var(--accent)}
+.topnav{max-width:820px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;padding-block:14px;border-bottom:1px solid var(--line);font-size:15px}
+.topnav .brand{font-weight:700;margin-right:auto;color:var(--ink);text-decoration:none}
+.topnav a.wk{color:var(--muted);text-decoration:none;padding:2px 8px;border-radius:6px}
+.topnav a.wk:hover{color:var(--accent)}
+.topnav a.wk[aria-current="page"]{background:var(--accent-soft);color:var(--accent);font-weight:600}
+.wrap{max-width:820px;margin:0 auto;display:flex;flex-direction:column;gap:40px}
+header.hero{padding-block:32px 4px;display:flex;flex-direction:column;gap:10px}
+.eyebrow{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;line-height:1.2;margin:0}
+h1{font-size:clamp(30px,6vw,44px)}
+h2{font-size:27px}
+h3{font-size:20px}
+p{margin:0}
+.lead{color:var(--muted);font-size:18.5px;max-width:65ch}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font-size:13px;font-weight:600;border:1px solid var(--line-strong);border-radius:999px;padding:3px 10px;color:var(--muted)}
+.toc{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:15px;padding:12px 16px;background:var(--paper);border:1px solid var(--line);border-radius:10px}
+.toc a{text-decoration:none}
+section{display:flex;flex-direction:column;gap:16px;scroll-margin-top:16px}
+.sec-head{display:flex;flex-direction:column;gap:4px}
+.sec-num{font-family:var(--f-mono);font-size:13px;color:var(--accent);font-weight:600}
+.prose{display:flex;flex-direction:column;gap:12px;max-width:68ch}
+ul.list,ol.list{margin:0;padding-left:1.3em;display:flex;flex-direction:column;gap:4px}
+.lo-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.lo-list li{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:baseline}
+.lo{font-family:var(--f-mono);font-size:12px;font-weight:600;background:var(--accent-soft);color:var(--accent);padding:2px 8px;border-radius:4px;white-space:nowrap}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.grid2.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media (max-width:600px){.grid2.two{grid-template-columns:1fr}}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.card h3{font-size:18px}
+.card .k{font-size:13px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:700}
+.code{position:relative;background:var(--code-bg);border:1px solid var(--line);border-radius:8px;min-width:0}
+.code pre{margin:0;padding:14px 16px;overflow-x:auto;font-family:var(--f-mono);font-size:14px;color:var(--code-ink);line-height:1.55}
+.code .copy{position:absolute;top:8px;right:8px}
+.copy,.btn{font:600 13px var(--f-body);background:var(--paper);color:var(--muted);border:1px solid var(--line-strong);border-radius:6px;padding:5px 11px;cursor:pointer}
+.copy:hover,.btn:hover{color:var(--accent);border-color:var(--accent)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--paper)}
+.btn.primary:hover{opacity:.9;color:var(--paper)}
+code{font-family:var(--f-mono);font-size:.88em;background:var(--code-bg);padding:1px 5px;border-radius:4px}
+.callout{border-left:3px solid var(--accent);background:var(--accent-soft);padding:12px 16px;border-radius:0 8px 8px 0}
+.callout.warn{border-color:var(--chal);background:var(--chal-soft)}
+.callout.good{border-color:var(--core);background:var(--core-soft)}
+/* figures and explorers */
+figure{margin:0}
+.figure{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.figure figcaption,.caption{font-size:14.5px;color:var(--muted)}
+.figure svg{width:100%;height:auto;display:block;overflow:visible}
+.explorer{border-color:var(--line-strong)}
+.explorer .title{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.explorer .title h3{font-size:19px}
+.tagx{font:700 11px var(--f-body);letter-spacing:.09em;text-transform:uppercase;padding:3px 8px;border-radius:999px;background:var(--accent-soft);color:var(--accent)}
+.controls{display:flex;flex-wrap:wrap;gap:12px 18px;align-items:flex-end}
+.ctl{display:flex;flex-direction:column;gap:4px;font-size:14px;color:var(--muted);min-width:0}
+.ctl b{color:var(--ink);font-family:var(--f-mono);font-weight:600}
+.ctl input[type=range]{width:min(220px,70vw);accent-color:var(--accent)}
+.ctl input[type=number],.ctl input[type=text],.ctl select{font:15px var(--f-mono);padding:5px 8px;border:1px solid var(--line-strong);border-radius:6px;background:var(--bg);color:var(--ink);width:7.5em}
+.ctl input[type=text]{width:12em}
+.ctl select{width:auto;font-family:var(--f-body)}
+.console{background:var(--code-bg);border:1px solid var(--line);border-radius:8px;padding:10px 14px;font-family:var(--f-mono);font-size:14px;color:var(--code-ink);overflow-x:auto;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.55}
+.console .p{color:var(--muted)}
+.kpis{display:flex;flex-wrap:wrap;gap:10px}
+.kpi{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 12px;display:flex;flex-direction:column;min-width:110px}
+.kpi span{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+.kpi b{font-family:var(--f-mono);font-size:19px;font-variant-numeric:tabular-nums}
+/* svg classes */
+.ax{stroke:var(--line-strong);stroke-width:1}
+.gridl{stroke:var(--grid);stroke-width:1}
+.tick{fill:var(--muted);font:12px var(--f-body)}
+.lab{fill:var(--ink);font:13px var(--f-body)}
+.labm{fill:var(--muted);font:12px var(--f-body)}
+.mono{font-family:var(--f-mono)}
+.curve{fill:none;stroke:var(--c1);stroke-width:2.2}
+.curve2{fill:none;stroke:var(--c2);stroke-width:2.2}
+.area{fill:var(--shade);stroke:none}
+.bar{fill:var(--c1)}
+.bar2{fill:var(--c2)}
+.bar3{fill:var(--c3)}
+.barmuted{fill:var(--line-strong)}
+.vline{stroke:var(--c2);stroke-width:2}
+.vline2{stroke:var(--c3);stroke-width:2;stroke-dasharray:5 4}
+.dot{fill:var(--c1)}
+/* vector cells */
+.vec{display:flex;flex-wrap:wrap;gap:4px}
+.cell{display:flex;flex-direction:column;align-items:center;min-width:46px;border:1px solid var(--line-strong);border-radius:6px;background:var(--paper);overflow:hidden;transition:background .15s,border-color .15s}
+.cell .v{font-family:var(--f-mono);font-size:15px;font-weight:600;padding:6px 6px 2px}
+.cell .i{font-family:var(--f-mono);font-size:11px;color:var(--muted);padding:0 6px 4px}
+.cell .t{font-family:var(--f-mono);font-size:10.5px;padding:2px 4px;width:100%;text-align:center;border-top:1px solid var(--line)}
+.cell.on{background:var(--core-soft);border-color:var(--core)}
+.cell.on .t{color:var(--core);font-weight:700}
+.cell.off{opacity:.55}
+.cell.off .t{color:var(--bad)}
+.cell.rec{border-style:dashed;opacity:.75}
+/* tiers and tasks */
+.tier{display:flex;flex-direction:column;gap:12px}
+.tier-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.tag{font:700 12px var(--f-body);letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:999px}
+.t-core .tag{background:var(--core-soft);color:var(--core)}
+.t-chal .tag{background:var(--chal-soft);color:var(--chal)}
+.t-str .tag{background:var(--str-soft);color:var(--str)}
+.note{color:var(--muted);font-size:15px}
+ol.tasks{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px}
+.task{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:14px 16px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.task-q{display:grid;grid-template-columns:2.4em 1fr;gap:4px}
+.task-q > span:last-child{min-width:0}
+.num{font-family:var(--f-mono);font-weight:600;color:var(--muted)}
+details{font-size:15px}
+summary{cursor:pointer;color:var(--accent);font-weight:600;width:max-content;max-width:100%}
+details > *:not(summary){margin-top:8px}
+summary:focus-visible,.copy:focus-visible,.btn:focus-visible,button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+/* tables */
+.tbl{overflow-x:auto;background:var(--paper);border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th,td{text-align:left;padding:8px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:none}
+th{font-weight:700;color:var(--muted);font-size:12.5px;text-transform:uppercase;letter-spacing:.06em;background:var(--bg)}
+td.m,th.m{font-family:var(--f-mono);font-size:14px;white-space:nowrap}
+td.n{text-align:right;font-variant-numeric:tabular-nums;font-family:var(--f-mono);font-size:14px}
+/* quiz */
+.quiz{display:flex;flex-direction:column;gap:14px}
+.q{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.q .opts{display:flex;flex-direction:column;gap:6px}
+.q button.opt{text-align:left;font:15px var(--f-body);background:var(--bg);color:var(--ink);border:1px solid var(--line-strong);border-radius:8px;padding:8px 12px;cursor:pointer}
+.q button.opt:hover{border-color:var(--accent)}
+.q button.opt.right{background:var(--core-soft);border-color:var(--core)}
+.q button.opt.wrong{background:var(--bad-soft);border-color:var(--bad)}
+.q .fb{font-size:15px;color:var(--muted)}
+.q .fb b.ok{color:var(--core)} .q .fb b.no{color:var(--bad)}
+/* rating */
+.rate{display:flex;flex-direction:column;gap:10px}
+.rate-row{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:10px 14px}
+.rate-row > span{min-width:0;flex:1 1 240px}
+.btns{display:flex;gap:6px}
+.btns button{font:600 14px var(--f-body);border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:6px;padding:6px 12px;cursor:pointer;min-width:44px}
+.btns button[aria-pressed="true"][data-v="1"]{background:var(--chal-soft);border-color:var(--chal);color:var(--chal)}
+.btns button[aria-pressed="true"][data-v="2"]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.btns button[aria-pressed="true"][data-v="3"]{background:var(--core-soft);border-color:var(--core);color:var(--core)}
+footer{max-width:820px;margin:48px auto 0;padding-bottom:8px;border-top:1px solid var(--line);padding-top:16px;color:var(--muted);font-size:14px;display:flex;flex-wrap:wrap;gap:8px 20px;justify-content:space-between}
+@media (max-width:520px){ body{font-size:16px} .card,.figure{padding:14px} .cell{min-width:40px} }
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+.wrap > *, section > *, .figure > *, .card > *{min-width:0;max-width:100%}
+p code, span code, li code, td code{overflow-wrap:anywhere}
+a.wkcard{text-decoration:none;color:var(--ink);transition:border-color .15s}
+a.wkcard:hover{border-color:var(--accent)}
+a.wkcard .go{color:var(--accent);font-weight:600;font-size:15px;margin-top:auto}
+@media (max-width:560px){
+  .figure svg .tick, .figure svg .labm{font-size:22px}
+  .figure svg .lab{font-size:23px}
+}
+/* ---------- module layout: left menu + main column ---------- */
+.layout{display:grid;grid-template-columns:270px minmax(0,1fr);gap:36px;max-width:1220px;margin:0 auto}
+.side{position:sticky;top:0;align-self:start;height:100vh;overflow-y:auto;padding:22px 6px 40px 0;border-right:1px solid var(--line);font-size:14.5px}
+.main{min-width:0}
+.side-brand{display:block;font-weight:700;font-size:16px;color:var(--ink);text-decoration:none;margin-bottom:14px}
+.side-group{font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:18px 0 6px}
+.side-list,.side-secs{list-style:none;margin:0;padding:0}
+.side-wk{display:grid;grid-template-columns:2.2em 1fr;gap:4px;align-items:baseline;padding:5px 8px;border-radius:6px;color:var(--ink);text-decoration:none;line-height:1.35}
+.side-wk:hover{background:var(--accent-soft)}
+.side-wk .wn{font-family:var(--f-mono);font-size:12.5px;color:var(--muted);font-weight:600}
+.side-wk[aria-current="page"]{background:var(--accent-soft);color:var(--accent);font-weight:600}
+.side-wk[aria-current="page"] .wn{color:var(--accent)}
+.side-secs{margin:4px 0 8px 2.6em;border-left:2px solid var(--line);padding-left:10px;display:flex;flex-direction:column;gap:2px}
+.side-secs a{color:var(--muted);text-decoration:none;font-size:13.5px;display:block;padding:2px 0;line-height:1.35}
+.side-secs a:hover{color:var(--accent)}
+.mobilebar{display:none}
+.pager{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px}
+.pager a{display:flex;flex-direction:column;gap:2px;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:var(--paper);text-decoration:none;color:var(--ink);font-weight:600;font-size:15px}
+.pager a:hover{border-color:var(--accent)}
+.pager a .k{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.pager a.nx{text-align:right}
+@media (max-width:1000px){
+  .layout{display:block}
+  .side{display:none}
+  .mobilebar{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding-block:12px;border-bottom:1px solid var(--line);position:relative}
+  .mobilebar .side-brand{margin:6px 0 0}
+  .mnav summary{list-style:none;cursor:pointer;font-weight:600;font-size:14px;color:var(--accent);border:1px solid var(--line-strong);border-radius:6px;padding:6px 12px;width:auto;background:var(--paper)}
+  .mnav summary::-webkit-details-marker{display:none}
+  .mnav[open] summary{background:var(--accent-soft)}
+  .mnav-panel{position:absolute;left:0;right:0;top:100%;z-index:20;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:14px 14px 18px;box-shadow:0 12px 30px rgba(0,0,0,.18);max-height:75vh;overflow-y:auto}
+  .mnav-panel .side-brand{display:none}
+}
+@media (max-width:520px){ .pager{grid-template-columns:1fr} .pager a.nx{text-align:left} }
+@media (min-width:1001px){ .toc{display:none} }
+.side-secs a.on{color:var(--accent);font-weight:600}
+
+</style>
+</head>
+<body data-page="week08">
+<div class="layout">
+<aside class="side" aria-label="Module weeks"><a class="side-brand" href="index.html">COM747 R Labs</a><p class="side-group">Foundations</p><ul class="side-list"><li><a class="side-wk" href="week01.html"><span class="wn">1</span><span>Data, Questions and R</span></a></li><li><a class="side-wk" href="week02a.html"><span class="wn">2A</span><span>Statistical Computing with R</span></a></li><li><a class="side-wk" href="week02b.html"><span class="wn">2B</span><span>Probability Distributions and EDA</span></a></li><li><a class="side-wk" href="week03.html"><span class="wn">3</span><span>Inferential Statistics</span></a></li></ul><p class="side-group">Modelling</p><ul class="side-list"><li><a class="side-wk" href="week04.html"><span class="wn">4</span><span>Regression and Time Series</span></a></li><li><a class="side-wk" href="week05.html"><span class="wn">5</span><span>Supervised ML and Feature Engineering</span></a></li><li><a class="side-wk" href="week06.html"><span class="wn">6</span><span>Ethics, Evaluation and Logistic Regression</span></a></li><li><a class="side-wk" href="week07.html"><span class="wn">7</span><span>ML Optimisation and Text Mining</span></a></li></ul><p class="side-group">Unsupervised learning</p><ul class="side-list"><li><a class="side-wk" href="week08.html" aria-current="page"><span class="wn">8</span><span>Clustering and PCA</span></a><ul class="side-secs"><li><a href="#question">What kinds of callers use a helpline?</a></li><li><a href="#why">Why cluster?</a></li><li><a href="#kmeans">k-means step by step</a></li><li><a href="#choosek">How many clusters?</a></li><li><a href="#scaling">Why scaling matters</a></li><li><a href="#mtcars">Naming the mtcars clusters</a></li><li><a href="#hier">Hierarchical clustering</a></li><li><a href="#pca">Principal component analysis</a></li><li><a href="#iris">PCA on the iris data</a></li><li><a href="#tasks">Your R tasks</a></li><li><a href="#quiz">Check yourself</a></li><li><a href="#glossary">Key terms</a></li><li><a href="#exit">Exit self-check</a></li></ul></li><li><a class="side-wk" href="week09.html"><span class="wn">9</span><span>Association Rule Mining</span></a></li></ul><p class="side-group">Wider practice</p><ul class="side-list"><li><a class="side-wk" href="week10.html"><span class="wn">10</span><span>Data Analytics and Engineering</span></a></li><li><a class="side-wk" href="week11.html"><span class="wn">11</span><span>Maths and the R Toolkit</span></a></li><li><a class="side-wk" href="week12.html"><span class="wn">12</span><span>Teamwork and Process Mining</span></a></li></ul></aside>
+<div class="main">
+<div class="mobilebar"><a class="side-brand" href="index.html">COM747 R Labs</a><details class="mnav"><summary>Menu</summary><nav class="mnav-panel" aria-label="Module weeks"><a class="side-brand" href="index.html">COM747 R Labs</a><p class="side-group">Foundations</p><ul class="side-list"><li><a class="side-wk" href="week01.html"><span class="wn">1</span><span>Data, Questions and R</span></a></li><li><a class="side-wk" href="week02a.html"><span class="wn">2A</span><span>Statistical Computing with R</span></a></li><li><a class="side-wk" href="week02b.html"><span class="wn">2B</span><span>Probability Distributions and EDA</span></a></li><li><a class="side-wk" href="week03.html"><span class="wn">3</span><span>Inferential Statistics</span></a></li></ul><p class="side-group">Modelling</p><ul class="side-list"><li><a class="side-wk" href="week04.html"><span class="wn">4</span><span>Regression and Time Series</span></a></li><li><a class="side-wk" href="week05.html"><span class="wn">5</span><span>Supervised ML and Feature Engineering</span></a></li><li><a class="side-wk" href="week06.html"><span class="wn">6</span><span>Ethics, Evaluation and Logistic Regression</span></a></li><li><a class="side-wk" href="week07.html"><span class="wn">7</span><span>ML Optimisation and Text Mining</span></a></li></ul><p class="side-group">Unsupervised learning</p><ul class="side-list"><li><a class="side-wk" href="week08.html" aria-current="page"><span class="wn">8</span><span>Clustering and PCA</span></a><ul class="side-secs"><li><a href="#question">What kinds of callers use a helpline?</a></li><li><a href="#why">Why cluster?</a></li><li><a href="#kmeans">k-means step by step</a></li><li><a href="#choosek">How many clusters?</a></li><li><a href="#scaling">Why scaling matters</a></li><li><a href="#mtcars">Naming the mtcars clusters</a></li><li><a href="#hier">Hierarchical clustering</a></li><li><a href="#pca">Principal component analysis</a></li><li><a href="#iris">PCA on the iris data</a></li><li><a href="#tasks">Your R tasks</a></li><li><a href="#quiz">Check yourself</a></li><li><a href="#glossary">Key terms</a></li><li><a href="#exit">Exit self-check</a></li></ul></li><li><a class="side-wk" href="week09.html"><span class="wn">9</span><span>Association Rule Mining</span></a></li></ul><p class="side-group">Wider practice</p><ul class="side-list"><li><a class="side-wk" href="week10.html"><span class="wn">10</span><span>Data Analytics and Engineering</span></a></li><li><a class="side-wk" href="week11.html"><span class="wn">11</span><span>Maths and the R Toolkit</span></a></li><li><a class="side-wk" href="week12.html"><span class="wn">12</span><span>Teamwork and Process Mining</span></a></li></ul></nav></details></div>
+<div class="wrap">
+<header class="hero">
+  <div class="eyebrow">COM747 Data Science &amp; Machine Learning · Week 8</div>
+  <h1>Clustering and PCA</h1>
+  <p class="lead">Unsupervised learning finds structure without labels. Group similar cases with k-means and hierarchical clustering, decide how many groups there are, and squeeze many variables into a few with principal component analysis.</p>
+  <div class="chips"><span class="chip">Lecture + lab</span><span class="chip">RStudio</span><span class="chip">Datasets: mtcars, iris (built in)</span><span class="chip">Class test week</span></div>
+</header>
+
+<nav class="toc" aria-label="On this page">
+  <a href="#question">The question</a><a href="#why">Why cluster?</a><a href="#kmeans">k-means</a><a href="#choosek">Choosing k</a><a href="#scaling">Scaling</a><a href="#mtcars">mtcars clusters</a><a href="#hier">Hierarchical</a><a href="#pca">PCA</a><a href="#iris">Iris PCA</a><a href="#tasks">R tasks</a><a href="#quiz">Quiz</a>
+</nav>
+
+<section id="question">
+  <div class="sec-head"><span class="sec-num">01</span><h2>What kinds of callers use a helpline?</h2></div>
+  <div class="prose"><p>Ulster researchers took 61,287 callers to a mental health helpline, described each by three features (number of calls, mean call length, variation in call length), standardised them and ran k-means. Five caller types emerged, from a tiny group of very prolific callers to the majority who call 5–6 times briefly. No one labelled the callers in advance: the clusters <i>created</i> the labels. That is unsupervised learning.</p></div>
+  <ul class="lo-list">
+    <li><span class="lo">LO1</span><span>Explain what clustering is for and how it differs from classification.</span></li>
+    <li><span class="lo">LO2</span><span>Describe the k-means algorithm step by step and run it with <code>kmeans()</code>.</span></li>
+    <li><span class="lo">LO3</span><span>Choose k with the elbow method, and explain why features must be scaled.</span></li>
+    <li><span class="lo">LO4</span><span>Interpret centroids to name clusters; build and cut a dendrogram.</span></li>
+    <li><span class="lo">LO5</span><span>Explain PCA, read a scree plot and a biplot, and use <code>prcomp()</code>.</span></li>
+  </ul>
+</section>
+
+<section id="why">
+  <div class="sec-head"><span class="sec-num">02</span><h2>Why cluster?</h2></div>
+  <div class="grid2 two">
+    <div class="card"><span class="k">Applications</span><p>Customer segmentation, types of app users, patient phenotypes, anomaly detection, creating labels for later supervised learning (semi-supervised), exploratory analysis.</p></div>
+    <div class="card"><span class="k">Hard vs soft</span><p><b>Hard</b>: each case in exactly one cluster (k-means). <b>Soft</b>: a probability of belonging to each (Gaussian mixtures). Other methods: k-medoids, DBSCAN (density), hierarchical.</p></div>
+    <div class="card"><span class="k">Choosing features</span><p>Which features characterise cases? Ask domain experts. Prefer independent features with real variance and little missing data. Categorical features need one-hot encoding (novice / amateur / professional → three 0/1 columns).</p></div>
+    <div class="card"><span class="k">Distance</span><p>Euclidean by default. Manhattan (city-block) and Minkowski are alternatives. Every distance-based method needs features on comparable scales.</p></div>
+  </div>
+</section>
+
+<section id="kmeans">
+  <div class="sec-head"><span class="sec-num">03</span><h2>k-means step by step</h2></div>
+  <div class="prose"><p>Imagine asking people in a gym how far they can run and how far they can swim. k-means: (1) pick k starting centroids at random; (2) <b>assign</b> each person to the nearest centroid; (3) <b>update</b> each centroid to the mean of its members; repeat 2–3 until nothing changes. It minimises the total within-cluster sum of squares (WSS).</p></div>
+  <div class="figure explorer">
+    <div class="title"><span class="tagx">Explorer</span><h3>Run k-means one step at a time</h3></div>
+    <div class="controls">
+      <label class="ctl" for="km-k"><span>k: <b id="km-kv">3</b></span><input type="range" id="km-k" min="1" max="7" value="3"></label>
+      <button class="btn" type="button" id="km-init">1. Random centroids</button>
+      <button class="btn" type="button" id="km-assign">2. Assign</button>
+      <button class="btn" type="button" id="km-update">3. Update centroids</button>
+      <button class="btn primary" type="button" id="km-run">Run to convergence</button>
+      <button class="btn" type="button" id="km-data">New gym data</button>
+    </div>
+    <svg id="km-svg" role="img" aria-label="Scatter plot of running and swimming distances with clusters and centroids"></svg>
+    <div class="console" id="km-out"></div>
+    <p class="caption">Shaded regions show which centroid is nearest everywhere (a Voronoi diagram). Different random starts can end in different solutions; that is why R's <code>kmeans(..., nstart = 25)</code> tries 25 starts and keeps the best.</p>
+  </div>
+</section>
+
+<section id="choosek">
+  <div class="sec-head"><span class="sec-num">04</span><h2>How many clusters?</h2></div>
+  <div class="prose"><p>WSS always falls as k grows (with k = n every point is its own cluster). Look for the <b>elbow</b>: the k after which adding clusters stops helping much. Other guides: a business constraint ("we can afford 3 campaigns"), the rule of thumb k ≈ √(n/2), or the silhouette method.</p></div>
+  <figure class="figure">
+    <svg id="el-svg" role="img" aria-label="Elbow plot: within-cluster sum of squares against k"></svg>
+    <figcaption>Elbow plot for the gym data in the explorer above (recomputed when you load new data). Using the lecture's <code>wssplot()</code> on the scaled mtcars variables gives 93.0, 29.2, 17.2, 11.6, 6.8… : the bend is at 3, with a smaller one at 5.</figcaption>
+  </figure>
+</section>
+
+<section id="scaling">
+  <div class="sec-head"><span class="sec-num">05</span><h2>Why scaling matters</h2></div>
+  <div class="figure explorer">
+    <div class="title"><span class="tagx">Explorer</span><h3>mtcars: miles per gallon and horsepower</h3></div>
+    <div class="controls"><label class="ctl" for="sc-m">features<select id="sc-m"><option value="raw">raw (mpg 10–34, hp 52–335)</option><option value="z">standardised with scale()</option></select></label></div>
+    <svg id="sc-svg" role="img" aria-label="mtcars clustered on raw or scaled features"></svg>
+    <p class="caption">k-means with k = 3. On raw values horsepower is ten times larger than mpg, so distances are almost entirely horsepower: the clusters are vertical bands that ignore fuel economy. After <code>scale()</code> both features count equally.</p>
+  </div>
+</section>
+
+<section id="mtcars">
+  <div class="sec-head"><span class="sec-num">06</span><h2>Naming the mtcars clusters</h2></div>
+  <div class="code"><pre>mtcarsNew &lt;- scale(mtcars[, c(1, 2, 4)])        # mpg, cyl, hp
+set.seed(123)
+kMeansClust &lt;- kmeans(mtcarsNew, centers = 3, iter.max = 10, nstart = 25)
+aggregate(mtcars[, c(1, 2, 4)], by = list(cluster = kMeansClust$cluster), mean)</pre></div>
+  <div class="tbl"><table><thead><tr><th>Cluster</th><th>Size</th><th>mean mpg</th><th>mean cylinders</th><th>mean hp</th><th>Label we give it</th></tr></thead><tbody id="mt-body"></tbody></table></div>
+  <div class="callout">The centroids (cluster means) are <b>archetypes</b>. Giving them names turns clusters into new knowledge. The helpline study did the same: "prolific callers", "single lengthy support callers", "not availing of service".</div>
+  <figure class="figure">
+    <svg id="cp-svg" role="img" aria-label="The three mtcars clusters on the first two principal components"></svg>
+    <figcaption>Like <code>cluster::clusplot()</code>: the 32 cars plotted on the first two principal components of the three scaled variables (together they explain 95.5% of the variance), coloured by cluster.</figcaption>
+  </figure>
+</section>
+
+<section id="hier">
+  <div class="sec-head"><span class="sec-num">07</span><h2>Hierarchical clustering</h2></div>
+  <div class="prose"><p>Agglomerative clustering starts with every case on its own and repeatedly merges the two closest groups. The result is a <b>dendrogram</b>: clusters within clusters. Cutting it at a height gives a flat clustering, so you can see several values of k at once.</p></div>
+  <div class="figure explorer">
+    <div class="title"><span class="tagx">Explorer</span><h3>Cut the mtcars dendrogram</h3></div>
+    <div class="controls"><label class="ctl" for="hc-h"><span>cut height: <b id="hc-hv"></b> → <b id="hc-kv"></b> clusters</span><input type="range" id="hc-h" min="0" max="1000" value="560"></label></div>
+    <svg id="hc-svg" role="img" aria-label="Dendrogram of 32 cars"></svg>
+    <p class="caption"><code>hc &lt;- hclust(dist(mtcarsNew)); plot(hc); cutree(hc, h = …)</code>. Complete linkage: the distance between two groups is the distance between their farthest members.</p>
+  </div>
+</section>
+
+<section id="pca">
+  <div class="sec-head"><span class="sec-num">08</span><h2>Principal component analysis</h2></div>
+  <div class="prose"><p>With many variables we can't plot the data, and we need more cases to cover the space (the <b>curse of dimensionality</b>). PCA rotates the axes so the first new axis, <b>PC1</b>, points along the direction of greatest variance, PC2 the next greatest at right angles, and so on. Keeping the first few components reduces dimensions while losing little information. Mathematically, the components are the <b>eigenvectors</b> of the correlation matrix, ordered by their <b>eigenvalues</b>.</p></div>
+  <div class="figure explorer">
+    <div class="title"><span class="tagx">Explorer</span><h3>Find the direction of most variance</h3></div>
+    <div class="controls">
+      <label class="ctl" for="pc-a"><span>axis angle: <b id="pc-av">0</b>°</span><input type="range" id="pc-a" min="0" max="179" value="0"></label>
+      <label class="ctl" for="pc-r"><span>correlation: <b id="pc-rv">0.80</b></span><input type="range" id="pc-r" min="0" max="0.98" step="0.02" value="0.8"></label>
+      <button class="btn primary" type="button" id="pc-snap">Snap to PC1</button>
+    </div>
+    <svg id="pc-svg" role="img" aria-label="Scatter of two standardised variables with a rotating axis and projections"></svg>
+    <div class="kpis"><div class="kpi"><span>variance along this axis</span><b id="pc-v"></b></div><div class="kpi"><span>share of total variance</span><b id="pc-s"></b></div></div>
+    <p class="caption">Each point is projected onto the axis (thin lines). PC1 is the angle where the projections are most spread out. With two standardised variables correlated at r, PC1 explains (1 + r) / 2 of the variance.</p>
+  </div>
+</section>
+
+<section id="iris">
+  <div class="sec-head"><span class="sec-num">09</span><h2>PCA on the iris data</h2></div>
+  <div class="code"><pre>irisPCA &lt;- prcomp(iris[, 1:4], center = TRUE, scale. = TRUE)
+summary(irisPCA)     # PC1 73.0%, PC2 22.9%: two components keep 95.8% of the information
+biplot(irisPCA)</pre></div>
+  <div class="grid2 two">
+    <figure class="figure"><svg id="scree-svg" role="img" aria-label="Scree plot"></svg><figcaption>Scree plot: proportion of variance per component. The elbow after PC2 says keep two.</figcaption></figure>
+    <figure class="figure"><svg id="bi-svg" role="img" aria-label="Biplot of iris on PC1 and PC2"></svg><figcaption>Biplot: flowers as points, variables as arrows (loadings). Petal length and width point along PC1, which alone separates setosa from the rest.</figcaption></figure>
+  </div>
+</section>
+
+<section id="tasks">
+  <div class="sec-head"><span class="sec-num">10</span><h2>Your R tasks</h2></div>
+  <div class="tier t-core">
+    <div class="tier-head"><span class="tag">Core</span><span class="note">k-means (LO2–LO4)</span></div>
+    <ol class="tasks">
+      <li class="task"><div class="task-q"><span class="num">1</span><span>Scale mpg, cyl and hp from mtcars and box-plot the raw and scaled versions side by side.</span></div>
+        <details><summary>Check your answer</summary><div class="code"><pre>mtcarsNew &lt;- mtcars[, c(1, 2, 4)]
+par(mfrow = c(1, 2))
+boxplot(mtcarsNew, main = "Unscaled")
+boxplot(scale(mtcarsNew), main = "Scaled")
+par(mfrow = c(1, 1))</pre></div></details></li>
+      <li class="task"><div class="task-q"><span class="num">2</span><span>Run k-means with k = 3 (<code>set.seed(123)</code>, <code>nstart = 25</code>). Report cluster sizes and unscaled means, and name each cluster.</span></div>
+        <details><summary>Check your answer</summary><div class="code"><pre>set.seed(123)
+km &lt;- kmeans(scale(mtcarsNew), centers = 3, iter.max = 10, nstart = 25)
+km$size        # 11 14 7
+aggregate(mtcarsNew, by = list(cluster = km$cluster), mean)
+# 1: average car (20.6 mpg, 5.3 cyl, 114 hp)
+# 2: fast but expensive to run (15.1 mpg, 8 cyl, 209 hp)
+# 3: economical, less powerful (29.3 mpg, 4 cyl, 74 hp)</pre></div></details></li>
+      <li class="task"><div class="task-q"><span class="num">3</span><span>Add the cluster labels to mtcars as a factor with names, then box-plot mpg, hp and cyl by cluster.</span></div>
+        <details><summary>Check your answer</summary><div class="code"><pre>mtcars$clusterLabel &lt;- factor(km$cluster, levels = c(3, 1, 2),
+  labels = c("Economical", "Average", "Fast but expensive"))
+boxplot(mpg ~ clusterLabel, data = mtcars)
+boxplot(hp  ~ clusterLabel, data = mtcars)</pre></div></details></li>
+    </ol>
+  </div>
+  <div class="tier t-chal">
+    <div class="tier-head"><span class="tag">Challenge</span><span class="note">Choosing k (LO3)</span></div>
+    <ol class="tasks">
+      <li class="task"><div class="task-q"><span class="num">4</span><span>Define the lecture's <code>wssplot()</code> function and draw the elbow plot for the scaled mtcars data. Where is the elbow?</span></div>
+        <details><summary>Check your answer</summary><div class="code"><pre>wssplot &lt;- function(data, nc = 15, seed = 12) {
+  wss &lt;- (nrow(data) - 1) * sum(apply(data, 2, var))   # k = 1: total sum of squares
+  for (i in 2:nc) { set.seed(seed); wss[i] &lt;- sum(kmeans(data, centers = i)$withinss) }
+  plot(1:nc, wss, type = "b", xlab = "Number of Clusters", ylab = "Within groups sum of squares")
+  invisible(wss)
+}
+wss &lt;- wssplot(scale(mtcarsNew), nc = 10)   # elbow at 3 (smaller bend at 5)</pre></div>
+        <p class="note">The sheet calls <code>wssplot()</code> before defining it. Define the function first, and since the original returns nothing, add <code>invisible(wss)</code> if you want to keep the values.</p></details></li>
+      <li class="task"><div class="task-q"><span class="num">5</span><span>Visualise the clusters with <code>cluster::clusplot()</code>. What percentage of variability do the two components explain?</span></div>
+        <details><summary>Check your answer</summary><div class="code"><pre>library(cluster)
+clusplot(scale(mtcarsNew), km$cluster, color = TRUE, shade = FALSE, labels = 2, lines = 0)
+# "These two components explain 95.54 % of the point variability."</pre></div></details></li>
+    </ol>
+  </div>
+  <div class="tier t-str">
+    <div class="tier-head"><span class="tag">Stretch</span><span class="note">PCA (LO5)</span></div>
+    <ol class="tasks">
+      <li class="task"><div class="task-q"><span class="num">6</span><span>Run PCA on iris, draw the scree plot, and box-plot PC1 by species.</span></div>
+        <details><summary>Check your answer</summary><div class="code"><pre>irisPCA &lt;- prcomp(iris[, 1:4], center = TRUE, scale. = TRUE)
+summary(irisPCA)
+screeplot(irisPCA, type = "lines")
+boxplot(irisPCA$x[, 1] ~ iris$Species, main = "1st PC values")
+biplot(irisPCA)</pre></div></details></li>
+      <li class="task"><div class="task-q"><span class="num">7</span><span>Cluster iris with k-means (k = 3) on the first two PCs and compare clusters with the real species in a table. How many flowers are "misclassified"?</span></div>
+        <details><summary>Check your answer</summary><div class="code"><pre>set.seed(1)
+k3 &lt;- kmeans(irisPCA$x[, 1:2], centers = 3, nstart = 25)
+table(cluster = k3$cluster, species = iris$Species)
+# setosa forms its own cluster; versicolor and virginica overlap</pre></div></details></li>
+      <li class="task"><div class="task-q"><span class="num">8</span><span>Draw a dendrogram of the scaled mtcars data and cut it into 3 clusters. Do they match k-means?</span></div>
+        <details><summary>Check your answer</summary><div class="code"><pre>hc &lt;- hclust(dist(scale(mtcarsNew)))
+plot(hc, cex = 0.7); rect.hclust(hc, k = 3)
+table(hierarchical = cutree(hc, k = 3), kmeans = km$cluster)</pre></div></details></li>
+    </ol>
+  </div>
+</section>
+
+<section id="quiz">
+  <div class="sec-head"><span class="sec-num">11</span><h2>Check yourself</h2></div>
+  <div class="quiz">
+    <div class="q" data-answer="1" data-why="Clustering has no labels to learn from; it discovers groups from similarity alone.">
+      <p><b>1.</b> The key difference between clustering and classification is…</p>
+      <div class="opts"><button class="opt">Clustering is always more accurate</button><button class="opt">Clustering uses no labels</button><button class="opt">Classification can't use numbers</button></div><p class="fb"></p></div>
+    <div class="q" data-answer="2" data-why="After assigning points, each centroid moves to the mean of its cluster's points.">
+      <p><b>2.</b> In k-means, the "update" step moves each centroid to…</p>
+      <div class="opts"><button class="opt">A random point</button><button class="opt">The point farthest away</button><button class="opt">The mean of the points assigned to it</button></div><p class="fb"></p></div>
+    <div class="q" data-answer="0" data-why="Without scaling, the feature with the largest numbers dominates the Euclidean distance.">
+      <p><b>3.</b> Why scale before k-means?</p>
+      <div class="opts"><button class="opt">So large-valued features don't dominate distance</button><button class="opt">k-means needs normal data</button><button class="opt">To reduce the number of clusters</button></div><p class="fb"></p></div>
+    <div class="q" data-answer="1" data-why="WSS falls every time k increases; look for where the improvement levels off.">
+      <p><b>4.</b> On an elbow plot you choose k where…</p>
+      <div class="opts"><button class="opt">WSS is zero</button><button class="opt">The curve bends and further gains are small</button><button class="opt">WSS is largest</button></div><p class="fb"></p></div>
+    <div class="q" data-answer="2" data-why="PC1 is the direction of greatest variance; summary() reports its proportion.">
+      <p><b>5.</b> For iris, PC1 explains 73% of the variance. This means…</p>
+      <div class="opts"><button class="opt">73% of flowers are setosa</button><button class="opt">The model is 73% accurate</button><button class="opt">One new variable captures most of the spread in four</button></div><p class="fb"></p></div>
+  </div>
+</section>
+
+<section id="glossary">
+  <div class="sec-head"><span class="sec-num">12</span><h2>Key terms</h2></div>
+  <div class="tbl"><table><thead><tr><th>Term</th><th>Meaning</th></tr></thead><tbody>
+    <tr><td>Centroid</td><td>The mean position of a cluster's members; its archetype.</td></tr>
+    <tr><td>WSS</td><td>Within-cluster sum of squares: total squared distance from points to their centroid.</td></tr>
+    <tr><td>Elbow method</td><td>Choose k where adding clusters stops reducing WSS much.</td></tr>
+    <tr><td>Voronoi diagram</td><td>Regions of space closest to each centroid.</td></tr>
+    <tr><td>Dendrogram</td><td>A tree showing the order in which clusters merge.</td></tr>
+    <tr><td>Curse of dimensionality</td><td>More variables need far more cases; distances become less meaningful.</td></tr>
+    <tr><td>Principal component</td><td>A new axis: a weighted mix of the original variables.</td></tr>
+    <tr><td>Loading</td><td>The weight of an original variable in a component.</td></tr>
+    <tr><td>Scree plot</td><td>Variance explained by each component, in order.</td></tr>
+  </tbody></table></div>
+</section>
+
+<section id="exit">
+  <div class="sec-head"><span class="sec-num">13</span><h2>Exit self-check</h2></div>
+  <p class="note">1 = I need help · 2 = nearly there · 3 = confident. Your choices stay on this device.</p>
+  <div class="rate">
+    <div class="rate-row"><span><span class="lo">LO2</span> The k-means algorithm.</span><div class="btns" data-k="lo2"><button data-v="1">1</button><button data-v="2">2</button><button data-v="3">3</button></div></div>
+    <div class="rate-row"><span><span class="lo">LO3</span> Choosing k and scaling.</span><div class="btns" data-k="lo3"><button data-v="1">1</button><button data-v="2">2</button><button data-v="3">3</button></div></div>
+    <div class="rate-row"><span><span class="lo">LO4</span> Naming clusters and dendrograms.</span><div class="btns" data-k="lo4"><button data-v="1">1</button><button data-v="2">2</button><button data-v="3">3</button></div></div>
+    <div class="rate-row"><span><span class="lo">LO5</span> PCA, scree plots and biplots.</span><div class="btns" data-k="lo5"><button data-v="1">1</button><button data-v="2">2</button><button data-v="3">3</button></div></div>
+  </div>
+</section>
+
+<nav class="pager" aria-label="Previous and next week"><a href="week07.html"><span class="k">← Week 7</span>ML Optimisation and Text Mining</a><a class="nx" href="week09.html"><span class="k">Week 9 →</span>Association Rule Mining</a></nav>
+</div>
+<footer><span>COM747 Data Science &amp; Machine Learning · QA Higher Education / Ulster University</span><span>Keep RStudio open beside this page.</span></footer>
+</div>
+</div>
+<script>
+/* Shared helpers for COM747 student pages: copy buttons, quizzes, self-ratings, stats maths, SVG charts */
+(function(){
+"use strict";
+/* ---------- copy buttons ---------- */
+document.querySelectorAll('.code').forEach(function(box){
+  if (box.dataset.nocopy !== undefined) return;
+  var pre = box.querySelector('pre'); if (!pre) return;
+  var btn = document.createElement('button'); btn.type='button'; btn.className='copy'; btn.textContent='Copy';
+  box.appendChild(btn);
+  btn.addEventListener('click', function(){
+    var text = pre.innerText;
+    var done = function(){ btn.textContent='Copied'; setTimeout(function(){btn.textContent='Copy';},1500); };
+    var fallback = function(){ var r=document.createRange(); r.selectNodeContents(pre); var s=window.getSelection(); s.removeAllRanges(); s.addRange(r); btn.textContent='Press Ctrl+C'; };
+    try { navigator.clipboard.writeText(text).then(done, fallback); } catch(e){ fallback(); }
+  });
+});
+/* ---------- quizzes: <div class="q" data-answer="1" data-why="..."> ---------- */
+document.querySelectorAll('.q').forEach(function(q){
+  var ans = +q.dataset.answer; var fb = q.querySelector('.fb');
+  var opts = q.querySelectorAll('button.opt');
+  opts.forEach(function(b, i){
+    b.type='button';
+    b.addEventListener('click', function(){
+      opts.forEach(function(o){ o.classList.remove('right','wrong'); });
+      if (i === ans){ b.classList.add('right'); fb.innerHTML = '<b class="ok">Correct.</b> ' + (q.dataset.why||''); }
+      else { b.classList.add('wrong'); fb.innerHTML = '<b class="no">Not quite.</b> Try another option.'; }
+    });
+  });
+});
+/* ---------- self-rating ---------- */
+var key = 'com747-' + (document.body.dataset.page || 'page');
+var saved = {};
+try { saved = JSON.parse(localStorage.getItem(key) || '{}'); } catch(e){}
+document.querySelectorAll('.btns').forEach(function(group){
+  var k = group.dataset.k;
+  var set = function(v){ group.querySelectorAll('button').forEach(function(b){ b.setAttribute('aria-pressed', String(b.dataset.v === v)); }); };
+  group.querySelectorAll('button').forEach(function(b){ b.type='button'; b.setAttribute('aria-pressed','false'); });
+  if (saved[k]) set(saved[k]);
+  group.addEventListener('click', function(e){
+    var b = e.target.closest('button'); if(!b) return;
+    set(b.dataset.v); saved[k]=b.dataset.v;
+    try { localStorage.setItem(key, JSON.stringify(saved)); } catch(e){}
+  });
+});
+
+/* ---------- stats maths ---------- */
+var S = {};
+S.mean = function(a){ var s=0; for (var i=0;i<a.length;i++) s+=a[i]; return s/a.length; };
+S.variance = function(a){ var m=S.mean(a), s=0; for (var i=0;i<a.length;i++) s+=(a[i]-m)*(a[i]-m); return s/(a.length-1); };
+S.sd = function(a){ return Math.sqrt(S.variance(a)); };
+S.median = function(a){ var b=a.slice().sort(function(x,y){return x-y;}); var n=b.length; return n%2? b[(n-1)/2] : (b[n/2-1]+b[n/2])/2; };
+S.erf = function(x){ /* Abramowitz-Stegun 7.1.26, |err|<1.5e-7 */
+  var s = x<0?-1:1; x=Math.abs(x);
+  var t=1/(1+0.3275911*x);
+  var y=1-(((((1.061405429*t-1.453152027)*t)+1.421413741)*t-0.284496736)*t+0.254829592)*t*Math.exp(-x*x);
+  return s*y; };
+S.dnorm = function(x,m,s){ m=m||0; s=s||1; var z=(x-m)/s; return Math.exp(-0.5*z*z)/(s*Math.sqrt(2*Math.PI)); };
+S.pnorm = function(x,m,s){ m=m||0; s=s||1; return 0.5*(1+S.erf((x-m)/(s*Math.SQRT2))); };
+S.qnorm = function(p){ /* Acklam */
+  var a=[-3.969683028665376e+01,2.209460984245205e+02,-2.759285104469687e+02,1.383577518672690e+02,-3.066479806614716e+01,2.506628277459239e+00],
+      b=[-5.447609879822406e+01,1.615858368580409e+02,-1.556989798598866e+02,6.680131188771972e+01,-1.328068155288572e+01],
+      c=[-7.784894002430293e-03,-3.223964580411365e-01,-2.400758277161838e+00,-2.549732539343734e+00,4.374664141464968e+00,2.938163982698783e+00],
+      d=[7.784695709041462e-03,3.224671290700398e-01,2.445134137142996e+00,3.754408661907416e+00];
+  var q,r; if (p<=0) return -Infinity; if (p>=1) return Infinity;
+  if (p<0.02425){ q=Math.sqrt(-2*Math.log(p)); return (((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5])/((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1); }
+  if (p>1-0.02425){ q=Math.sqrt(-2*Math.log(1-p)); return -(((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5])/((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1); }
+  q=p-0.5; r=q*q; return (((((a[0]*r+a[1])*r+a[2])*r+a[3])*r+a[4])*r+a[5])*q/(((((b[0]*r+b[1])*r+b[2])*r+b[3])*r+b[4])*r+1); };
+S.lgamma = function(x){ var c=[76.18009172947146,-86.50532032941677,24.01409824083091,-1.231739572450155,0.1208650973866179e-2,-0.5395239384953e-5];
+  var y=x, t=x+5.5; t-=(x+0.5)*Math.log(t); var s=1.000000000190015; for (var j=0;j<6;j++) s+=c[j]/++y; return -t+Math.log(2.5066282746310005*s/x); };
+function betacf(a,b,x){ var MAXIT=200,EPS=3e-14,FPMIN=1e-300; var qab=a+b,qap=a+1,qam=a-1,c=1,d=1-qab*x/qap; if(Math.abs(d)<FPMIN)d=FPMIN; d=1/d; var h=d;
+  for (var m=1;m<=MAXIT;m++){ var m2=2*m, aa=m*(b-m)*x/((qam+m2)*(a+m2)); d=1+aa*d; if(Math.abs(d)<FPMIN)d=FPMIN; c=1+aa/c; if(Math.abs(c)<FPMIN)c=FPMIN; d=1/d; h*=d*c;
+    aa=-(a+m)*(qab+m)*x/((a+m2)*(qap+m2)); d=1+aa*d; if(Math.abs(d)<FPMIN)d=FPMIN; c=1+aa/c; if(Math.abs(c)<FPMIN)c=FPMIN; d=1/d; var del=d*c; h*=del; if(Math.abs(del-1)<EPS)break; }
+  return h; }
+S.ibeta = function(x,a,b){ if (x<=0) return 0; if (x>=1) return 1;
+  var bt=Math.exp(S.lgamma(a+b)-S.lgamma(a)-S.lgamma(b)+a*Math.log(x)+b*Math.log(1-x));
+  return x<(a+1)/(a+b+2) ? bt*betacf(a,b,x)/a : 1-bt*betacf(b,a,1-x)/b; };
+S.pt = function(t,df){ var x=df/(df+t*t); var tail=0.5*S.ibeta(x,df/2,0.5); return t>0? 1-tail : tail; };
+S.dt = function(t,df){ return Math.exp(S.lgamma((df+1)/2)-S.lgamma(df/2))/Math.sqrt(df*Math.PI)*Math.pow(1+t*t/df,-(df+1)/2); };
+S.qt = function(p,df){ var lo=-60,hi=60; for (var i=0;i<100;i++){ var mid=(lo+hi)/2; if (S.pt(mid,df)<p) lo=mid; else hi=mid; } return (lo+hi)/2; };
+S.choose = function(n,k){ var r=1; for (var i=1;i<=k;i++) r=r*(n-k+i)/i; return r; };
+S.dbinom = function(k,n,p){ return S.choose(n,k)*Math.pow(p,k)*Math.pow(1-p,n-k); };
+S.rnorm = function(m,s){ var u=0,v=0; while(u===0)u=Math.random(); while(v===0)v=Math.random(); return m + s*Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v); };
+S.welch = function(x,y){ var mx=S.mean(x),my=S.mean(y),vx=S.variance(x),vy=S.variance(y),nx=x.length,ny=y.length;
+  var se=Math.sqrt(vx/nx+vy/ny), t=(mx-my)/se; var df=Math.pow(vx/nx+vy/ny,2)/(Math.pow(vx/nx,2)/(nx-1)+Math.pow(vy/ny,2)/(ny-1));
+  return {t:t, df:df, p:2*(1-S.pt(Math.abs(t),df))}; };
+S.fmt = function(x,d){ if (!isFinite(x)) return String(x); d = d===undefined?2:d; var s=x.toFixed(d); return s==='-0'+(d?'.'+'0'.repeat(d):'')? s.slice(1): s; };
+S.sig = function(x,n){ n=n||4; if (x===0) return '0'; if (Math.abs(x)<1e-4) return x.toExponential(2); return String(+x.toPrecision(n)); };
+window.S = S;
+
+/* ---------- SVG helpers ---------- */
+var NS='http://www.w3.org/2000/svg';
+function el(tag, attrs, parent){ var e=document.createElementNS(NS,tag); for (var k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; }
+function txt(parent, x, y, s, cls, anchor){ var t=el('text',{x:x,y:y,'class':cls||'tick','text-anchor':anchor||'middle'},parent); t.textContent=s; return t; }
+function niceTicks(lo, hi, n){ var span=hi-lo; if (span<=0) return [lo]; var step=Math.pow(10,Math.floor(Math.log10(span/n))); var err=n/span*step;
+  if (err<=0.15) step*=10; else if (err<=0.35) step*=5; else if (err<=0.75) step*=2;
+  var out=[]; for (var v=Math.ceil(lo/step)*step; v<=hi+1e-9; v+=step) out.push(+v.toFixed(10)); return out; }
+/* Chart frame: returns {g, x(), y(), W, H} */
+function frame(svg, opts){
+  while (svg.firstChild) svg.removeChild(svg.firstChild);
+  var W=opts.W||640, H=opts.H||260, m=opts.m||{l:48,r:16,t:14,b:38};
+  svg.setAttribute('viewBox','0 0 '+W+' '+H);
+  var x=function(v){ return m.l + (v-opts.x0)/(opts.x1-opts.x0)*(W-m.l-m.r); };
+  var y=function(v){ return H-m.b - (v-opts.y0)/(opts.y1-opts.y0)*(H-m.t-m.b); };
+  var g=el('g',{},svg);
+  if (opts.ygrid!==false){ niceTicks(opts.y0,opts.y1,opts.ny||4).forEach(function(v){ el('line',{x1:m.l,x2:W-m.r,y1:y(v),y2:y(v),'class':'gridl'},g); if (opts.ylabels!==false) txt(g,m.l-6,y(v)+4,opts.yfmt?opts.yfmt(v):S.sig(v,3),'tick','end'); }); }
+  el('line',{x1:m.l,x2:W-m.r,y1:H-m.b,y2:H-m.b,'class':'ax'},g);
+  (opts.xticks || niceTicks(opts.x0,opts.x1,opts.nx||6)).forEach(function(v){ el('line',{x1:x(v),x2:x(v),y1:H-m.b,y2:H-m.b+4,'class':'ax'},g); txt(g,x(v),H-m.b+17,opts.xfmt?opts.xfmt(v):S.sig(v,4)); });
+  if (opts.xlab) txt(g,(m.l+W-m.r)/2,H-4,opts.xlab,'labm');
+  if (opts.ylab){ var t=txt(g,12,(m.t+H-m.b)/2,opts.ylab,'labm'); t.setAttribute('transform','rotate(-90 12 '+((m.t+H-m.b)/2)+')'); }
+  return {g:g, x:x, y:y, W:W, H:H, m:m};
+}
+function pathFrom(pts){ return pts.map(function(p,i){ return (i?'L':'M')+p[0].toFixed(2)+' '+p[1].toFixed(2); }).join(''); }
+/* histogram of values into bins: returns {edges, counts} */
+function bins(vals, lo, hi, k){ var w=(hi-lo)/k, c=new Array(k).fill(0); vals.forEach(function(v){ var i=Math.floor((v-lo)/w); if (i===k) i=k-1; if (i>=0&&i<k) c[i]++; }); var e=[]; for (var i=0;i<=k;i++) e.push(lo+i*w); return {edges:e, counts:c, w:w}; }
+window.G = {el:el, txt:txt, frame:frame, path:pathFrom, ticks:niceTicks, bins:bins};
+})();
+/* scroll-spy: highlight the current section in the left menu */
+(function(){
+  var links = Array.prototype.slice.call(document.querySelectorAll('.side .side-secs a'));
+  if (!links.length || !('IntersectionObserver' in window)) return;
+  var map = {}; links.forEach(function(a){ map[a.getAttribute('href').slice(1)] = a; });
+  var obs = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){ if (e.isIntersecting){ links.forEach(function(a){ a.classList.remove('on'); }); var a = map[e.target.id]; if (a) a.classList.add('on'); } });
+  }, {rootMargin: '-20% 0px -70% 0px'});
+  Object.keys(map).forEach(function(id){ var s = document.getElementById(id); if (s) obs.observe(s); });
+})();
+
+</script>
+<script>
+(function(){
+"use strict";
+var W8={"mt":{"car":["Mazda RX4","Mazda RX4 Wag","Datsun 710","Hornet 4 Drive","Hornet Sportabout","Valiant","Duster 360","Merc 240D","Merc 230","Merc 280","Merc 280C","Merc 450SE","Merc 450SL","Merc 450SLC","Cadillac Fleetwood","Lincoln Continental","Chrysler Imperial","Fiat 128","Honda Civic","Toyota Corolla","Toyota Corona","Dodge Challenger","AMC Javelin","Camaro Z28","Pontiac Firebird","Fiat X1-9","Porsche 914-2","Lotus Europa","Ford Pantera L","Ferrari Dino","Maserati Bora","Volvo 142E"],"mpg":[21,21,22.8,21.4,18.7,18.1,14.3,24.4,22.8,19.2,17.8,16.4,17.3,15.2,10.4,10.4,14.7,32.4,30.4,33.9,21.5,15.5,15.2,13.3,19.2,27.3,26,30.4,15.8,19.7,15,21.4],"cyl":[6,6,4,6,8,6,8,4,4,6,6,8,8,8,8,8,8,4,4,4,4,8,8,8,8,4,4,4,8,6,8,4],"hp":[110,110,93,110,175,105,245,62,95,123,123,180,180,180,205,215,230,66,52,65,97,150,150,245,175,66,91,113,264,175,335,109],"cluster":[1,1,1,1,2,1,2,3,1,1,1,2,2,2,2,2,2,3,3,3,1,2,2,2,2,3,3,3,2,1,2,1]},"km_size":[11,14,7],"km_profile":{"cluster":[1,2,3],"mpg":[20.6090909090909,15.1,29.2571428571429],"cyl":[5.27272727272727,8,4],"hp":[113.636363636364,209.214285714286,73.5714285714286]},"wss":[93,29.185,17.164,11.643,6.798,6.367,4.787,3.434,2.73,2.094],"mt_pc":{"x":[-0.4533,-0.4533,-1.4241,-0.4914,0.9641,-0.2184,1.9654,-1.8343,-1.4075,-0.1736,-0.0402,1.2249,1.1391,1.3393,2.0048,2.0879,1.8026,-2.5637,-2.4894,-2.7151,-1.2669,1.0614,1.09,2.0607,0.9164,-2.0775,-1.7458,-1.9824,1.9803,0.2109,2.6466,-1.1576],"y":[-0.296,-0.296,-0.1791,-0.253,0.0622,-0.6628,0.3601,-0.3486,-0.1571,-0.3463,-0.4968,-0.1301,-0.0333,-0.2591,-0.4998,-0.3896,0.2379,0.5556,0.1864,0.7059,-0.2749,-0.5573,-0.5895,0.2526,0.1159,0.0073,0.1429,0.8583,0.7307,0.2802,1.4268,-0.1534],"var":[0.8803,0.0751]},"iris_imp":[0.7296,0.2285,0.0367,0.0052],"iris_cum":[0.7296,0.9581,0.9948,1],"iris_rot":{"pc1":[0.5211,-0.2693,0.5804,0.5649],"pc2":[-0.3774,-0.9233,-0.0245,-0.0669],"var":["Sepal.Length","Sepal.Width","Petal.Length","Petal.Width"]},"iris_scores":{"x":[-2.2571,-2.074,-2.3563,-2.2917,-2.3819,-2.0687,-2.4359,-2.2254,-2.3268,-2.177,-2.1591,-2.3184,-2.211,-2.6243,-2.1914,-2.2547,-2.2002,-2.183,-1.8922,-2.3355,-1.9079,-2.1996,-2.7651,-1.8126,-2.2197,-1.9453,-2.0443,-2.1613,-2.1324,-2.2577,-2.133,-1.8255,-2.6062,-2.438,-2.1029,-2.2004,-2.0383,-2.5189,-2.4215,-2.1625,-2.2788,-1.8519,-2.5451,-1.9579,-2.1299,-2.0628,-2.3768,-2.3864,-2.222,-2.1965,1.0981,0.7289,1.2368,0.4061,1.0719,0.3874,0.744,-0.4857,0.9248,0.0114,-0.1098,0.4392,0.5602,0.7172,-0.0332,0.8725,0.3491,0.1583,1.221,0.1644,0.7352,0.4747,1.2301,0.6307,0.7003,0.8714,1.2523,1.3539,0.6626,-0.0401,0.1304,0.0234,0.2407,1.0576,0.2232,0.4277,1.0452,1.041,0.0694,0.2825,0.2781,0.6225,0.3354,-0.361,0.2876,0.0911,0.227,0.5745,-0.4462,0.2559,1.8384,1.154,2.1979,1.4353,1.8616,2.7427,0.3658,2.2948,2,2.2522,1.3596,1.5973,1.8776,1.2559,1.4627,1.5848,1.4665,2.4182,3.2996,1.2595,2.0309,0.9747,2.888,1.3288,1.6951,1.9478,1.1712,1.0175,1.7824,1.8574,2.4278,2.2972,1.8565,1.1104,1.1985,2.7894,1.571,1.3418,0.9217,1.8459,2.0081,1.8954,1.154,2.0337,1.9915,1.8643,1.5594,1.5161,1.3682,0.9574],"y":[-0.4784,0.6719,0.3408,0.5954,-0.6447,-1.4842,-0.0475,-0.2224,1.1116,0.4674,-1.0402,-0.1326,0.7262,0.9583,-1.8538,-2.6773,-1.4787,-0.4872,-1.4003,-1.1241,-0.4075,-0.921,-0.4568,-0.0853,-0.1368,0.6235,-0.2414,-0.5254,-0.3122,0.3366,0.5029,-0.4223,-1.7876,-2.1435,0.4587,0.2054,-0.6593,-0.5903,0.9012,-0.268,-0.4402,2.3296,0.4775,-0.4707,-1.1384,0.7087,-1.1167,0.385,-0.9946,-0.0092,-0.8601,-0.5926,-0.6142,1.7485,0.2077,0.5913,-0.7704,1.8462,-0.0321,1.0306,2.6452,0.0631,1.7588,0.1856,0.4375,-0.5074,0.1957,0.7895,1.6168,1.2983,-0.3952,0.4159,0.9302,0.415,0.0632,-0.25,0.077,-0.3302,0.2252,1.0552,1.5571,1.5672,0.7747,0.6317,0.2868,-0.8428,-0.5203,1.3784,0.2188,1.3249,1.1163,-0.0248,0.9851,2.0125,0.8529,0.1806,0.3836,0.1544,1.5386,0.5969,-0.8675,0.6965,-0.5601,0.0468,-0.2941,-0.7977,1.5563,-0.4187,0.7091,-1.9146,-0.6904,0.4203,-0.4178,1.1584,0.4408,-0.674,-0.2548,-2.5481,-0.0177,1.701,-0.9074,0.5699,-0.4123,0.4802,-1.0105,-1.0044,0.3153,-0.0641,0.1867,-0.5604,-0.2584,-2.6176,0.178,0.2919,0.8086,-0.8539,-1.065,-0.421,-0.0172,-0.6739,-0.6118,-0.6873,0.6965,-0.8646,-1.0457,-0.3857,0.8937,-0.2682,-1.0079,0.0243],"sp":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3]},"hc":{"merge":[[-1,-2],[-3,-9],[-22,-23],[-4,1],[-5,-25],[-15,-16],[-12,-13],[-7,-24],[-21,-32],[-10,-11],[-18,-20],[-17,8],[-6,10],[2,9],[-14,7],[-26,-27],[-8,16],[-29,12],[3,15],[-19,11],[4,13],[5,19],[-28,20],[-30,21],[14,17],[6,18],[22,26],[23,25],[24,27],[-31,29],[28,30]],"height":[0,0.0292,0.0498,0.0664,0.083,0.1459,0.1493,0.1659,0.1758,0.2323,0.2493,0.3191,0.3197,0.3293,0.3484,0.4237,0.4994,0.5284,0.5593,0.6109,0.6267,0.7573,0.9096,1.0549,1.1626,1.2423,1.6657,2.171,2.6763,3.6264,5.5098],"order":[28,19,18,20,3,9,21,32,8,26,27,31,30,4,1,2,6,10,11,5,25,22,23,14,12,13,15,16,29,17,7,24],"labels":["Mazda RX4","Mazda RX4 Wag","Datsun 710","Hornet 4 Drive","Hornet Sportabout","Valiant","Duster 360","Merc 240D","Merc 230","Merc 280","Merc 280C","Merc 450SE","Merc 450SL","Merc 450SLC","Cadillac Fleetwood","Lincoln Continental","Chrysler Imperial","Fiat 128","Honda Civic","Toyota Corolla","Toyota Corona","Dodge Challenger","AMC Javelin","Camaro Z28","Pontiac Firebird","Fiat X1-9","Porsche 914-2","Lotus Europa","Ford Pantera L","Ferrari Dino","Maserati Bora","Volvo 142E"]}};
+var COL=['var(--c1)','var(--c2)','var(--c3)','var(--c4)','#8a6d3b','#3b8a86','#a33b6d'];
+function dot(g,x,y,r,style){ return G.el('circle',{cx:x,cy:y,r:r,style:style},g); }
+function d2(a,b){ var s=0; for (var i=0;i<a.length;i++){ var e=a[i]-b[i]; s+=e*e; } return s; }
+function nearest(p,C){ var best=0, bd=Infinity; C.forEach(function(c,i){ var d=d2(p,c); if (d<bd){ bd=d; best=i; } }); return best; }
+function kmeans(P,k,starts){ var bestW=Infinity, best=null;
+  for (var s=0;s<(starts||10);s++){ var C=[P[Math.floor(Math.random()*P.length)].slice()];
+    while (C.length<k){ var D=P.map(function(p){ return Math.min.apply(null,C.map(function(c){return d2(p,c);})); }), tot=D.reduce(function(a,b){return a+b;},0), r=Math.random()*tot, acc=0, pick=0;
+      for (var i=0;i<D.length;i++){ acc+=D[i]; if (acc>=r){ pick=i; break; } } C.push(P[pick].slice()); }
+    var A=[];
+    for (var it=0;it<50;it++){ var A2=P.map(function(p){return nearest(p,C);}); var same=A.length && A2.every(function(a,i){return a===A[i];}); A=A2;
+      C=C.map(function(c,j){ var m=P.filter(function(_,i){return A[i]===j;}); if (!m.length) return c; return c.map(function(_,d){ return m.reduce(function(s,p){return s+p[d];},0)/m.length; }); }); if (same) break; }
+    var W=P.reduce(function(s,p,i){ return s+d2(p,C[A[i]]); },0); if (W<bestW){ bestW=W; best={C:C,A:A,W:W}; } }
+  return best; }
+
+/* ---------- k-means stepper ---------- */
+var GYM=[];
+(function(){
+  var kS=document.getElementById('km-k'), svg=document.getElementById('km-svg'), out=document.getElementById('km-out');
+  var C=[], A=[], it=0, phase='init';
+  function data(){ GYM=[]; [[1.2,2.0,0.5,0.45,10],[10,5,1.1,0.5,9],[11,0.6,1.0,0.3,11]].forEach(function(g){ for (var i=0;i<g[4];i++) GYM.push([Math.max(0.2,S.rnorm(g[0],g[2])),Math.max(0.1,S.rnorm(g[1],g[3]))]); }); }
+  function init(){ var k=+kS.value; C=[]; var idx=[]; while (idx.length<k){ var r=Math.floor(Math.random()*GYM.length); if (idx.indexOf(r)<0) idx.push(r); } C=idx.map(function(i){return GYM[i].slice();}); A=[]; it=0; phase='assign'; draw('Picked '+k+' random people as starting centroids.'); }
+  function assign(){ if (!C.length) init(); A=GYM.map(function(p){return nearest(p,C);}); phase='update'; draw('Assigned everyone to their nearest centroid.'); }
+  function update(){ if (!A.length) assign(); var moved=0;
+    C=C.map(function(c,j){ var m=GYM.filter(function(_,i){return A[i]===j;}); if (!m.length) return c; var n=[S.mean(m.map(function(p){return p[0];})),S.mean(m.map(function(p){return p[1];}))]; moved+=Math.sqrt(d2(n,c)); return n; });
+    it++; phase='assign'; draw('Moved each centroid to the mean of its members (total movement '+S.fmt(moved,3)+' km).'); return moved; }
+  function run(){ if (!C.length) init(); for (var i=0;i<30;i++){ A=GYM.map(function(p){return nearest(p,C);}); var mv=0, NC=C.map(function(c,j){ var m=GYM.filter(function(_,q){return A[q]===j;}); if (!m.length) return c; var n=[S.mean(m.map(function(p){return p[0];})),S.mean(m.map(function(p){return p[1];}))]; mv+=Math.sqrt(d2(n,c)); return n; }); C=NC; it++; if (mv<1e-9) break; }
+    A=GYM.map(function(p){return nearest(p,C);}); draw('Converged: assignments no longer change.'); }
+  function wss(){ return A.length? GYM.reduce(function(s,p,i){ return s+d2(p,C[A[i]]); },0) : NaN; }
+  function draw(msg){ document.getElementById('km-kv').textContent=kS.value;
+    var f=G.frame(svg,{W:640,H:330,x0:0,x1:13.5,y0:0,y1:6.5,ny:4,xlab:'running distance (km)',ylab:'swimming distance (km)',m:{l:40,r:16,t:12,b:38}});
+    if (C.length){ var nx=54, ny=26; for (var i=0;i<nx;i++) for (var j=0;j<ny;j++){ var x=(i+0.5)*13.5/nx, y=(j+0.5)*6.5/ny, c=nearest([x,y],C);
+      G.el('rect',{x:f.x(i*13.5/nx),y:f.y((j+1)*6.5/ny),width:f.x(13.5/nx)-f.x(0)+0.6,height:f.y(0)-f.y(6.5/ny)+0.6,style:'fill:'+COL[c]+';opacity:.1'},f.g); } }
+    GYM.forEach(function(p,i){ dot(f.g,f.x(p[0]),f.y(p[1]),5,'fill:'+(A.length?COL[A[i]]:'var(--line-strong)')+';stroke:var(--paper);stroke-width:1'); });
+    C.forEach(function(c,i){ var x=f.x(c[0]), y=f.y(c[1]); G.el('path',{d:'M'+(x-9)+' '+(y-9)+'L'+(x+9)+' '+(y+9)+'M'+(x+9)+' '+(y-9)+'L'+(x-9)+' '+(y+9),style:'stroke:var(--ink);stroke-width:5'},f.g); G.el('path',{d:'M'+(x-8)+' '+(y-8)+'L'+(x+8)+' '+(y+8)+'M'+(x+8)+' '+(y-8)+'L'+(x-8)+' '+(y+8),style:'stroke:'+COL[i]+';stroke-width:3'},f.g); });
+    out.innerHTML=(msg||'Press "1. Random centroids" to begin, or "Run to convergence".')+'\niterations: '+it+'   WSS: '+(isNaN(wss())?'–':S.fmt(wss(),2))+(C.length?'\n'+C.map(function(c,i){ var n=A.filter(function(a){return a===i;}).length; return 'cluster '+(i+1)+': centroid ('+S.fmt(c[0],1)+' km run, '+S.fmt(c[1],1)+' km swim), '+n+' people'; }).join('\n'):'');
+  }
+  document.getElementById('km-init').addEventListener('click',init);
+  document.getElementById('km-assign').addEventListener('click',assign);
+  document.getElementById('km-update').addEventListener('click',update);
+  document.getElementById('km-run').addEventListener('click',run);
+  document.getElementById('km-data').addEventListener('click',function(){ data(); C=[]; A=[]; it=0; draw(); elbow(); });
+  kS.addEventListener('input',function(){ C=[]; A=[]; it=0; draw(); });
+  data(); draw(); elbow();
+})();
+
+/* ---------- elbow ---------- */
+function elbow(){
+  var svg=document.getElementById('el-svg'), w=[]; for (var k=1;k<=8;k++) w.push(kmeans(GYM,k,15).W);
+  var f=G.frame(svg,{W:640,H:240,x0:0.5,x1:8.5,y0:0,y1:w[0]*1.08,ny:4,xticks:[1,2,3,4,5,6,7,8],xlab:'number of clusters k',ylab:'WSS',m:{l:52,r:16,t:12,b:38}});
+  G.el('path',{d:G.path(w.map(function(v,i){return [f.x(i+1),f.y(v)];})),'class':'curve'},f.g);
+  w.forEach(function(v,i){ dot(f.g,f.x(i+1),f.y(v),i===2?7:4.5,'fill:'+(i===2?'var(--c2)':'var(--c1)')); });
+  G.txt(f.g,f.x(3)+10,f.y(w[2])-10,'elbow at k = 3','labm','start').setAttribute('style','fill:var(--c2);font-weight:700');
+}
+
+/* ---------- scaling ---------- */
+(function(){
+  var M=W8.mt, sel=document.getElementById('sc-m'), svg=document.getElementById('sc-svg');
+  var mm=S.mean(M.mpg), sm=S.sd(M.mpg), mh=S.mean(M.hp), sh=S.sd(M.hp);
+  var cache={};
+  function draw(){ var z=sel.value==='z';
+    var P=M.mpg.map(function(v,i){ return z? [(v-mm)/sm,(M.hp[i]-mh)/sh] : [v,M.hp[i]]; });
+    if (!cache[sel.value]) cache[sel.value]=kmeans(P,3,25);
+    var r=cache[sel.value];
+    var f=z? G.frame(svg,{W:640,H:300,x0:-2.2,x1:2.6,y0:-1.8,y1:3,ny:4,xlab:'mpg (z-score)',ylab:'hp (z-score)',m:{l:44,r:16,t:12,b:38}})
+           : G.frame(svg,{W:640,H:300,x0:0,x1:340,y0:0,y1:340,ny:4,xlab:'mpg (same scale as hp)',ylab:'hp',m:{l:44,r:16,t:12,b:38}});
+    P.forEach(function(p,i){ dot(f.g,f.x(p[0]),f.y(p[1]),5.5,'fill:'+COL[r.A[i]]+';stroke:var(--paper);stroke-width:1'); });
+    if (!z) G.txt(f.g,f.x(60),f.y(320),'drawn to scale: mpg barely varies compared with hp','labm','start');
+  }
+  sel.addEventListener('change',draw); draw();
+})();
+
+/* ---------- mtcars profiles and clusplot ---------- */
+(function(){
+  var P=W8.km_profile, sizes=W8.km_size, names={1:'Average car',2:'Fast but expensive to run',3:'Economical, less powerful'};
+  document.getElementById('mt-body').innerHTML=P.cluster.map(function(c,i){ return '<tr><td><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:'+COL[c-1]+';margin-right:6px"></span>'+c+'</td><td class="n">'+sizes[i]+'</td><td class="n">'+S.fmt(P.mpg[i],1)+'</td><td class="n">'+S.fmt(P.cyl[i],1)+'</td><td class="n">'+S.fmt(P.hp[i],0)+'</td><td>'+names[c]+'</td></tr>'; }).join('');
+  var Q=W8.mt_pc, svg=document.getElementById('cp-svg');
+  var f=G.frame(svg,{W:640,H:300,x0:Math.min.apply(null,Q.x)-0.5,x1:Math.max.apply(null,Q.x)+1.4,y0:Math.min.apply(null,Q.y)-0.3,y1:Math.max.apply(null,Q.y)+0.3,ny:4,xlab:'Component 1 ('+S.fmt(Q.var[0]*100,1)+'%)',ylab:'Component 2 ('+S.fmt(Q.var[1]*100,1)+'%)',m:{l:44,r:16,t:12,b:38}});
+  Q.x.forEach(function(x,i){ var c=W8.mt.cluster[i]; dot(f.g,f.x(x),f.y(Q.y[i]),5,'fill:'+COL[c-1]);
+    if (['Maserati Bora','Lotus Europa','Honda Civic','Toyota Corolla','Cadillac Fleetwood','Ferrari Dino','Merc 240D','Valiant','Camaro Z28'].indexOf(W8.mt.car[i])>=0) G.txt(f.g,f.x(x)+7,f.y(Q.y[i])+4,W8.mt.car[i],'labm','start').setAttribute('style','font-size:10px;paint-order:stroke;stroke:var(--paper);stroke-width:3px'); });
+})();
+
+/* ---------- dendrogram ---------- */
+(function(){
+  var H=W8.hc, n=H.labels.length, svg=document.getElementById('hc-svg'), sl=document.getElementById('hc-h');
+  var maxH=Math.max.apply(null,H.height)*1.04;
+  var pos={}; H.order.forEach(function(o,i){ pos[-o]=i; });
+  function members(id){ return id<0? [-id] : members(H.merge[id-1][0]).concat(members(H.merge[id-1][1])); }
+  function draw(){ var cut=+sl.value/1000*maxH; document.getElementById('hc-hv').textContent=S.fmt(cut,2);
+    var W=640, Hh=330, m={l:40,r:10,t:12,b:110}; svg.setAttribute('viewBox','0 0 '+W+' '+Hh); while (svg.firstChild) svg.removeChild(svg.firstChild);
+    var xs=function(i){ return m.l+(i+0.5)*(W-m.l-m.r)/n; }, ys=function(h){ return Hh-m.b-h/maxH*(Hh-m.t-m.b); };
+    // cluster assignment from cut
+    var groups=[]; (function walk(id){ var h=id>0?H.height[id-1]:0; if (h<=cut){ groups.push(members(id)); return; } walk(H.merge[id-1][0]); walk(H.merge[id-1][1]); })(n-1);
+    var gOf={}; groups.forEach(function(g,i){ g.forEach(function(o){ gOf[o]=i; }); });
+    document.getElementById('hc-kv').textContent=groups.length;
+    G.frame; [0,1,2,3,4,5].forEach(function(v){ if (v<=maxH){ G.el('line',{x1:m.l,x2:W-m.r,y1:ys(v),y2:ys(v),'class':'gridl'},svg); G.txt(svg,m.l-6,ys(v)+4,String(v),'tick','end'); } });
+    var X={}, Y={};
+    function xy(id){ if (id<0) return [xs(pos[id]), ys(0)]; return [X[id],Y[id]]; }
+    for (var i=0;i<H.merge.length;i++){ var a=H.merge[i][0], b=H.merge[i][1], pa=xy(a), pb=xy(b), y=ys(H.height[i]);
+      X[i+1]=(pa[0]+pb[0])/2; Y[i+1]=y;
+      var mem=members(i+1), g=gOf[mem[0]], same=mem.every(function(o){return gOf[o]===g;}), col=same&&groups.length>1?COL[g%COL.length]:'var(--muted)';
+      G.el('path',{d:'M'+pa[0]+' '+pa[1]+'V'+y+'H'+pb[0]+'V'+pb[1],style:'fill:none;stroke:'+col+';stroke-width:'+(same?2:1.4)},svg); }
+    G.el('line',{x1:m.l,x2:W-m.r,y1:ys(cut),y2:ys(cut),style:'stroke:var(--bad);stroke-width:1.5;stroke-dasharray:6 4'},svg);
+    H.order.forEach(function(o,i){ var t=G.txt(svg,xs(i)+3,ys(0)+8,H.labels[o-1],'labm','end'); t.setAttribute('transform','rotate(-60 '+(xs(i)+3)+' '+(ys(0)+8)+')'); t.setAttribute('style','font-size:10px;fill:'+COL[gOf[o]%COL.length]); });
+  }
+  sl.addEventListener('input',draw); draw();
+})();
+
+/* ---------- PCA rotating axis ---------- */
+(function(){
+  var aS=document.getElementById('pc-a'), rS=document.getElementById('pc-r'), svg=document.getElementById('pc-svg');
+  var base=[]; for (var i=0;i<120;i++) base.push([S.rnorm(0,1),S.rnorm(0,1)]);
+  var P=[];
+  function makeData(){ var r=+rS.value; P=base.map(function(b){ return [b[0], r*b[0]+Math.sqrt(1-r*r)*b[1]]; });
+    [0,1].forEach(function(d){ var v=P.map(function(p){return p[d];}), m=S.mean(v), s=S.sd(v); P.forEach(function(p){ p[d]=(p[d]-m)/s; }); }); }
+  function pc1(){ var sxx=0, syy=0, sxy=0; P.forEach(function(p){ sxx+=p[0]*p[0]; syy+=p[1]*p[1]; sxy+=p[0]*p[1]; }); return (0.5*Math.atan2(2*sxy, sxx-syy))*180/Math.PI; }
+  function draw(){ var a=+aS.value*Math.PI/180; document.getElementById('pc-av').textContent=aS.value; document.getElementById('pc-rv').textContent=S.fmt(+rS.value,2);
+    var f=G.frame(svg,{W:640,H:330,x0:-3.6,x1:3.6,y0:-3,y1:3,ny:4,xlab:'variable 1 (standardised)',ylab:'variable 2',m:{l:40,r:16,t:12,b:38}});
+    var ux=Math.cos(a), uy=Math.sin(a), proj=P.map(function(p){ return p[0]*ux+p[1]*uy; });
+    G.el('line',{x1:f.x(-4*ux),y1:f.y(-4*uy),x2:f.x(4*ux),y2:f.y(4*uy),style:'stroke:var(--c2);stroke-width:2.5'},f.g);
+    P.forEach(function(p,i){ var q=[proj[i]*ux,proj[i]*uy]; G.el('line',{x1:f.x(p[0]),y1:f.y(p[1]),x2:f.x(q[0]),y2:f.y(q[1]),style:'stroke:var(--line-strong);stroke-width:.8'},f.g); });
+    P.forEach(function(p,i){ dot(f.g,f.x(p[0]),f.y(p[1]),3.2,'fill:var(--c1);opacity:.75'); dot(f.g,f.x(proj[i]*ux),f.y(proj[i]*uy),2.4,'fill:var(--c2)'); });
+    var v=S.variance(proj); document.getElementById('pc-v').textContent=S.fmt(v,3); document.getElementById('pc-s').textContent=S.fmt(v/2*100,1)+'%';
+  }
+  document.getElementById('pc-snap').addEventListener('click',function(){ var d=pc1(); if (d<0) d+=180; aS.value=Math.round(d)%180; draw(); });
+  aS.addEventListener('input',draw); rS.addEventListener('input',function(){ makeData(); draw(); });
+  makeData(); draw();
+})();
+
+/* ---------- iris scree and biplot ---------- */
+(function(){
+  var imp=W8.iris_imp, cum=W8.iris_cum, s=document.getElementById('scree-svg');
+  var f=G.frame(s,{W:320,H:240,x0:0.4,x1:4.6,y0:0,y1:1,ny:4,xticks:[1,2,3,4],xfmt:function(v){return 'PC'+v;},yfmt:function(v){return Math.round(v*100)+'%';},m:{l:42,r:10,t:12,b:34}});
+  imp.forEach(function(v,i){ G.el('rect',{x:f.x(i+1)-22,y:f.y(v),width:44,height:f.y(0)-f.y(v),rx:3,'class':i<2?'bar':'barmuted'},f.g); var t=G.txt(f.g,f.x(i+1),i<2?f.y(v)+16:f.y(v)-5,S.fmt(v*100,1)+'%','labm'); if (i<2) t.setAttribute('style','fill:var(--paper);font-weight:700'); });
+  G.el('path',{d:G.path(cum.map(function(v,i){return [f.x(i+1),f.y(v)];})),'class':'curve2'},f.g);
+  G.txt(f.g,f.x(3),f.y(cum[2])+20,'cumulative','labm','start').setAttribute('style','fill:var(--c2)');
+  var Sx=W8.iris_scores, R=W8.iris_rot, b=document.getElementById('bi-svg');
+  var g=G.frame(b,{W:320,H:240,x0:-3.4,x1:3.6,y0:-2.9,y1:2.9,nx:4,ny:4,xlab:'PC1',ylab:'PC2',m:{l:30,r:10,t:12,b:34}});
+  Sx.x.forEach(function(x,i){ dot(g.g,g.x(x),g.y(Sx.y[i]),2.4,'fill:'+COL[Sx.sp[i]-1]+';opacity:.45'); });
+  R.var.forEach(function(v,i){ var x=R.pc1[i]*3, y=R.pc2[i]*3; G.el('line',{x1:g.x(0),y1:g.y(0),x2:g.x(x),y2:g.y(y),style:'stroke:var(--ink);stroke-width:1.8'},g.g);
+    G.txt(g.g,g.x(x)+(x>0?4:-4),g.y(y)+[14,4,-6,9][i],v,'labm',x>0?'start':'end').setAttribute('style','font-size:10px;font-weight:700;paint-order:stroke;stroke:var(--paper);stroke-width:3px'); });
+  ['setosa','versicolor','virginica'].forEach(function(nm,i){ dot(g.g,g.x(-3.2),g.y(2.6-i*0.45),3.5,'fill:'+COL[i]); G.txt(g.g,g.x(-3.2)+7,g.y(2.6-i*0.45)+4,nm,'labm','start').setAttribute('style','font-size:10px'); });
+})();
+})();
+
+</script>
+</body>
+</html>

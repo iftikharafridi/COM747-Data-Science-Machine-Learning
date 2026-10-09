@@ -1,0 +1,892 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>COM747 Week 11 Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: single-column lab notebook, ~800px measure. Concept sections, then interactive "explorers", then tiered R tasks. */
+:root{
+  --bg:#f5f6f8; --paper:#ffffff; --ink:#1b2330; --muted:#5a6474; --line:#dce1e9; --line-strong:#c3cad6;
+  --accent:#2b5fa6; --accent-soft:#e5edf8;
+  --core:#2f7d5b; --core-soft:#e2f1e9;
+  --chal:#b26a00; --chal-soft:#fbefd9;
+  --str:#7a3fa0; --str-soft:#f1e7f8;
+  --bad:#b3372f; --bad-soft:#f9e3e1;
+  --code-bg:#eef2f7; --code-ink:#1c2a44;
+  --c1:#2b5fa6; --c2:#d0791a; --c3:#2f8a62; --c4:#8a4bb3; --shade:rgba(43,95,166,.28); --grid:#e6e9ef;
+  --f-display:"Source Serif 4", Georgia, "Times New Roman", serif;
+  --f-body:"Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, Consolas, monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#11151c; --paper:#1a2029; --ink:#e4e8ef; --muted:#9aa4b4; --line:#2b3340; --line-strong:#3c4656;
+  --accent:#7fa8e6; --accent-soft:#1e2b3f;
+  --core:#6cc79d; --core-soft:#173025; --chal:#e5a64a; --chal-soft:#33281a; --str:#c39be0; --str-soft:#2a2135;
+  --bad:#ef8a80; --bad-soft:#3a1f1d;
+  --code-bg:#0e131a; --code-ink:#d6e2f5;
+  --c1:#7fa8e6; --c2:#eb9c4c; --c3:#5fc394; --c4:#c39be0; --shade:rgba(127,168,230,.30); --grid:#262e3a;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#11151c; --paper:#1a2029; --ink:#e4e8ef; --muted:#9aa4b4; --line:#2b3340; --line-strong:#3c4656;
+  --accent:#7fa8e6; --accent-soft:#1e2b3f;
+  --core:#6cc79d; --core-soft:#173025; --chal:#e5a64a; --chal-soft:#33281a; --str:#c39be0; --str-soft:#2a2135;
+  --bad:#ef8a80; --bad-soft:#3a1f1d;
+  --code-bg:#0e131a; --code-ink:#d6e2f5;
+  --c1:#7fa8e6; --c2:#eb9c4c; --c3:#5fc394; --c4:#c39be0; --shade:rgba(127,168,230,.30); --grid:#262e3a;
+  color-scheme:dark}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.6;margin:0;padding-inline:16px;padding-block:0 72px}
+a{color:var(--accent)}
+.topnav{max-width:820px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;padding-block:14px;border-bottom:1px solid var(--line);font-size:15px}
+.topnav .brand{font-weight:700;margin-right:auto;color:var(--ink);text-decoration:none}
+.topnav a.wk{color:var(--muted);text-decoration:none;padding:2px 8px;border-radius:6px}
+.topnav a.wk:hover{color:var(--accent)}
+.topnav a.wk[aria-current="page"]{background:var(--accent-soft);color:var(--accent);font-weight:600}
+.wrap{max-width:820px;margin:0 auto;display:flex;flex-direction:column;gap:40px}
+header.hero{padding-block:32px 4px;display:flex;flex-direction:column;gap:10px}
+.eyebrow{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;line-height:1.2;margin:0}
+h1{font-size:clamp(30px,6vw,44px)}
+h2{font-size:27px}
+h3{font-size:20px}
+p{margin:0}
+.lead{color:var(--muted);font-size:18.5px;max-width:65ch}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font-size:13px;font-weight:600;border:1px solid var(--line-strong);border-radius:999px;padding:3px 10px;color:var(--muted)}
+.toc{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:15px;padding:12px 16px;background:var(--paper);border:1px solid var(--line);border-radius:10px}
+.toc a{text-decoration:none}
+section{display:flex;flex-direction:column;gap:16px;scroll-margin-top:16px}
+.sec-head{display:flex;flex-direction:column;gap:4px}
+.sec-num{font-family:var(--f-mono);font-size:13px;color:var(--accent);font-weight:600}
+.prose{display:flex;flex-direction:column;gap:12px;max-width:68ch}
+ul.list,ol.list{margin:0;padding-left:1.3em;display:flex;flex-direction:column;gap:4px}
+.lo-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.lo-list li{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:baseline}
+.lo{font-family:var(--f-mono);font-size:12px;font-weight:600;background:var(--accent-soft);color:var(--accent);padding:2px 8px;border-radius:4px;white-space:nowrap}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.grid2.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media (max-width:600px){.grid2.two{grid-template-columns:1fr}}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.card h3{font-size:18px}
+.card .k{font-size:13px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:700}
+.code{position:relative;background:var(--code-bg);border:1px solid var(--line);border-radius:8px;min-width:0}
+.code pre{margin:0;padding:14px 16px;overflow-x:auto;font-family:var(--f-mono);font-size:14px;color:var(--code-ink);line-height:1.55}
+.code .copy{position:absolute;top:8px;right:8px}
+.copy,.btn{font:600 13px var(--f-body);background:var(--paper);color:var(--muted);border:1px solid var(--line-strong);border-radius:6px;padding:5px 11px;cursor:pointer}
+.copy:hover,.btn:hover{color:var(--accent);border-color:var(--accent)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--paper)}
+.btn.primary:hover{opacity:.9;color:var(--paper)}
+code{font-family:var(--f-mono);font-size:.88em;background:var(--code-bg);padding:1px 5px;border-radius:4px}
+.callout{border-left:3px solid var(--accent);background:var(--accent-soft);padding:12px 16px;border-radius:0 8px 8px 0}
+.callout.warn{border-color:var(--chal);background:var(--chal-soft)}
+.callout.good{border-color:var(--core);background:var(--core-soft)}
+/* figures and explorers */
+figure{margin:0}
+.figure{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.figure figcaption,.caption{font-size:14.5px;color:var(--muted)}
+.figure svg{width:100%;height:auto;display:block;overflow:visible}
+.explorer{border-color:var(--line-strong)}
+.explorer .title{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.explorer .title h3{font-size:19px}
+.tagx{font:700 11px var(--f-body);letter-spacing:.09em;text-transform:uppercase;padding:3px 8px;border-radius:999px;background:var(--accent-soft);color:var(--accent)}
+.controls{display:flex;flex-wrap:wrap;gap:12px 18px;align-items:flex-end}
+.ctl{display:flex;flex-direction:column;gap:4px;font-size:14px;color:var(--muted);min-width:0}
+.ctl b{color:var(--ink);font-family:var(--f-mono);font-weight:600}
+.ctl input[type=range]{width:min(220px,70vw);accent-color:var(--accent)}
+.ctl input[type=number],.ctl input[type=text],.ctl select{font:15px var(--f-mono);padding:5px 8px;border:1px solid var(--line-strong);border-radius:6px;background:var(--bg);color:var(--ink);width:7.5em}
+.ctl input[type=text]{width:12em}
+.ctl select{width:auto;font-family:var(--f-body)}
+.console{background:var(--code-bg);border:1px solid var(--line);border-radius:8px;padding:10px 14px;font-family:var(--f-mono);font-size:14px;color:var(--code-ink);overflow-x:auto;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.55}
+.console .p{color:var(--muted)}
+.kpis{display:flex;flex-wrap:wrap;gap:10px}
+.kpi{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 12px;display:flex;flex-direction:column;min-width:110px}
+.kpi span{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+.kpi b{font-family:var(--f-mono);font-size:19px;font-variant-numeric:tabular-nums}
+/* svg classes */
+.ax{stroke:var(--line-strong);stroke-width:1}
+.gridl{stroke:var(--grid);stroke-width:1}
+.tick{fill:var(--muted);font:12px var(--f-body)}
+.lab{fill:var(--ink);font:13px var(--f-body)}
+.labm{fill:var(--muted);font:12px var(--f-body)}
+.mono{font-family:var(--f-mono)}
+.curve{fill:none;stroke:var(--c1);stroke-width:2.2}
+.curve2{fill:none;stroke:var(--c2);stroke-width:2.2}
+.area{fill:var(--shade);stroke:none}
+.bar{fill:var(--c1)}
+.bar2{fill:var(--c2)}
+.bar3{fill:var(--c3)}
+.barmuted{fill:var(--line-strong)}
+.vline{stroke:var(--c2);stroke-width:2}
+.vline2{stroke:var(--c3);stroke-width:2;stroke-dasharray:5 4}
+.dot{fill:var(--c1)}
+/* vector cells */
+.vec{display:flex;flex-wrap:wrap;gap:4px}
+.cell{display:flex;flex-direction:column;align-items:center;min-width:46px;border:1px solid var(--line-strong);border-radius:6px;background:var(--paper);overflow:hidden;transition:background .15s,border-color .15s}
+.cell .v{font-family:var(--f-mono);font-size:15px;font-weight:600;padding:6px 6px 2px}
+.cell .i{font-family:var(--f-mono);font-size:11px;color:var(--muted);padding:0 6px 4px}
+.cell .t{font-family:var(--f-mono);font-size:10.5px;padding:2px 4px;width:100%;text-align:center;border-top:1px solid var(--line)}
+.cell.on{background:var(--core-soft);border-color:var(--core)}
+.cell.on .t{color:var(--core);font-weight:700}
+.cell.off{opacity:.55}
+.cell.off .t{color:var(--bad)}
+.cell.rec{border-style:dashed;opacity:.75}
+/* tiers and tasks */
+.tier{display:flex;flex-direction:column;gap:12px}
+.tier-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.tag{font:700 12px var(--f-body);letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:999px}
+.t-core .tag{background:var(--core-soft);color:var(--core)}
+.t-chal .tag{background:var(--chal-soft);color:var(--chal)}
+.t-str .tag{background:var(--str-soft);color:var(--str)}
+.note{color:var(--muted);font-size:15px}
+ol.tasks{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px}
+.task{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:14px 16px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.task-q{display:grid;grid-template-columns:2.4em 1fr;gap:4px}
+.task-q > span:last-child{min-width:0}
+.num{font-family:var(--f-mono);font-weight:600;color:var(--muted)}
+details{font-size:15px}
+summary{cursor:pointer;color:var(--accent);font-weight:600;width:max-content;max-width:100%}
+details > *:not(summary){margin-top:8px}
+summary:focus-visible,.copy:focus-visible,.btn:focus-visible,button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+/* tables */
+.tbl{overflow-x:auto;background:var(--paper);border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th,td{text-align:left;padding:8px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:none}
+th{font-weight:700;color:var(--muted);font-size:12.5px;text-transform:uppercase;letter-spacing:.06em;background:var(--bg)}
+td.m,th.m{font-family:var(--f-mono);font-size:14px;white-space:nowrap}
+td.n{text-align:right;font-variant-numeric:tabular-nums;font-family:var(--f-mono);font-size:14px}
+/* quiz */
+.quiz{display:flex;flex-direction:column;gap:14px}
+.q{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.q .opts{display:flex;flex-direction:column;gap:6px}
+.q button.opt{text-align:left;font:15px var(--f-body);background:var(--bg);color:var(--ink);border:1px solid var(--line-strong);border-radius:8px;padding:8px 12px;cursor:pointer}
+.q button.opt:hover{border-color:var(--accent)}
+.q button.opt.right{background:var(--core-soft);border-color:var(--core)}
+.q button.opt.wrong{background:var(--bad-soft);border-color:var(--bad)}
+.q .fb{font-size:15px;color:var(--muted)}
+.q .fb b.ok{color:var(--core)} .q .fb b.no{color:var(--bad)}
+/* rating */
+.rate{display:flex;flex-direction:column;gap:10px}
+.rate-row{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:10px 14px}
+.rate-row > span{min-width:0;flex:1 1 240px}
+.btns{display:flex;gap:6px}
+.btns button{font:600 14px var(--f-body);border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:6px;padding:6px 12px;cursor:pointer;min-width:44px}
+.btns button[aria-pressed="true"][data-v="1"]{background:var(--chal-soft);border-color:var(--chal);color:var(--chal)}
+.btns button[aria-pressed="true"][data-v="2"]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.btns button[aria-pressed="true"][data-v="3"]{background:var(--core-soft);border-color:var(--core);color:var(--core)}
+footer{max-width:820px;margin:48px auto 0;padding-bottom:8px;border-top:1px solid var(--line);padding-top:16px;color:var(--muted);font-size:14px;display:flex;flex-wrap:wrap;gap:8px 20px;justify-content:space-between}
+@media (max-width:520px){ body{font-size:16px} .card,.figure{padding:14px} .cell{min-width:40px} }
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+.wrap > *, section > *, .figure > *, .card > *{min-width:0;max-width:100%}
+p code, span code, li code, td code{overflow-wrap:anywhere}
+a.wkcard{text-decoration:none;color:var(--ink);transition:border-color .15s}
+a.wkcard:hover{border-color:var(--accent)}
+a.wkcard .go{color:var(--accent);font-weight:600;font-size:15px;margin-top:auto}
+@media (max-width:560px){
+  .figure svg .tick, .figure svg .labm{font-size:22px}
+  .figure svg .lab{font-size:23px}
+}
+/* ---------- module layout: left menu + main column ---------- */
+.layout{display:grid;grid-template-columns:270px minmax(0,1fr);gap:36px;max-width:1220px;margin:0 auto}
+.side{position:sticky;top:0;align-self:start;height:100vh;overflow-y:auto;padding:22px 6px 40px 0;border-right:1px solid var(--line);font-size:14.5px}
+.main{min-width:0}
+.side-brand{display:block;font-weight:700;font-size:16px;color:var(--ink);text-decoration:none;margin-bottom:14px}
+.side-group{font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:18px 0 6px}
+.side-list,.side-secs{list-style:none;margin:0;padding:0}
+.side-wk{display:grid;grid-template-columns:2.2em 1fr;gap:4px;align-items:baseline;padding:5px 8px;border-radius:6px;color:var(--ink);text-decoration:none;line-height:1.35}
+.side-wk:hover{background:var(--accent-soft)}
+.side-wk .wn{font-family:var(--f-mono);font-size:12.5px;color:var(--muted);font-weight:600}
+.side-wk[aria-current="page"]{background:var(--accent-soft);color:var(--accent);font-weight:600}
+.side-wk[aria-current="page"] .wn{color:var(--accent)}
+.side-secs{margin:4px 0 8px 2.6em;border-left:2px solid var(--line);padding-left:10px;display:flex;flex-direction:column;gap:2px}
+.side-secs a{color:var(--muted);text-decoration:none;font-size:13.5px;display:block;padding:2px 0;line-height:1.35}
+.side-secs a:hover{color:var(--accent)}
+.mobilebar{display:none}
+.pager{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px}
+.pager a{display:flex;flex-direction:column;gap:2px;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:var(--paper);text-decoration:none;color:var(--ink);font-weight:600;font-size:15px}
+.pager a:hover{border-color:var(--accent)}
+.pager a .k{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.pager a.nx{text-align:right}
+@media (max-width:1000px){
+  .layout{display:block}
+  .side{display:none}
+  .mobilebar{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding-block:12px;border-bottom:1px solid var(--line);position:relative}
+  .mobilebar .side-brand{margin:6px 0 0}
+  .mnav summary{list-style:none;cursor:pointer;font-weight:600;font-size:14px;color:var(--accent);border:1px solid var(--line-strong);border-radius:6px;padding:6px 12px;width:auto;background:var(--paper)}
+  .mnav summary::-webkit-details-marker{display:none}
+  .mnav[open] summary{background:var(--accent-soft)}
+  .mnav-panel{position:absolute;left:0;right:0;top:100%;z-index:20;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:14px 14px 18px;box-shadow:0 12px 30px rgba(0,0,0,.18);max-height:75vh;overflow-y:auto}
+  .mnav-panel .side-brand{display:none}
+}
+@media (max-width:520px){ .pager{grid-template-columns:1fr} .pager a.nx{text-align:left} }
+@media (min-width:1001px){ .toc{display:none} }
+.side-secs a.on{color:var(--accent);font-weight:600}
+
+</style>
+</head>
+<body data-page="week11">
+<div class="layout">
+<aside class="side" aria-label="Module weeks"><a class="side-brand" href="index.html">COM747 R Labs</a><p class="side-group">Foundations</p><ul class="side-list"><li><a class="side-wk" href="week01.html"><span class="wn">1</span><span>Data, Questions and R</span></a></li><li><a class="side-wk" href="week02a.html"><span class="wn">2A</span><span>Statistical Computing with R</span></a></li><li><a class="side-wk" href="week02b.html"><span class="wn">2B</span><span>Probability Distributions and EDA</span></a></li><li><a class="side-wk" href="week03.html"><span class="wn">3</span><span>Inferential Statistics</span></a></li></ul><p class="side-group">Modelling</p><ul class="side-list"><li><a class="side-wk" href="week04.html"><span class="wn">4</span><span>Regression and Time Series</span></a></li><li><a class="side-wk" href="week05.html"><span class="wn">5</span><span>Supervised ML and Feature Engineering</span></a></li><li><a class="side-wk" href="week06.html"><span class="wn">6</span><span>Ethics, Evaluation and Logistic Regression</span></a></li><li><a class="side-wk" href="week07.html"><span class="wn">7</span><span>ML Optimisation and Text Mining</span></a></li></ul><p class="side-group">Unsupervised learning</p><ul class="side-list"><li><a class="side-wk" href="week08.html"><span class="wn">8</span><span>Clustering and PCA</span></a></li><li><a class="side-wk" href="week09.html"><span class="wn">9</span><span>Association Rule Mining</span></a></li></ul><p class="side-group">Wider practice</p><ul class="side-list"><li><a class="side-wk" href="week10.html"><span class="wn">10</span><span>Data Analytics and Engineering</span></a></li><li><a class="side-wk" href="week11.html" aria-current="page"><span class="wn">11</span><span>Maths and the R Toolkit</span></a><ul class="side-secs"><li><a href="#question">Can a computer read a heart?</a></li><li><a href="#cardio">Data science in cardiology</a></li><li><a href="#ecg">Rule-based versus machine learning</a></li><li><a href="#numbers">Number systems and scientific notation</a></li><li><a href="#sets">Sets and logic</a></li><li><a href="#functions">Functions: domain, codomain and range</a></li><li><a href="#matrices">Matrices</a></li><li><a href="#graphs">Graphs and networks</a></li><li><a href="#vartypes">Statistics and variable types</a></li><li><a href="#toolkit">The R toolkit: what to reach for next</a></li><li><a href="#tasks">Your R tasks</a></li><li><a href="#quiz">Check yourself</a></li><li><a href="#glossary">Key terms</a></li><li><a href="#exit">Exit self-check</a></li></ul></li><li><a class="side-wk" href="week12.html"><span class="wn">12</span><span>Teamwork and Process Mining</span></a></li></ul></aside>
+<div class="main">
+<div class="mobilebar"><a class="side-brand" href="index.html">COM747 R Labs</a><details class="mnav"><summary>Menu</summary><nav class="mnav-panel" aria-label="Module weeks"><a class="side-brand" href="index.html">COM747 R Labs</a><p class="side-group">Foundations</p><ul class="side-list"><li><a class="side-wk" href="week01.html"><span class="wn">1</span><span>Data, Questions and R</span></a></li><li><a class="side-wk" href="week02a.html"><span class="wn">2A</span><span>Statistical Computing with R</span></a></li><li><a class="side-wk" href="week02b.html"><span class="wn">2B</span><span>Probability Distributions and EDA</span></a></li><li><a class="side-wk" href="week03.html"><span class="wn">3</span><span>Inferential Statistics</span></a></li></ul><p class="side-group">Modelling</p><ul class="side-list"><li><a class="side-wk" href="week04.html"><span class="wn">4</span><span>Regression and Time Series</span></a></li><li><a class="side-wk" href="week05.html"><span class="wn">5</span><span>Supervised ML and Feature Engineering</span></a></li><li><a class="side-wk" href="week06.html"><span class="wn">6</span><span>Ethics, Evaluation and Logistic Regression</span></a></li><li><a class="side-wk" href="week07.html"><span class="wn">7</span><span>ML Optimisation and Text Mining</span></a></li></ul><p class="side-group">Unsupervised learning</p><ul class="side-list"><li><a class="side-wk" href="week08.html"><span class="wn">8</span><span>Clustering and PCA</span></a></li><li><a class="side-wk" href="week09.html"><span class="wn">9</span><span>Association Rule Mining</span></a></li></ul><p class="side-group">Wider practice</p><ul class="side-list"><li><a class="side-wk" href="week10.html"><span class="wn">10</span><span>Data Analytics and Engineering</span></a></li><li><a class="side-wk" href="week11.html" aria-current="page"><span class="wn">11</span><span>Maths and the R Toolkit</span></a><ul class="side-secs"><li><a href="#question">Can a computer read a heart?</a></li><li><a href="#cardio">Data science in cardiology</a></li><li><a href="#ecg">Rule-based versus machine learning</a></li><li><a href="#numbers">Number systems and scientific notation</a></li><li><a href="#sets">Sets and logic</a></li><li><a href="#functions">Functions: domain, codomain and range</a></li><li><a href="#matrices">Matrices</a></li><li><a href="#graphs">Graphs and networks</a></li><li><a href="#vartypes">Statistics and variable types</a></li><li><a href="#toolkit">The R toolkit: what to reach for next</a></li><li><a href="#tasks">Your R tasks</a></li><li><a href="#quiz">Check yourself</a></li><li><a href="#glossary">Key terms</a></li><li><a href="#exit">Exit self-check</a></li></ul></li><li><a class="side-wk" href="week12.html"><span class="wn">12</span><span>Teamwork and Process Mining</span></a></li></ul></nav></details></div>
+<div class="wrap">
+<header class="hero">
+  <div class="eyebrow">COM747 Data Science &amp; Machine Learning · Week 11</div>
+  <h1>Data Science in Practice, Useful Maths and the R Toolkit</h1>
+  <p class="lead">Two guest talks show data science in cardiology: heart failure research and AI that reads ECGs. Then a refresher on the maths underneath the module (number systems, sets and logic, functions, matrices, graphs) and the R packages you'll reach for next: web data, JSON, fast data, timing, parallel code and Shiny.</p>
+  <div class="chips"><span class="chip">Guest lectures + seminar</span><span class="chip">RStudio</span><span class="chip">Packages: jsonlite, rvest, xml2, data.table, parallel, shiny</span></div>
+</header>
+
+<nav class="toc" aria-label="On this page">
+  <a href="#question">The question</a><a href="#cardio">Cardiology</a><a href="#ecg">Rules vs ML</a><a href="#numbers">Numbers</a><a href="#sets">Sets and logic</a><a href="#functions">Functions</a><a href="#matrices">Matrices</a><a href="#graphs">Graphs</a><a href="#vartypes">Variable types</a><a href="#toolkit">R toolkit</a><a href="#tasks">R tasks</a><a href="#quiz">Quiz</a>
+</nav>
+
+<section id="question">
+  <div class="sec-head"><span class="sec-num">01</span><h2>Can a computer read a heart?</h2></div>
+  <div class="prose"><p>About a million ECGs are recorded every day worldwide. Recording one is simple; interpreting it is hard for humans and machines alike. Since the 1950s computers have helped, first with hand-written rules and now with deep learning trained on millions of examples. This week's talks show what that looks like in practice, and what can go wrong.</p></div>
+  <ul class="lo-list">
+    <li><span class="lo">LO1</span><span>Describe how data science and ML are used in cardiology, and the challenges.</span></li>
+    <li><span class="lo">LO2</span><span>Compare rule-based and machine learning approaches to the same problem.</span></li>
+    <li><span class="lo">LO3</span><span>Use sets, logic, functions, matrices and graphs, and their R equivalents.</span></li>
+    <li><span class="lo">LO4</span><span>Classify variables as nominal, ordinal or metric.</span></li>
+    <li><span class="lo">LO5</span><span>Read JSON and web data, time code and use multiple cores in R; know what Shiny is for.</span></li>
+  </ul>
+</section>
+
+<section id="cardio">
+  <div class="sec-head"><span class="sec-num">02</span><h2>Data science in cardiology</h2></div>
+  <div class="grid2 two">
+    <div class="card"><span class="k">Heart failure in Northern Ireland</span><p>Heart failure is common, increasing, under-detected and still deadly (around 39% mortality at one year in national audit data). A doctoral study combined a systematic review, open government data (QOF, NISRA), survival analysis (Kaplan–Meier, Cox regression: Week 4), supervised ML (decision trees) and unsupervised ML (PCA and k-means: Week 8) to map the landscape and find patient phenotypes.</p></div>
+    <div class="card"><span class="k">What the review found</span><p>Many published ML papers <b>overclaim</b> clinical usefulness, and about a quarter were written by IT specialists without clinical input. Lesson: domain experts belong on the team, and a good AUC is not the same as a useful tool.</p></div>
+    <div class="card"><span class="k">AI for ECGs</span><p>A Belfast start-up built a database of over a million ECGs for algorithm development. Deep networks now match or beat individual cardiologists on several tasks, e.g. a residual network on 90,000+ single-lead ECGs (Hannun et al., 2019) and networks trained on 2 million 12-lead ECGs that outperformed resident doctors on six abnormalities (Ribeiro et al., 2020).</p></div>
+    <div class="card"><span class="k">Data requirements</span><p><b>Large</b> (thousands of examples or more), <b>clean</b> (correct labels: a single annotator makes errors, so use consensus) and <b>diverse</b> (many edge cases, many populations). Labels are the expensive part, which is why unsupervised learning on unlabelled ECGs is attracting interest.</p></div>
+  </div>
+</section>
+
+<section id="ecg">
+  <div class="sec-head"><span class="sec-num">03</span><h2>Rule-based versus machine learning</h2></div>
+  <div class="prose"><p>A <b>rule-based</b> system uses rules written by experts: preprocess, detect beats, correct the baseline, average beats, apply decision logic. When it fails you can see why. A <b>machine learning</b> system learns the rules from many labelled examples; it can find patterns no one wrote down, but the reasoning is hidden. The explorer is a simple rule: "a beat is wherever the signal crosses a threshold". Add noise or baseline wander and watch the rule break.</p></div>
+  <div class="figure explorer">
+    <div class="title"><span class="tagx">Explorer</span><h3>A threshold rule for detecting heartbeats</h3></div>
+    <div class="controls">
+      <label class="ctl" for="ecg-hr"><span>true heart rate: <b id="ecg-hrv"></b> bpm</span><input type="range" id="ecg-hr" min="45" max="150" value="72"></label>
+      <label class="ctl" for="ecg-th"><span>rule threshold: <b id="ecg-thv"></b> mV</span><input type="range" id="ecg-th" min="10" max="150" value="60"></label>
+      <label class="ctl" for="ecg-n"><span>noise: <b id="ecg-nv"></b></span><input type="range" id="ecg-n" min="0" max="40" value="4"></label>
+      <label class="ctl" for="ecg-w"><span>baseline wander: <b id="ecg-wv"></b></span><input type="range" id="ecg-w" min="0" max="60" value="0"></label>
+    </div>
+    <svg id="ecg-svg" role="img" aria-label="Simulated ECG trace with threshold line and detected beats"></svg>
+    <div class="kpis"><div class="kpi"><span>beats detected</span><b id="ecg-d"></b></div><div class="kpi"><span>true beats</span><b id="ecg-t"></b></div><div class="kpi"><span>estimated rate</span><b id="ecg-r"></b></div></div>
+    <div class="console" id="ecg-out"></div>
+    <p class="caption">A simulated 8-second trace (not real patient data). Triangles mark detections; red ones are false alarms, and grey rings are missed beats. Real rule-based software adds filtering and baseline correction to cope with exactly these problems; ML learns to cope from examples.</p>
+  </div>
+  <div class="tbl"><table><thead><tr><th></th><th>Rule-based</th><th>Machine learning</th></tr></thead><tbody>
+    <tr><td>Knowledge from</td><td>Domain experts</td><td>Large labelled datasets</td></tr>
+    <tr><td>Best when</td><td>Knowledge is well established and training data is limited</td><td>Plenty of good labelled data; patterns are complex</td></tr>
+    <tr><td>When it fails</td><td>Easy to trace and fix</td><td>Hard to explain (feature processing is hidden)</td></tr>
+    <tr><td>Path to market</td><td colspan="2">Data sourcing → cleansing → training and testing → clinical validation and regulation → release</td></tr>
+  </tbody></table></div>
+</section>
+
+<section id="numbers">
+  <div class="sec-head"><span class="sec-num">04</span><h2>Number systems and scientific notation</h2></div>
+  <div class="grid2 two">
+    <figure class="figure"><svg id="ns-svg" role="img" aria-label="Nested sets of numbers: natural, integer, rational, real, complex"></svg><div class="console" id="ns-out"></div><figcaption>Each system fixes a gap in the one inside it: integers allow 2 − 4, rationals allow 2 / 6, reals allow √2, complex numbers allow √−1. Click a ring for examples.</figcaption></figure>
+    <div>
+      <div class="figure explorer">
+        <div class="title"><span class="tagx">Explorer</span><h3>Scientific notation (as R prints it)</h3></div>
+        <div class="controls"><label class="ctl" for="sn-in">a number<input type="text" id="sn-in" value="0.0000123" autocomplete="off" spellcheck="false"></label></div>
+        <div class="console" id="sn-out"></div>
+        <p class="caption">R prints <code>1.23e-05</code> for 1.23 × 10⁻⁵, but 0.000123 stays as it is because the fixed form is no longer than the scientific one. You saw this with p-values (Week 3) and 2¹⁰⁰ = 1.27e+30 (Week 9). <code>format(x, scientific = FALSE)</code> turns it off.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="sets">
+  <div class="sec-head"><span class="sec-num">05</span><h2>Sets and logic</h2></div>
+  <div class="figure explorer">
+    <div class="title"><span class="tagx">Explorer</span><h3>Set operations and their R functions</h3></div>
+    <div class="controls">
+      <label class="ctl" for="st-a">A<input type="text" id="st-a" value="1, 2, 3, 4, 5" autocomplete="off"></label>
+      <label class="ctl" for="st-b">B<input type="text" id="st-b" value="4, 5, 6, 7" autocomplete="off"></label>
+      <label class="ctl" for="st-op">operation<select id="st-op"><option value="u">A ∪ B union</option><option value="i">A ∩ B intersection</option><option value="d">A \ B difference</option><option value="e">B \ A difference</option><option value="s">symmetric difference</option></select></label>
+    </div>
+    <svg id="st-svg" role="img" aria-label="Venn diagram of A and B with the chosen operation shaded"></svg>
+    <div class="console" id="st-out"></div>
+  </div>
+  <div class="figure explorer">
+    <div class="title"><span class="tagx">Explorer</span><h3>Truth tables</h3></div>
+    <div class="controls"><label class="ctl" for="tt-op">statement<select id="tt-op"><option value="and">P AND Q  (P &amp; Q)</option><option value="or">P OR Q  (P | Q)</option><option value="xor">P XOR Q  (xor(P, Q))</option><option value="imp">P implies Q  (!P | Q)</option><option value="nand">NOT (P AND Q)  (!(P &amp; Q))</option><option value="dm">NOT P OR NOT Q  (!P | !Q)</option></select></label></div>
+    <div class="tbl" id="tt-tbl"></div>
+    <p class="caption">Compare "NOT (P AND Q)" with "NOT P OR NOT Q": identical columns. That is De Morgan's law. In R: <code>expand.grid(P = c(TRUE, FALSE), Q = c(TRUE, FALSE))</code> then compute the column. You use these every time you <code>subset()</code> with <code>&amp;</code> and <code>|</code>.</p>
+  </div>
+</section>
+
+<section id="functions">
+  <div class="sec-head"><span class="sec-num">06</span><h2>Functions: domain, codomain and range</h2></div>
+  <div class="prose"><p>A function f : A → B assigns <b>exactly one</b> element of B to each element of A. A is the <b>domain</b>, B the <b>codomain</b>, and the elements actually reached form the <b>range</b> (image). Every model in this module is a function: features in, prediction out.</p></div>
+  <div class="grid2 two">
+    <figure class="figure"><svg id="fm-svg" role="img" aria-label="Arrow diagram of f(x) = x squared from A to B"></svg><figcaption>The lecture's example: A = {−2, −1, 0, 1, 2, 3}, B = {0, …, 9}, f(x) = x². Range = {0, 1, 4, 9}. Two arrows can land on the same element (−2 and 2 both give 4), so f is not one-to-one, but it is still a function.</figcaption></figure>
+    <div class="card"><span class="k">Not functions</span><p>A mapping where one input has two outputs (2 → 4 and 2 → 5) is not a function; nor is one that leaves an input with no output. In R, <code>function(x) x^2</code> is a function in exactly this sense, and <code>sqrt()</code> has domain x ≥ 0 for real numbers (try <code>sqrt(-1)</code>).</p><p>A function is <b>one-to-one</b> (injective) if different inputs always give different outputs, and <b>onto</b> (surjective) if the range is the whole codomain. x² on A is neither.</p></div>
+  </div>
+  <div class="figure explorer">
+    <div class="title"><span class="tagx">Explorer</span><h3>Function families</h3></div>
+    <div class="controls">
+      <label class="ctl" for="fp-f">f(x)<select id="fp-f"><option value="lin">a·x + b (linear)</option><option value="quad">a·x² + b (quadratic)</option><option value="exp">b·eᵃˣ (exponential)</option><option value="log">a·log(x) + b</option><option value="sig">1 / (1 + e^−(a·x + b)) (sigmoid)</option></select></label>
+      <label class="ctl" for="fp-a"><span>a: <b id="fp-av"></b></span><input type="range" id="fp-a" min="-30" max="30" value="10"></label>
+      <label class="ctl" for="fp-b"><span>b: <b id="fp-bv"></b></span><input type="range" id="fp-b" min="-30" max="30" value="0"></label>
+    </div>
+    <svg id="fp-svg" role="img" aria-label="Plot of the chosen function"></svg>
+    <div class="console" id="fp-out"></div>
+    </div>
+</section>
+
+<section id="matrices">
+  <div class="sec-head"><span class="sec-num">07</span><h2>Matrices</h2></div>
+  <div class="prose"><p>An m × n matrix has m rows and n columns: exactly how a data frame of numbers is stored. A distance table is a <b>symmetric</b> matrix (a<sub>ij</sub> = a<sub>ji</sub>); <code>dist()</code> in Week 8 built one. Matrix multiplication is behind regression (<code>X %*% beta</code>), PCA (<code>X %*% rotation</code>) and every layer of a neural network (<code>W %*% x + b</code>).</p></div>
+  <div class="figure explorer">
+    <div class="title"><span class="tagx">Explorer</span><h3>Matrix multiplication step by step</h3></div>
+    <div class="controls">
+      <label class="ctl" for="mm-ex">example<select id="mm-ex"><option value="0">2×3 times 3×2</option><option value="1">prices × quantities</option><option value="2">a neural network layer</option></select></label>
+      <button class="btn" type="button" id="mm-next">Next cell</button>
+      <button class="btn" type="button" id="mm-all">Show all</button>
+    </div>
+    <svg id="mm-svg" role="img" aria-label="Two matrices and their product, with the current row and column highlighted"></svg>
+    <div class="console" id="mm-out"></div>
+    <p class="caption">Element (i, j) of A·B is row i of A times column j of B, summed. The inner sizes must match: (m × <b>n</b>)(<b>n</b> × p) gives m × p. In R use <code>%*%</code>; plain <code>*</code> multiplies element by element.</p>
+  </div>
+</section>
+
+<section id="graphs">
+  <div class="sec-head"><span class="sec-num">08</span><h2>Graphs and networks</h2></div>
+  <div class="prose"><p>A graph has vertices (nodes) and edges; in a directed graph (digraph) edges are arcs with a direction. A network is stored as an <b>adjacency matrix</b>: m<sub>ij</sub> = number of arcs from i to j. Squaring the matrix counts the paths of length 2. Social networks, process maps (Week 12) and association-rule graphs (Week 9) are all graphs.</p></div>
+  <div class="figure explorer">
+    <div class="title"><span class="tagx">Explorer</span><h3>The lecture's digraph and its matrix</h3></div>
+    <div class="controls">
+      <label class="ctl" for="gr-show">show<select id="gr-show"><option value="1">M (paths of length 1)</option><option value="2">M² (paths of length 2)</option><option value="3">M³ (paths of length 3)</option></select></label>
+      <span class="note">Click a node to see its in-degree and out-degree.</span>
+    </div>
+    <div class="grid2 two">
+      <svg id="gr-svg" role="img" aria-label="Directed graph with five nodes A to E"></svg>
+      <div class="tbl" id="gr-tbl"></div>
+    </div>
+    <div class="console" id="gr-out"></div>
+  </div>
+</section>
+
+<section id="vartypes">
+  <div class="sec-head"><span class="sec-num">09</span><h2>Statistics and variable types</h2></div>
+  <div class="prose"><p><b>Descriptive</b> statistics summarise a sample (the class's mean height); <b>inferential</b> statistics generalise from the sample to the population (the university's mean height). The type of each variable decides which summaries, plots and tests are valid.</p></div>
+  <div class="figure explorer">
+    <div class="title"><span class="tagx">Explorer</span><h3>Sort the variables</h3></div>
+    <div id="vt-box"></div>
+    <div class="console" id="vt-out"></div>
+    <p class="caption"><b>Nominal</b>: categories with no order (in R a <code>factor</code>). <b>Ordinal</b>: ordered categories (<code>factor(..., ordered = TRUE)</code>). <b>Metric</b>: numbers on a scale (<code>numeric</code>), discrete counts or continuous measurements.</p>
+  </div>
+</section>
+
+<section id="toolkit">
+  <div class="sec-head"><span class="sec-num">10</span><h2>The R toolkit: what to reach for next</h2></div>
+  <div class="grid2 two">
+    <div class="card"><span class="k">Web pages: rvest, xml2</span><p>Web scraping: read a page's HTML and pull out elements by CSS selector.</p><div class="code"><pre>library(rvest)
+webpage &lt;- read_html("https://www.ulster.ac.uk")
+html_node(webpage, "title") %&gt;% html_text()</pre></div></div>
+    <div class="card"><span class="k">JSON: jsonlite</span><p>The format of most web APIs. Data frames go to JSON as an array of records and come back unchanged; car names travel in a <code>"_row"</code> field. Note <code>toJSON()</code> keeps only 4 decimal places unless you set <code>digits</code>.</p><div class="code"><pre>library(jsonlite)
+j &lt;- toJSON(mtcars, pretty = TRUE)
+myCarDataset &lt;- fromJSON(j)</pre></div></div>
+    <div class="card"><span class="k">Big files: data.table</span><p><code>fread()</code> reads CSVs many times faster than <code>read.csv()</code> and guesses separators and types.</p><div class="code"><pre>library(data.table)
+myDataset &lt;- fread("data.csv")</pre></div></div>
+    <div class="card"><span class="k">Timing and cores</span><p><code>system.time()</code> measures code; <code>parallel</code> (built into R, no install needed) runs work on several cores.</p><div class="code"><pre>system.time(rnorm(1e6))
+library(parallel); detectCores()
+mclapply(1:8, slow_fn, mc.cores = 4)</pre></div></div>
+    <div class="card"><span class="k">Networks: statnet, igraph</span><p>Social network analysis: degrees, centrality, communities.</p></div>
+    <div class="card"><span class="k">Dashboards: Shiny</span><p>Interactive web apps written only in R: inputs, reactive outputs, plots. Try <code>shiny::runExample("01_hello")</code>. Big data: <code>sparklyr</code> connects R to Apache Spark.</p></div>
+  </div>
+  <div class="figure explorer">
+    <div class="title"><span class="tagx">Explorer</span><h3>JSON round trip</h3></div>
+    <div class="controls"><label class="ctl" for="js-n">rows of mtcars<select id="js-n"><option>1</option><option selected>2</option><option>3</option></select></label><label class="ctl" for="js-v">view<select id="js-v"><option value="rows">toJSON(df) (records)</option><option value="cols">toJSON(df, dataframe = "columns")</option></select></label></div>
+    <div class="console" id="js-out"></div>
+    <p class="caption">Records (one object per row) are the default and what most APIs send. The column form is more compact; this site's charts use it for the data they load.</p>
+  </div>
+  <figure class="figure"><svg id="tm-svg" role="img" aria-label="Run time of sequential vs parallel code for different numbers of cores"></svg>
+  <figcaption>Why parallel code rarely scales perfectly (Amdahl's law): if 90% of a job can be parallelised, 4 cores give at most a 3.1× speed-up and 16 cores 6.4×, because the serial 10% never speeds up. Time your own code with <code>system.time()</code> before and after.</figcaption></figure>
+</section>
+
+<section id="tasks">
+  <div class="sec-head"><span class="sec-num">11</span><h2>Your R tasks</h2></div>
+  <div class="tier t-core">
+    <div class="tier-head"><span class="tag">Core</span><span class="note">Maths in R (LO3, LO4)</span></div>
+    <ol class="tasks">
+      <li class="task"><div class="task-q"><span class="num">1</span><span>With A = 1:5 and B = 4:7, compute the union, intersection, both differences and test whether 3 is in A.</span></div>
+        <details><summary>Check your answer</summary><div class="code"><pre>A &lt;- 1:5; B &lt;- 4:7
+union(A, B); intersect(A, B); setdiff(A, B); setdiff(B, A)
+3 %in% A                 # TRUE
+setequal(c(1, 2), c(2, 1))</pre></div></details></li>
+      <li class="task"><div class="task-q"><span class="num">2</span><span>Enter the lecture's adjacency matrix M, compute in- and out-degrees and the number of paths of length 2.</span></div>
+        <details><summary>Check your answer</summary><div class="code"><pre>M &lt;- matrix(c(0,1,1,2,0,
+              1,0,0,0,0,
+              0,0,1,1,0,
+              0,0,0,0,1,
+              0,0,1,0,1), nrow = 5, byrow = TRUE,
+            dimnames = list(LETTERS[1:5], LETTERS[1:5]))
+rowSums(M)    # out-degree
+colSums(M)    # in-degree: C has 3
+M %*% M       # paths of length 2</pre></div></details></li>
+      <li class="task"><div class="task-q"><span class="num">3</span><span>Store blood group as a nominal factor and shoe size band as an ordinal factor. What does <code>max()</code> do on each?</span></div>
+        <details><summary>Check your answer</summary><div class="code"><pre>blood &lt;- factor(c("A", "O", "B", "O", "AB"))
+size  &lt;- factor(c("S", "L", "M", "S"), levels = c("S", "M", "L"), ordered = TRUE)
+try(max(blood))   # error: no order for a nominal factor
+max(size)         # L
+table(blood)</pre></div></details></li>
+    </ol>
+  </div>
+  <div class="tier t-chal">
+    <div class="tier-head"><span class="tag">Challenge</span><span class="note">Data formats (LO5)</span></div>
+    <ol class="tasks">
+      <li class="task"><div class="task-q"><span class="num">4</span><span>Convert mtcars to JSON and back. Is the result identical? What is lost?</span></div>
+        <details><summary>Check your answer</summary><div class="code"><pre>library(jsonlite)
+j &lt;- toJSON(mtcars, pretty = TRUE)
+back &lt;- fromJSON(j)
+all.equal(mtcars, back, check.attributes = FALSE)   # TRUE: values the same
+rownames(back)[1:3]    # car names are kept as row names by default ("_row" field)
+j2 &lt;- toJSON(mtcars, rownames = FALSE); head(fromJSON(j2), 2)   # names lost here</pre></div></details></li>
+      <li class="task"><div class="task-q"><span class="num">5</span><span>Write a 1-million-row CSV and time <code>read.csv()</code> against <code>data.table::fread()</code>.</span></div>
+        <details><summary>Check your answer</summary><div class="code"><pre>library(data.table)
+df &lt;- data.frame(id = 1:1e6, x = rnorm(1e6), g = sample(letters, 1e6, TRUE))
+f &lt;- tempfile(fileext = ".csv"); fwrite(df, f)
+system.time(a &lt;- read.csv(f))
+system.time(b &lt;- fread(f))      # typically 10x or more faster</pre></div></details></li>
+    </ol>
+  </div>
+  <div class="tier t-str">
+    <div class="tier-head"><span class="tag">Stretch</span><span class="note">Speed and apps (LO5)</span></div>
+    <ol class="tasks">
+      <li class="task"><div class="task-q"><span class="num">6</span><span>Time 200 bootstrap fits of a regression on 1 core and on all cores.</span></div>
+        <details><summary>Check your answer</summary><div class="code"><pre>library(parallel)
+boot_fit &lt;- function(i) coef(lm(mpg ~ wt + hp, mtcars[sample(32, replace = TRUE), ]))
+system.time(lapply(1:200, boot_fit))
+system.time(mclapply(1:200, boot_fit, mc.cores = detectCores()))   # Windows: use parLapply</pre></div>
+        <p class="note">The sheet's <code>install.packages("parallel")</code> isn't needed (and gives a warning): parallel ships with R.</p></details></li>
+      <li class="task"><div class="task-q"><span class="num">7</span><span>Run <code>shiny::runExample("01_hello")</code>, then write a 15-line app with a slider for k that plots k-means clusters of iris.</span></div></li>
+    </ol>
+  </div>
+</section>
+
+<section id="quiz">
+  <div class="sec-head"><span class="sec-num">12</span><h2>Check yourself</h2></div>
+  <div class="quiz">
+    <div class="q" data-answer="0" data-why="Rules are explicit, so failures can be traced; ML hides its feature processing.">
+      <p><b>1.</b> One advantage of a rule-based ECG algorithm over deep learning is…</p>
+      <div class="opts"><button class="opt">When it fails, it is easy to see why</button><button class="opt">It needs more labelled data</button><button class="opt">It is always more accurate</button></div><p class="fb"></p></div>
+    <div class="q" data-answer="2" data-why="intersect() keeps elements in both sets.">
+      <p><b>2.</b> <code>intersect(c(1,2,3), c(2,3,4))</code> returns…</p>
+      <div class="opts"><button class="opt">1 2 3 4</button><button class="opt">1 4</button><button class="opt">2 3</button></div><p class="fb"></p></div>
+    <div class="q" data-answer="1" data-why="Inner dimensions must match: (2×3)(3×4) gives 2×4.">
+      <p><b>3.</b> A is 2×3 and B is 3×4. What is the size of A %*% B?</p>
+      <div class="opts"><button class="opt">3×3</button><button class="opt">2×4</button><button class="opt">It can't be computed</button></div><p class="fb"></p></div>
+    <div class="q" data-answer="1" data-why="Income bands have an order but the gaps aren't equal measurements: ordinal.">
+      <p><b>4.</b> Income band (&lt;£20k, £20–40k, &gt;£40k) is…</p>
+      <div class="opts"><button class="opt">Nominal</button><button class="opt">Ordinal</button><button class="opt">Continuous metric</button></div><p class="fb"></p></div>
+    <div class="q" data-answer="0" data-why="Each element of the domain must map to exactly one element.">
+      <p><b>5.</b> A mapping sends 2 to both 4 and 5. Is it a function?</p>
+      <div class="opts"><button class="opt">No: each input must have exactly one output</button><button class="opt">Yes, any mapping is a function</button><button class="opt">Only if 4 and 5 are in the range</button></div><p class="fb"></p></div>
+  </div>
+</section>
+
+<section id="glossary">
+  <div class="sec-head"><span class="sec-num">13</span><h2>Key terms</h2></div>
+  <div class="tbl"><table><thead><tr><th>Term</th><th>Meaning</th></tr></thead><tbody>
+    <tr><td>Rule-based system</td><td>Software following rules written by experts.</td></tr>
+    <tr><td>Union / intersection</td><td>Elements in either set / in both sets.</td></tr>
+    <tr><td>Predicate</td><td>A statement about x that is true or false for each element.</td></tr>
+    <tr><td>Domain / codomain / range</td><td>Inputs / allowed outputs / outputs actually reached.</td></tr>
+    <tr><td>Symmetric matrix</td><td>a<sub>ij</sub> = a<sub>ji</sub>, like a distance table.</td></tr>
+    <tr><td>Adjacency matrix</td><td>m<sub>ij</sub> = number of edges from node i to node j.</td></tr>
+    <tr><td>In- / out-degree</td><td>Arcs into / out of a node.</td></tr>
+    <tr><td>Nominal / ordinal / metric</td><td>Unordered categories / ordered categories / measured numbers.</td></tr>
+    <tr><td>JSON</td><td>Text format of objects and arrays used by web APIs.</td></tr>
+  </tbody></table></div>
+</section>
+
+<section id="exit">
+  <div class="sec-head"><span class="sec-num">14</span><h2>Exit self-check</h2></div>
+  <p class="note">1 = I need help · 2 = nearly there · 3 = confident. Your choices stay on this device.</p>
+  <div class="rate">
+    <div class="rate-row"><span><span class="lo">LO2</span> Rule-based vs ML.</span><div class="btns" data-k="w11lo2"><button data-v="1">1</button><button data-v="2">2</button><button data-v="3">3</button></div></div>
+    <div class="rate-row"><span><span class="lo">LO3</span> Sets, functions, matrices, graphs.</span><div class="btns" data-k="w11lo3"><button data-v="1">1</button><button data-v="2">2</button><button data-v="3">3</button></div></div>
+    <div class="rate-row"><span><span class="lo">LO4</span> Variable types.</span><div class="btns" data-k="w11lo4"><button data-v="1">1</button><button data-v="2">2</button><button data-v="3">3</button></div></div>
+    <div class="rate-row"><span><span class="lo">LO5</span> JSON, timing, parallel, Shiny.</span><div class="btns" data-k="w11lo5"><button data-v="1">1</button><button data-v="2">2</button><button data-v="3">3</button></div></div>
+  </div>
+</section>
+
+<nav class="pager" aria-label="Previous and next week"><a href="week10.html"><span class="k">← Week 10</span>Data Analytics and Engineering</a><a class="nx" href="week12.html"><span class="k">Week 12 →</span>Teamwork and Process Mining</a></nav>
+</div>
+<footer><span>COM747 Data Science &amp; Machine Learning · QA Higher Education / Ulster University</span><span>Keep RStudio open beside this page.</span></footer>
+</div>
+</div>
+<script>
+/* Shared helpers for COM747 student pages: copy buttons, quizzes, self-ratings, stats maths, SVG charts */
+(function(){
+"use strict";
+/* ---------- copy buttons ---------- */
+document.querySelectorAll('.code').forEach(function(box){
+  if (box.dataset.nocopy !== undefined) return;
+  var pre = box.querySelector('pre'); if (!pre) return;
+  var btn = document.createElement('button'); btn.type='button'; btn.className='copy'; btn.textContent='Copy';
+  box.appendChild(btn);
+  btn.addEventListener('click', function(){
+    var text = pre.innerText;
+    var done = function(){ btn.textContent='Copied'; setTimeout(function(){btn.textContent='Copy';},1500); };
+    var fallback = function(){ var r=document.createRange(); r.selectNodeContents(pre); var s=window.getSelection(); s.removeAllRanges(); s.addRange(r); btn.textContent='Press Ctrl+C'; };
+    try { navigator.clipboard.writeText(text).then(done, fallback); } catch(e){ fallback(); }
+  });
+});
+/* ---------- quizzes: <div class="q" data-answer="1" data-why="..."> ---------- */
+document.querySelectorAll('.q').forEach(function(q){
+  var ans = +q.dataset.answer; var fb = q.querySelector('.fb');
+  var opts = q.querySelectorAll('button.opt');
+  opts.forEach(function(b, i){
+    b.type='button';
+    b.addEventListener('click', function(){
+      opts.forEach(function(o){ o.classList.remove('right','wrong'); });
+      if (i === ans){ b.classList.add('right'); fb.innerHTML = '<b class="ok">Correct.</b> ' + (q.dataset.why||''); }
+      else { b.classList.add('wrong'); fb.innerHTML = '<b class="no">Not quite.</b> Try another option.'; }
+    });
+  });
+});
+/* ---------- self-rating ---------- */
+var key = 'com747-' + (document.body.dataset.page || 'page');
+var saved = {};
+try { saved = JSON.parse(localStorage.getItem(key) || '{}'); } catch(e){}
+document.querySelectorAll('.btns').forEach(function(group){
+  var k = group.dataset.k;
+  var set = function(v){ group.querySelectorAll('button').forEach(function(b){ b.setAttribute('aria-pressed', String(b.dataset.v === v)); }); };
+  group.querySelectorAll('button').forEach(function(b){ b.type='button'; b.setAttribute('aria-pressed','false'); });
+  if (saved[k]) set(saved[k]);
+  group.addEventListener('click', function(e){
+    var b = e.target.closest('button'); if(!b) return;
+    set(b.dataset.v); saved[k]=b.dataset.v;
+    try { localStorage.setItem(key, JSON.stringify(saved)); } catch(e){}
+  });
+});
+
+/* ---------- stats maths ---------- */
+var S = {};
+S.mean = function(a){ var s=0; for (var i=0;i<a.length;i++) s+=a[i]; return s/a.length; };
+S.variance = function(a){ var m=S.mean(a), s=0; for (var i=0;i<a.length;i++) s+=(a[i]-m)*(a[i]-m); return s/(a.length-1); };
+S.sd = function(a){ return Math.sqrt(S.variance(a)); };
+S.median = function(a){ var b=a.slice().sort(function(x,y){return x-y;}); var n=b.length; return n%2? b[(n-1)/2] : (b[n/2-1]+b[n/2])/2; };
+S.erf = function(x){ /* Abramowitz-Stegun 7.1.26, |err|<1.5e-7 */
+  var s = x<0?-1:1; x=Math.abs(x);
+  var t=1/(1+0.3275911*x);
+  var y=1-(((((1.061405429*t-1.453152027)*t)+1.421413741)*t-0.284496736)*t+0.254829592)*t*Math.exp(-x*x);
+  return s*y; };
+S.dnorm = function(x,m,s){ m=m||0; s=s||1; var z=(x-m)/s; return Math.exp(-0.5*z*z)/(s*Math.sqrt(2*Math.PI)); };
+S.pnorm = function(x,m,s){ m=m||0; s=s||1; return 0.5*(1+S.erf((x-m)/(s*Math.SQRT2))); };
+S.qnorm = function(p){ /* Acklam */
+  var a=[-3.969683028665376e+01,2.209460984245205e+02,-2.759285104469687e+02,1.383577518672690e+02,-3.066479806614716e+01,2.506628277459239e+00],
+      b=[-5.447609879822406e+01,1.615858368580409e+02,-1.556989798598866e+02,6.680131188771972e+01,-1.328068155288572e+01],
+      c=[-7.784894002430293e-03,-3.223964580411365e-01,-2.400758277161838e+00,-2.549732539343734e+00,4.374664141464968e+00,2.938163982698783e+00],
+      d=[7.784695709041462e-03,3.224671290700398e-01,2.445134137142996e+00,3.754408661907416e+00];
+  var q,r; if (p<=0) return -Infinity; if (p>=1) return Infinity;
+  if (p<0.02425){ q=Math.sqrt(-2*Math.log(p)); return (((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5])/((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1); }
+  if (p>1-0.02425){ q=Math.sqrt(-2*Math.log(1-p)); return -(((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5])/((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1); }
+  q=p-0.5; r=q*q; return (((((a[0]*r+a[1])*r+a[2])*r+a[3])*r+a[4])*r+a[5])*q/(((((b[0]*r+b[1])*r+b[2])*r+b[3])*r+b[4])*r+1); };
+S.lgamma = function(x){ var c=[76.18009172947146,-86.50532032941677,24.01409824083091,-1.231739572450155,0.1208650973866179e-2,-0.5395239384953e-5];
+  var y=x, t=x+5.5; t-=(x+0.5)*Math.log(t); var s=1.000000000190015; for (var j=0;j<6;j++) s+=c[j]/++y; return -t+Math.log(2.5066282746310005*s/x); };
+function betacf(a,b,x){ var MAXIT=200,EPS=3e-14,FPMIN=1e-300; var qab=a+b,qap=a+1,qam=a-1,c=1,d=1-qab*x/qap; if(Math.abs(d)<FPMIN)d=FPMIN; d=1/d; var h=d;
+  for (var m=1;m<=MAXIT;m++){ var m2=2*m, aa=m*(b-m)*x/((qam+m2)*(a+m2)); d=1+aa*d; if(Math.abs(d)<FPMIN)d=FPMIN; c=1+aa/c; if(Math.abs(c)<FPMIN)c=FPMIN; d=1/d; h*=d*c;
+    aa=-(a+m)*(qab+m)*x/((a+m2)*(qap+m2)); d=1+aa*d; if(Math.abs(d)<FPMIN)d=FPMIN; c=1+aa/c; if(Math.abs(c)<FPMIN)c=FPMIN; d=1/d; var del=d*c; h*=del; if(Math.abs(del-1)<EPS)break; }
+  return h; }
+S.ibeta = function(x,a,b){ if (x<=0) return 0; if (x>=1) return 1;
+  var bt=Math.exp(S.lgamma(a+b)-S.lgamma(a)-S.lgamma(b)+a*Math.log(x)+b*Math.log(1-x));
+  return x<(a+1)/(a+b+2) ? bt*betacf(a,b,x)/a : 1-bt*betacf(b,a,1-x)/b; };
+S.pt = function(t,df){ var x=df/(df+t*t); var tail=0.5*S.ibeta(x,df/2,0.5); return t>0? 1-tail : tail; };
+S.dt = function(t,df){ return Math.exp(S.lgamma((df+1)/2)-S.lgamma(df/2))/Math.sqrt(df*Math.PI)*Math.pow(1+t*t/df,-(df+1)/2); };
+S.qt = function(p,df){ var lo=-60,hi=60; for (var i=0;i<100;i++){ var mid=(lo+hi)/2; if (S.pt(mid,df)<p) lo=mid; else hi=mid; } return (lo+hi)/2; };
+S.choose = function(n,k){ var r=1; for (var i=1;i<=k;i++) r=r*(n-k+i)/i; return r; };
+S.dbinom = function(k,n,p){ return S.choose(n,k)*Math.pow(p,k)*Math.pow(1-p,n-k); };
+S.rnorm = function(m,s){ var u=0,v=0; while(u===0)u=Math.random(); while(v===0)v=Math.random(); return m + s*Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v); };
+S.welch = function(x,y){ var mx=S.mean(x),my=S.mean(y),vx=S.variance(x),vy=S.variance(y),nx=x.length,ny=y.length;
+  var se=Math.sqrt(vx/nx+vy/ny), t=(mx-my)/se; var df=Math.pow(vx/nx+vy/ny,2)/(Math.pow(vx/nx,2)/(nx-1)+Math.pow(vy/ny,2)/(ny-1));
+  return {t:t, df:df, p:2*(1-S.pt(Math.abs(t),df))}; };
+S.fmt = function(x,d){ if (!isFinite(x)) return String(x); d = d===undefined?2:d; var s=x.toFixed(d); return s==='-0'+(d?'.'+'0'.repeat(d):'')? s.slice(1): s; };
+S.sig = function(x,n){ n=n||4; if (x===0) return '0'; if (Math.abs(x)<1e-4) return x.toExponential(2); return String(+x.toPrecision(n)); };
+window.S = S;
+
+/* ---------- SVG helpers ---------- */
+var NS='http://www.w3.org/2000/svg';
+function el(tag, attrs, parent){ var e=document.createElementNS(NS,tag); for (var k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; }
+function txt(parent, x, y, s, cls, anchor){ var t=el('text',{x:x,y:y,'class':cls||'tick','text-anchor':anchor||'middle'},parent); t.textContent=s; return t; }
+function niceTicks(lo, hi, n){ var span=hi-lo; if (span<=0) return [lo]; var step=Math.pow(10,Math.floor(Math.log10(span/n))); var err=n/span*step;
+  if (err<=0.15) step*=10; else if (err<=0.35) step*=5; else if (err<=0.75) step*=2;
+  var out=[]; for (var v=Math.ceil(lo/step)*step; v<=hi+1e-9; v+=step) out.push(+v.toFixed(10)); return out; }
+/* Chart frame: returns {g, x(), y(), W, H} */
+function frame(svg, opts){
+  while (svg.firstChild) svg.removeChild(svg.firstChild);
+  var W=opts.W||640, H=opts.H||260, m=opts.m||{l:48,r:16,t:14,b:38};
+  svg.setAttribute('viewBox','0 0 '+W+' '+H);
+  var x=function(v){ return m.l + (v-opts.x0)/(opts.x1-opts.x0)*(W-m.l-m.r); };
+  var y=function(v){ return H-m.b - (v-opts.y0)/(opts.y1-opts.y0)*(H-m.t-m.b); };
+  var g=el('g',{},svg);
+  if (opts.ygrid!==false){ niceTicks(opts.y0,opts.y1,opts.ny||4).forEach(function(v){ el('line',{x1:m.l,x2:W-m.r,y1:y(v),y2:y(v),'class':'gridl'},g); if (opts.ylabels!==false) txt(g,m.l-6,y(v)+4,opts.yfmt?opts.yfmt(v):S.sig(v,3),'tick','end'); }); }
+  el('line',{x1:m.l,x2:W-m.r,y1:H-m.b,y2:H-m.b,'class':'ax'},g);
+  (opts.xticks || niceTicks(opts.x0,opts.x1,opts.nx||6)).forEach(function(v){ el('line',{x1:x(v),x2:x(v),y1:H-m.b,y2:H-m.b+4,'class':'ax'},g); txt(g,x(v),H-m.b+17,opts.xfmt?opts.xfmt(v):S.sig(v,4)); });
+  if (opts.xlab) txt(g,(m.l+W-m.r)/2,H-4,opts.xlab,'labm');
+  if (opts.ylab){ var t=txt(g,12,(m.t+H-m.b)/2,opts.ylab,'labm'); t.setAttribute('transform','rotate(-90 12 '+((m.t+H-m.b)/2)+')'); }
+  return {g:g, x:x, y:y, W:W, H:H, m:m};
+}
+function pathFrom(pts){ return pts.map(function(p,i){ return (i?'L':'M')+p[0].toFixed(2)+' '+p[1].toFixed(2); }).join(''); }
+/* histogram of values into bins: returns {edges, counts} */
+function bins(vals, lo, hi, k){ var w=(hi-lo)/k, c=new Array(k).fill(0); vals.forEach(function(v){ var i=Math.floor((v-lo)/w); if (i===k) i=k-1; if (i>=0&&i<k) c[i]++; }); var e=[]; for (var i=0;i<=k;i++) e.push(lo+i*w); return {edges:e, counts:c, w:w}; }
+window.G = {el:el, txt:txt, frame:frame, path:pathFrom, ticks:niceTicks, bins:bins};
+})();
+/* scroll-spy: highlight the current section in the left menu */
+(function(){
+  var links = Array.prototype.slice.call(document.querySelectorAll('.side .side-secs a'));
+  if (!links.length || !('IntersectionObserver' in window)) return;
+  var map = {}; links.forEach(function(a){ map[a.getAttribute('href').slice(1)] = a; });
+  var obs = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){ if (e.isIntersecting){ links.forEach(function(a){ a.classList.remove('on'); }); var a = map[e.target.id]; if (a) a.classList.add('on'); } });
+  }, {rootMargin: '-20% 0px -70% 0px'});
+  Object.keys(map).forEach(function(id){ var s = document.getElementById(id); if (s) obs.observe(s); });
+})();
+
+</script>
+<script>
+(function(){
+"use strict";
+function fitW(svg,lo,hi){ var w=svg.getBoundingClientRect().width||640; return Math.round(Math.max(lo,Math.min(hi,w))); }
+function clear(svg,W,H){ svg.setAttribute('viewBox','0 0 '+W+' '+H); while (svg.firstChild) svg.removeChild(svg.firstChild); }
+function t(g,x,y,s,size,anchor,style){ var e=G.txt(g,x,y,s,'',anchor||'middle'); e.setAttribute('style','font-size:'+size+'px;fill:var(--ink);'+(style||'')); return e; }
+function onResize(fn){ var to; window.addEventListener('resize',function(){ clearTimeout(to); to=setTimeout(fn,150); }); }
+function rng(seed){ var s=seed; return function(){ s=(s*16807)%2147483647; return (s-1)/2147483646; }; }
+
+/* ---------- ECG threshold rule ---------- */
+(function(){
+  var ctl={hr:document.getElementById('ecg-hr'),th:document.getElementById('ecg-th'),n:document.getElementById('ecg-n'),w:document.getElementById('ecg-w')};
+  var svg=document.getElementById('ecg-svg'), FS=250, DUR=8, N=FS*DUR;
+  var r=rng(3), Z=[]; for (var i=0;i<N;i+=1){ var u=Math.max(r(),1e-9), v=r(); Z.push(Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v)); }
+  var spikes=[]; for (i=0;i<N;i++){ if (r()<0.004) spikes.push(i); }
+  function gauss(x,mu,s,a){ return a*Math.exp(-0.5*Math.pow((x-mu)/s,2)); }
+  function draw(){
+    var hr=+ctl.hr.value, th=ctl.th.value/100, ns=ctl.n.value/100, wd=ctl.w.value/100;
+    document.getElementById('ecg-hrv').textContent=hr; document.getElementById('ecg-thv').textContent=th.toFixed(2); document.getElementById('ecg-nv').textContent=ns.toFixed(2)+' mV'; document.getElementById('ecg-wv').textContent=wd.toFixed(2)+' mV';
+    var rr=60/hr, beats=[]; for (var tb=0.35; tb<DUR-0.1; tb+=rr) beats.push(tb);
+    var sig=[]; for (var k=0;k<N;k++){ var tt=k/FS, v=0;
+      beats.forEach(function(b){ if (Math.abs(tt-b)<0.6){ v+=gauss(tt,b-0.16,0.025,0.15)+gauss(tt,b-0.03,0.008,-0.1)+gauss(tt,b,0.01,1.0)+gauss(tt,b+0.03,0.01,-0.25)+gauss(tt,b+0.25,0.045,0.3); } });
+      v+=wd*Math.sin(2*Math.PI*0.3*tt)+ns*Z[k]; sig.push(v); }
+    spikes.forEach(function(s){ if (ns>0.15) sig[s]+=ns*2.2; });
+    var det=[], last=-1; for (k=1;k<N;k++){ if (sig[k-1]<th && sig[k]>=th && (last<0 || k-last>0.2*FS)){ det.push(k/FS); last=k; } }
+    var used={}, tp=0, fp=[], miss=[];
+    det.forEach(function(d){ var m=-1; beats.forEach(function(b,j){ if (!used[j] && Math.abs(d-b)<0.1) m=j; }); if (m>=0){ used[m]=1; tp++; } else fp.push(d); });
+    beats.forEach(function(b,j){ if (!used[j]) miss.push(b); });
+    var f=G.frame(svg,{W:640,H:260,x0:0,x1:DUR,y0:-1.2,y1:2,ny:4,xlab:'time (s)',ylab:'mV',m:{l:40,r:12,t:12,b:36}});
+    var pts=[]; for (k=0;k<N;k+=2) pts.push([f.x(k/FS),f.y(Math.max(-1.2,Math.min(2,sig[k])))]);
+    G.el('path',{d:G.path(pts),style:'fill:none;stroke:var(--c1);stroke-width:1.2'},f.g);
+    G.el('line',{x1:f.x(0),x2:f.x(DUR),y1:f.y(th),y2:f.y(th),style:'stroke:var(--c2);stroke-width:1.6;stroke-dasharray:6 4'},f.g);
+    det.forEach(function(d){ var isfp=fp.indexOf(d)>=0, x=f.x(d), y=f.y(1.85); G.el('path',{d:'M'+(x-6)+' '+(y-8)+'L'+(x+6)+' '+(y-8)+'L'+x+' '+y+'Z',style:'fill:'+(isfp?'var(--bad)':'var(--core)')},f.g); });
+    miss.forEach(function(b){ G.el('circle',{cx:f.x(b),cy:f.y(1.75),r:7,style:'fill:none;stroke:var(--muted);stroke-width:2'},f.g); });
+    document.getElementById('ecg-d').textContent=det.length; document.getElementById('ecg-t').textContent=beats.length;
+    var est=det.length>1? 60*(det.length-1)/(det[det.length-1]-det[0]) : NaN;
+    document.getElementById('ecg-r').textContent=isFinite(est)? Math.round(est)+' bpm' : '–';
+    document.getElementById('ecg-out').textContent='Rule: a beat is detected when the signal rises through '+th.toFixed(2)+' mV (then ignore 200 ms).\n'+
+      'Correct detections '+tp+', false alarms '+fp.length+', missed beats '+miss.length+'.  Sensitivity '+S.fmt(tp/beats.length*100,0)+'%, PPV '+(det.length?S.fmt(tp/det.length*100,0)+'%':'–')+'.\n'+
+      (fp.length&&th<0.35? 'Threshold so low that T waves or noise count as beats.' : miss.length&&th>0.9? 'Threshold above some R peaks: beats are missed.' : wd>0.25&&(fp.length||miss.length)? 'Baseline wander moves the whole trace up and down, so a fixed threshold fails. Real algorithms remove the baseline first.' : ns>0.15&&(fp.length||miss.length)? 'Noise and spikes cross the threshold. Real algorithms filter first; ML learns what a real beat looks like.' : 'The rule works on this clean signal.');
+  }
+  ['hr','th','n','w'].forEach(function(k){ ctl[k].addEventListener('input',draw); }); draw();
+})();
+
+/* ---------- number systems ---------- */
+(function(){
+  var svg=document.getElementById('ns-svg'), out=document.getElementById('ns-out'), cur=0;
+  var L=[['ℕ natural','1, 2, 3, … for counting.  R: 1:10, seq_len(n).  2 − 4 has no answer here.'],['ℤ integers','… −2, −1, 0, 1, 2 …  R: 5L is stored as an integer; is.integer(5L).  2 / 6 has no answer here.'],['ℚ rationals','Ratios p/q such as 1/3 and −1/3.  R stores them as doubles: 1/3 prints 0.3333333.'],['ℝ reals','Adds irrationals such as √2, π, e.  R: sqrt(2), pi, exp(1). Doubles keep about 15–16 significant digits, so 0.1 + 0.2 == 0.3 is FALSE in R; use all.equal().'],['ℂ complex','Adds √−1 = i.  R: sqrt(as.complex(-1)) gives 0+1i; sqrt(-1) gives NaN with a warning.']];
+  function draw(){ clear(svg,320,250);
+    [4,3,2,1,0].forEach(function(i){ var pad=(4-i)*22, py=(4-i)*28;
+      var r=G.el('rect',{x:10+pad,y:6+py,width:300-2*pad,height:238-py*1.55,rx:16,style:'cursor:pointer;fill:'+(i===cur?'var(--accent-soft)':'var(--paper)')+';stroke:'+(i===cur?'var(--accent)':'var(--line-strong)')+';stroke-width:'+(i===cur?2.5:1.2)},svg);
+      r.addEventListener('click',function(){ cur=i; draw(); });
+      t(svg,22+pad,25+py,L[i][0],13,'start','font-weight:700;pointer-events:none;fill:'+(i===cur?'var(--accent)':'var(--ink)')); });
+    out.textContent=L[cur][0]+': '+L[cur][1]; }
+  draw();
+})();
+(function(){
+  var inp=document.getElementById('sn-in'), out=document.getElementById('sn-out');
+  function rprint(x){ if (x===0) return '0'; var neg=x<0, a=Math.abs(x), e=Math.floor(Math.log10(a)), m=a/Math.pow(10,e);
+    if (m>=9.9999995){ m/=10; e+=1; }
+    var ms=m.toPrecision(7).replace(/\.?0+$/,''), sig=ms.replace('.','').replace(/^0+/,'').length;
+    var sci=ms+'e'+(e<0?'-':'+')+(Math.abs(e)<10?'0':'')+Math.abs(e);
+    var fw= e>=0 ? (e+1)+(Math.max(0,sig-e-1)>0? Math.max(0,sig-e-1)+1:0) : 2+(-e-1)+sig;
+    var fixed= e>=0 ? a.toFixed(Math.max(0,sig-e-1)) : a.toFixed(-e-1+sig);
+    return (neg?'-':'')+(fw<=sci.length? fixed : sci); }
+  function go(){ var x=Number(inp.value.replace(/[, ]/g,'').replace(/×10\^?/,'e'));
+    if (!isFinite(x)){ out.textContent='Type a number, e.g. 0.0000123, 602200000000000000000000 or 6.022e23'; return; }
+    var e=x===0?0:Math.floor(Math.log10(Math.abs(x))), m=x/Math.pow(10,e);
+    out.textContent='scientific:  '+S.sig(m,6)+' × 10^'+e+'\nR prints:    [1] '+rprint(x)+'\nformat(x, scientific = FALSE):  '+(Math.abs(e)<20? Number(x).toFixed(Math.max(0,-e+5)).replace(/\.?0+$/,''):'(too long to show)')+
+      '\nR uses scientific notation when it is shorter than the fixed form (7 significant digits).'; }
+  inp.addEventListener('input',go); go();
+})();
+
+/* ---------- sets ---------- */
+(function(){
+  var a=document.getElementById('st-a'), b=document.getElementById('st-b'), op=document.getElementById('st-op'), svg=document.getElementById('st-svg'), out=document.getElementById('st-out');
+  function parse(s){ var o=[]; s.split(',').map(function(x){return x.trim();}).filter(Boolean).forEach(function(x){ if (o.indexOf(x)<0) o.push(x); }); return o; }
+  function draw(){ var A=parse(a.value), B=parse(b.value), o=op.value;
+    var AB=A.filter(function(x){return B.indexOf(x)>=0;}), Ao=A.filter(function(x){return B.indexOf(x)<0;}), Bo=B.filter(function(x){return A.indexOf(x)<0;});
+    var res={u:Ao.concat(AB,Bo),i:AB,d:Ao,e:Bo,s:Ao.concat(Bo)}[o];
+    var on={u:[1,1,1],i:[0,1,0],d:[1,0,0],e:[0,0,1],s:[1,0,1]}[o];
+    clear(svg,640,230);
+    var defs=G.el('defs',{},svg);
+    var cA=G.el('clipPath',{id:'clipA'},defs); G.el('circle',{cx:250,cy:115,r:100},cA);
+    var mB=G.el('mask',{id:'notB'},defs); G.el('rect',{x:0,y:0,width:640,height:230,style:'fill:#fff'},mB); G.el('circle',{cx:390,cy:115,r:100,style:'fill:#000'},mB);
+    var mA=G.el('mask',{id:'notA'},defs); G.el('rect',{x:0,y:0,width:640,height:230,style:'fill:#fff'},mA); G.el('circle',{cx:250,cy:115,r:100,style:'fill:#000'},mA);
+    if (on[0]) G.el('circle',{cx:250,cy:115,r:100,mask:'url(#notB)',style:'fill:var(--c1);opacity:.3'},svg);
+    if (on[1]) G.el('circle',{cx:390,cy:115,r:100,'clip-path':'url(#clipA)',style:'fill:var(--c4);opacity:.35'},svg);
+    if (on[2]) G.el('circle',{cx:390,cy:115,r:100,mask:'url(#notA)',style:'fill:var(--c2);opacity:.3'},svg);
+    G.el('circle',{cx:250,cy:115,r:100,style:'fill:none;stroke:var(--c1);stroke-width:2.5'},svg);
+    G.el('circle',{cx:390,cy:115,r:100,style:'fill:none;stroke:var(--c2);stroke-width:2.5'},svg);
+    t(svg,175,30,'A',18,'middle','font-weight:700;fill:var(--c1)'); t(svg,465,30,'B',18,'middle','font-weight:700;fill:var(--c2)');
+    function list(arr,cx){ arr.slice(0,12).forEach(function(x,i){ var col=i%2, row=Math.floor(i/2); t(svg,cx+(arr.length>1?(col?14:-14):0),80+row*22,x,15,'middle','font-weight:600'); }); }
+    list(Ao,205); list(AB,320); list(Bo,435);
+    var fn={u:'union(A, B)',i:'intersect(A, B)',d:'setdiff(A, B)',e:'setdiff(B, A)',s:'union(setdiff(A, B), setdiff(B, A))'}[o];
+    var q=function(v){ return v.map(function(x){ return isNaN(+x)?'"'+x+'"':x; }).join(', '); };
+    out.textContent='A <- c('+q(A)+'); B <- c('+q(B)+')\n'+fn+'\n[1] '+(res.length? res.join(' ') : '(empty: '+(isNaN(+A[0])?'character(0)':'numeric(0)')+')')+'\nlength: '+res.length+'   |A| + |B| − |A ∩ B| = '+A.length+' + '+B.length+' − '+AB.length+' = '+(A.length+B.length-AB.length)+' = |A ∪ B|';
+  }
+  [a,b].forEach(function(e){ e.addEventListener('input',draw); }); op.addEventListener('change',draw); draw();
+})();
+(function(){
+  var op=document.getElementById('tt-op'), box=document.getElementById('tt-tbl');
+  var F={and:function(p,q){return p&&q;},or:function(p,q){return p||q;},xor:function(p,q){return p!==q;},imp:function(p,q){return !p||q;},nand:function(p,q){return !(p&&q);},dm:function(p,q){return !p||!q;}};
+  var name={and:'P & Q',or:'P | Q',xor:'xor(P, Q)',imp:'!P | Q',nand:'!(P & Q)',dm:'!P | !Q'};
+  function cell(v){ return '<b style="color:'+(v?'var(--core)':'var(--bad)')+'">'+(v?'TRUE':'FALSE')+'</b>'; }
+  function draw(){ var o=op.value, rows=[[true,true],[true,false],[false,true],[false,false]];
+    box.innerHTML='<table><thead><tr><th>P</th><th>Q</th><th>'+name[o].replace(/&/g,'&amp;')+'</th></tr></thead><tbody>'+rows.map(function(r){ return '<tr><td>'+cell(r[0])+'</td><td>'+cell(r[1])+'</td><td>'+cell(F[o](r[0],r[1]))+'</td></tr>'; }).join('')+'</tbody></table>'; }
+  op.addEventListener('change',draw); draw();
+})();
+
+/* ---------- function mapping and plotter ---------- */
+(function(){
+  var svg=document.getElementById('fm-svg'); clear(svg,320,250);
+  var A=[-2,-1,0,1,2,3], B=[0,1,2,3,4,5,6,7,8,9];
+  G.el('ellipse',{cx:70,cy:125,rx:46,ry:110,style:'fill:var(--accent-soft);stroke:var(--c1)'},svg);
+  G.el('ellipse',{cx:250,cy:125,rx:46,ry:116,style:'fill:var(--paper);stroke:var(--c2)'},svg);
+  t(svg,70,12,'A (domain)',12,'middle','font-weight:700;fill:var(--c1)'); t(svg,250,12,'B (codomain)',12,'middle','font-weight:700;fill:var(--c2)');
+  var ya=function(i){ return 38+i*34; }, yb=function(i){ return 26+i*22.2; };
+  A.forEach(function(a,i){ var j=a*a; G.el('line',{x1:82,y1:ya(i),x2:236,y2:yb(j)+0,style:'stroke:var(--muted);stroke-width:1.3'},svg);
+    G.el('path',{d:'M236 '+yb(j)+'l-8 -3l1 6z',style:'fill:var(--muted)'},svg); t(svg,70,ya(i)+5,String(a),14,'middle','font-weight:600'); });
+  B.forEach(function(b,i){ var hit=[0,1,4,9].indexOf(b)>=0; if (hit) G.el('circle',{cx:250,cy:yb(i),r:10,style:'fill:var(--c2);opacity:.25'},svg); t(svg,250,yb(i)+5,String(b),13,'middle',hit?'font-weight:700':'fill:var(--muted)'); });
+  t(svg,160,245,'f(x) = x²   range = {0, 1, 4, 9}',12,'middle','fill:var(--muted)');
+})();
+(function(){
+  var fs=document.getElementById('fp-f'), as=document.getElementById('fp-a'), bs=document.getElementById('fp-b'), svg=document.getElementById('fp-svg'), out=document.getElementById('fp-out');
+  var DEF={lin:{f:function(x,a,b){return a*x+b;},r:'a * x + b',note:'Straight line: slope a, intercept b. Regression (Week 4).'},
+    quad:{f:function(x,a,b){return a*x*x+b;},r:'a * x^2 + b',note:'Parabola: not one-to-one (f(−2) = f(2)). Polynomial overfitting (Week 5).'},
+    exp:{f:function(x,a,b){return (b===0?1:b)*Math.exp(a*x);},r:'b * exp(a * x)',note:'Growth or decay: compound interest, epidemics. Domain all reals, range (0, ∞) when b > 0.'},
+    log:{f:function(x,a,b){return x>0? a*Math.log(x)+b : NaN;},r:'a * log(x) + b',note:'Domain x > 0 only: log(0) is -Inf and log(-1) is NaN in R. The inverse of exp.'},
+    sig:{f:function(x,a,b){return 1/(1+Math.exp(-(a*x+b)));},r:'1 / (1 + exp(-(a * x + b)))',note:'Range (0, 1): turns any number into a probability. Logistic regression (Week 6), neurons (Week 10).'}};
+  function draw(){ var d=DEF[fs.value], a=as.value/10, b=bs.value/10; document.getElementById('fp-av').textContent=S.fmt(a,1); document.getElementById('fp-bv').textContent=S.fmt(b,1);
+    var lo=fs.value==='sig'?-0.2:-6, hi=fs.value==='sig'?1.2:6;
+    var f=G.frame(svg,{W:640,H:260,x0:-5,x1:5,y0:lo,y1:hi,ny:4,xlab:'x',ylab:'f(x)',m:{l:40,r:12,t:12,b:36}});
+    G.el('line',{x1:f.x(0),x2:f.x(0),y1:f.y(lo),y2:f.y(hi),'class':'ax'},f.g); if (lo<0) G.el('line',{x1:f.x(-5),x2:f.x(5),y1:f.y(0),y2:f.y(0),'class':'ax'},f.g);
+    var seg=[], segs=[]; for (var i=0;i<=400;i++){ var x=-5+i/40, y=d.f(x,a,b); if (!isFinite(y)||y<lo-50||y>hi+50){ if (seg.length) segs.push(seg); seg=[]; continue; } seg.push([f.x(x),f.y(Math.max(lo-1,Math.min(hi+1,y)))]); } if (seg.length) segs.push(seg);
+    var cp=G.el('clipPath',{id:'fpclip'},f.g); G.el('rect',{x:f.x(-5),y:f.y(hi),width:f.x(5)-f.x(-5),height:f.y(lo)-f.y(hi)},cp);
+    segs.forEach(function(s){ G.el('path',{d:G.path(s),'class':'curve','clip-path':'url(#fpclip)'},f.g); });
+    out.textContent='f <- function(x, a = '+S.fmt(a,1)+', b = '+S.fmt(b,1)+') '+d.r+'\ncurve(f, from = -5, to = 5)\n'+d.note; }
+  fs.addEventListener('change',draw); as.addEventListener('input',draw); bs.addEventListener('input',draw); draw();
+})();
+
+/* ---------- matrix multiplication ---------- */
+(function(){
+  var EX=[{A:[[1,2,3],[4,5,6]],B:[[7,8],[9,10],[11,12]],an:'A',bn:'B',note:''},
+          {A:[[10,4,6],[3,8,2]],B:[[1.2],[0.9],[2.5]],an:'quantities (shop × product)',bn:'price (£)',note:'Each shop\'s revenue: quantities %*% prices.'},
+          {A:[[0.5,-1,0.2],[1.5,0.3,-0.7]],B:[[1.4],[0.2],[5.1]],an:'weights W (2 neurons × 3 inputs)',bn:'input x',note:'A layer of 2 neurons: W %*% x, then add the biases and apply the activation.'}];
+  var sel=document.getElementById('mm-ex'), svg=document.getElementById('mm-svg'), out=document.getElementById('mm-out'), k=-1, all=false;
+  function draw(){ var e=EX[+sel.value], A=e.A, B=e.B, m=A.length, n=B.length, p=B[0].length;
+    var C=A.map(function(r){ return B[0].map(function(_,j){ return r.reduce(function(s,v,q){ return s+v*B[q][j]; },0); }); });
+    var ci=k>=0? Math.floor(k/p):-1, cj=k>=0? k%p:-1;
+    var cw=56, ch=34, W=640, H=60+Math.max(m,n)*ch+30; clear(svg,W,H);
+    function grid(M,x0,y0,name,hr,hc,res){ t(svg,x0+M[0].length*cw/2,y0-12,name,12,'middle','font-weight:700;fill:var(--muted)');
+      M.forEach(function(r,i){ r.forEach(function(v,j){ var hl=(hr===i)||(hc===j), shown=!res || all || (i*p+j<=k);
+        G.el('rect',{x:x0+j*cw,y:y0+i*ch,width:cw-3,height:ch-3,rx:4,style:'fill:'+(res&&i===ci&&j===cj?'var(--c2)':hl?'var(--accent-soft)':'var(--paper)')+';stroke:'+(hl?'var(--accent)':'var(--line-strong)')},svg);
+        if (shown) t(svg,x0+j*cw+cw/2-1,y0+i*ch+ch/2+4,S.sig(Math.round(v*1000)/1000,4),13,'middle',res&&i===ci&&j===cj?'fill:#fff;font-weight:700':''); }); }); }
+    var x1=20, x2=x1+A[0].length*cw+40, x3=x2+p*cw+50;
+    grid(A,x1,40,e.an.length>20?'A':e.an,ci,-1,false); t(svg,x2-20,40+ch,'×',20,'middle');
+    grid(B,x2,40,e.bn.length>12?'B':e.bn,-1,cj,false); t(svg,x3-25,40+ch,'=',20,'middle');
+    grid(C,x3,40,'result ('+m+' × '+p+')',-1,-1,true);
+    t(svg,20,H-8,'('+m+' × '+A[0].length+') %*% ('+n+' × '+p+') = '+m+' × '+p+(e.an.length>20?'   A = '+e.an+', B = '+e.bn:''),12,'start','fill:var(--muted)');
+    if (k>=0){ var terms=A[ci].map(function(v,q){ return v+' × '+B[q][cj]; }); out.textContent='result['+(ci+1)+', '+(cj+1)+'] = row '+(ci+1)+' of A · column '+(cj+1)+' of B = '+terms.join(' + ')+' = '+S.sig(Math.round(C[ci][cj]*1000)/1000,5)+(e.note?'\n'+e.note:''); }
+    else out.textContent='Press "Next cell" to compute the product one element at a time.'+(e.note?'\n'+e.note:'');
+  }
+  document.getElementById('mm-next').addEventListener('click',function(){ var e=EX[+sel.value]; all=false; k=(k+1)%(e.A.length*e.B[0].length); draw(); });
+  document.getElementById('mm-all').addEventListener('click',function(){ var e=EX[+sel.value]; all=true; k=e.A.length*e.B[0].length-1; draw(); });
+  sel.addEventListener('change',function(){ k=-1; all=false; draw(); }); draw();
+})();
+
+/* ---------- digraph ---------- */
+(function(){
+  var M=[[0,1,1,2,0],[1,0,0,0,0],[0,0,1,1,0],[0,0,0,0,1],[0,0,1,0,1]], N='ABCDE';
+  var P=[[50,60],[160,30],[90,170],[200,130],[290,110]];
+  var svg=document.getElementById('gr-svg'), sel=document.getElementById('gr-show'), cur=2;
+  function mul(X,Y){ return X.map(function(r){ return Y[0].map(function(_,j){ return r.reduce(function(s,v,q){ return s+v*Y[q][j]; },0); }); }); }
+  function arrow(i,j,bend){ var a=P[i], b=P[j];
+    if (i===j){ var x=a[0], y=a[1]; G.el('path',{d:'M'+(x-8)+' '+(y+12)+' C'+(x-34)+' '+(y+52)+' '+(x+34)+' '+(y+52)+' '+(x+8)+' '+(y+12),style:'fill:none;stroke:var(--ink);stroke-width:1.5','marker-end':'url(#ah)'},svg); return; }
+    var dx=b[0]-a[0], dy=b[1]-a[1], L=Math.sqrt(dx*dx+dy*dy), ux=dx/L, uy=dy/L, sx=a[0]+ux*16, sy=a[1]+uy*16, ex=b[0]-ux*18, ey=b[1]-uy*18;
+    var mx=(sx+ex)/2-uy*bend, my=(sy+ey)/2+ux*bend;
+    G.el('path',{d:'M'+sx+' '+sy+' Q'+mx+' '+my+' '+ex+' '+ey,style:'fill:none;stroke:var(--ink);stroke-width:1.5','marker-end':'url(#ah)'},svg); }
+  function draw(){ clear(svg,330,240);
+    var defs=G.el('defs',{},svg), mk=G.el('marker',{id:'ah',viewBox:'0 0 10 10',refX:9,refY:5,markerWidth:7,markerHeight:7,orient:'auto-start-reverse'},defs); G.el('path',{d:'M0 0L10 5L0 10z',style:'fill:var(--ink)'},mk);
+    M.forEach(function(r,i){ r.forEach(function(v,j){ for (var c=0;c<v;c++){ var rev=M[j][i]>0&&i!==j; arrow(i,j, v>1? (c?22:-22) : rev?14:0); } }); });
+    P.forEach(function(p,i){ var c=G.el('circle',{cx:p[0],cy:p[1],r:15,style:'cursor:pointer;fill:'+(i===cur?'var(--c2)':'var(--paper)')+';stroke:var(--ink);stroke-width:1.8'},svg);
+      c.addEventListener('click',function(){ cur=i; draw(); }); t(svg,p[0],p[1]+5,N[i],14,'middle','font-weight:700;pointer-events:none'+(i===cur?';fill:#fff':'')); });
+    var pw=+sel.value, R=M; for (var q=1;q<pw;q++) R=mul(R,M);
+    document.getElementById('gr-tbl').innerHTML='<table><thead><tr><th>'+(pw===1?'M':'M'+(pw===2?'²':'³'))+'</th>'+N.split('').map(function(c,j){ return '<th'+(j===cur?' style="color:var(--c2)"':'')+'>'+c+'</th>'; }).join('')+'<th>out</th></tr></thead><tbody>'+
+      R.map(function(r,i){ return '<tr><td><b'+(i===cur?' style="color:var(--c2)"':'')+'>'+N[i]+'</b></td>'+r.map(function(v,j){ return '<td class="n" style="'+((i===cur||j===cur)?'background:var(--chal-soft)':'')+'">'+v+'</td>'; }).join('')+'<td class="n">'+r.reduce(function(s,v){return s+v;},0)+'</td></tr>'; }).join('')+
+      '<tr><td><b>in</b></td>'+N.split('').map(function(_,j){ return '<td class="n">'+R.reduce(function(s,r){return s+r[j];},0)+'</td>'; }).join('')+'<td></td></tr></tbody></table>';
+    var indeg=M.reduce(function(s,r){return s+r[cur];},0), outdeg=M[cur].reduce(function(s,v){return s+v;},0);
+    document.getElementById('gr-out').textContent='Node '+N[cur]+': in-degree '+indeg+' (colSums(M)["'+N[cur]+'"]), out-degree '+outdeg+' (rowSums(M)["'+N[cur]+'"]).'+(M[cur][cur]?' It has a loop to itself, which counts once each way.':'')+
+      (pw>1? '\nEntry (i, j) of M'+(pw===2?'²':'³')+' counts the paths of length '+pw+' from i to j. e.g. A to E in '+pw+' steps: '+R[0][4]+' path(s).' : '\nThe path B → A → C → D → E has length 4.'); }
+  sel.addEventListener('change',draw); draw();
+})();
+
+/* ---------- variable types ---------- */
+(function(){
+  var V=[['blood group','n'],['shoe size band (S/M/L)','o'],['height (cm)','m'],['nationality','n'],['income band','o'],['number of children','m'],['eye colour','n'],['staff grade','o'],['weight (kg)','m'],['favourite football team','n'],['age group (18–24, 25–34 …)','o'],['heart rate (bpm)','m']];
+  var lab={n:'nominal',o:'ordinal',m:'metric'}, ans={}, box=document.getElementById('vt-box'), out=document.getElementById('vt-out');
+  box.innerHTML='<div class="tbl"><table><tbody>'+V.map(function(v,i){ return '<tr><td>'+v[0]+'</td><td style="white-space:nowrap">'+['n','o','m'].map(function(k){ return '<button class="btn" type="button" data-i="'+i+'" data-k="'+k+'" style="margin:2px;padding:3px 8px">'+lab[k]+'</button>'; }).join('')+'</td><td data-r="'+i+'"></td></tr>'; }).join('')+'</tbody></table></div>';
+  function score(){ var n=Object.keys(ans).length, c=Object.keys(ans).filter(function(i){ return ans[i]===V[i][1]; }).length;
+    out.textContent=n? c+' of '+n+' correct.'+(n===V.length? (c===V.length?' All sorted!':' Check the red ones: does the order of the categories mean anything?'):'') : 'Click a type for each variable.'; }
+  Array.prototype.forEach.call(box.querySelectorAll('button'),function(btn){ btn.addEventListener('click',function(){ var i=+btn.getAttribute('data-i'), k=btn.getAttribute('data-k'); ans[i]=k;
+    Array.prototype.forEach.call(box.querySelectorAll('button[data-i="'+i+'"]'),function(b2){ b2.classList.toggle('primary',b2===btn); });
+    var ok=k===V[i][1]; box.querySelector('[data-r="'+i+'"]').innerHTML='<b style="color:'+(ok?'var(--core)':'var(--bad)')+'">'+(ok?'✓':'✗ '+lab[V[i][1]])+'</b>'; score(); }); });
+  score();
+})();
+
+/* ---------- JSON and timing ---------- */
+(function(){
+  var R=[['Mazda RX4',21,6,160,110,3.9,2.62,16.46,0,1,4,4],['Mazda RX4 Wag',21,6,160,110,3.9,2.875,17.02,0,1,4,4],['Datsun 710',22.8,4,108,93,3.85,2.32,18.61,1,1,4,1]];
+  var C=['mpg','cyl','disp','hp','drat','wt','qsec','vs','am','gear','carb'];
+  var n=document.getElementById('js-n'), v=document.getElementById('js-v'), out=document.getElementById('js-out');
+  function draw(){ var k=+n.value, rows=R.slice(0,k), s;
+    if (v.value==='rows'){ s='toJSON(head(mtcars, '+k+'), pretty = TRUE)\n[\n'+rows.map(function(r){ return '  {\n'+C.map(function(c,i){ return '    "'+c+'": '+r[i+1]; }).join(',\n')+',\n    "_row": "'+r[0]+'"\n  }'; }).join(',\n')+'\n]'; }
+    else { s='toJSON(head(mtcars, '+k+'), dataframe = "columns")\n{'+C.map(function(c,i){ return '"'+c+'":['+rows.map(function(r){return r[i+1];}).join(',')+']'; }).join(',')+',"_row":['+rows.map(function(r){return '"'+r[0]+'"';}).join(',')+']}'; }
+    out.textContent=s+'\n\nfromJSON(...) gives back a data frame with '+k+' row(s) and 11 columns; "_row" becomes the row names.'; }
+  n.addEventListener('change',draw); v.addEventListener('change',draw); draw();
+  var svg=document.getElementById('tm-svg');
+  var f=G.frame(svg,{W:640,H:260,x0:1,x1:16,y0:0,y1:16,ny:4,xticks:[1,2,4,8,12,16],xlab:'cores',ylab:'speed-up',m:{l:44,r:110,t:12,b:36}});
+  G.el('path',{d:G.path([[f.x(1),f.y(1)],[f.x(16),f.y(16)]]),style:'stroke:var(--muted);stroke-dasharray:5 4;stroke-width:1.5;fill:none'},f.g);
+  G.txt(f.g,f.x(16)+6,f.y(16)+4,'ideal','labm','start');
+  [[0.99,'var(--c3)'],[0.9,'var(--c1)'],[0.5,'var(--c2)']].forEach(function(q){ var pts=[]; for (var c=1;c<=16;c+=0.25) pts.push([f.x(c),f.y(1/((1-q[0])+q[0]/c))]);
+    G.el('path',{d:G.path(pts),style:'fill:none;stroke:'+q[1]+';stroke-width:2.5'},f.g); var e=1/((1-q[0])+q[0]/16); G.txt(f.g,f.x(16)+6,f.y(e)+4,Math.round(q[0]*100)+'% parallel','labm','start').setAttribute('style','fill:'+q[1]); });
+})();
+})();
+
+</script>
+</body>
+</html>

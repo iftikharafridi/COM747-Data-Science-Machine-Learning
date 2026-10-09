@@ -1,0 +1,938 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>COM747 Week 4 Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: single-column lab notebook, ~800px measure. Concept sections, then interactive "explorers", then tiered R tasks. */
+:root{
+  --bg:#f5f6f8; --paper:#ffffff; --ink:#1b2330; --muted:#5a6474; --line:#dce1e9; --line-strong:#c3cad6;
+  --accent:#2b5fa6; --accent-soft:#e5edf8;
+  --core:#2f7d5b; --core-soft:#e2f1e9;
+  --chal:#b26a00; --chal-soft:#fbefd9;
+  --str:#7a3fa0; --str-soft:#f1e7f8;
+  --bad:#b3372f; --bad-soft:#f9e3e1;
+  --code-bg:#eef2f7; --code-ink:#1c2a44;
+  --c1:#2b5fa6; --c2:#d0791a; --c3:#2f8a62; --c4:#8a4bb3; --shade:rgba(43,95,166,.28); --grid:#e6e9ef;
+  --f-display:"Source Serif 4", Georgia, "Times New Roman", serif;
+  --f-body:"Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, Consolas, monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#11151c; --paper:#1a2029; --ink:#e4e8ef; --muted:#9aa4b4; --line:#2b3340; --line-strong:#3c4656;
+  --accent:#7fa8e6; --accent-soft:#1e2b3f;
+  --core:#6cc79d; --core-soft:#173025; --chal:#e5a64a; --chal-soft:#33281a; --str:#c39be0; --str-soft:#2a2135;
+  --bad:#ef8a80; --bad-soft:#3a1f1d;
+  --code-bg:#0e131a; --code-ink:#d6e2f5;
+  --c1:#7fa8e6; --c2:#eb9c4c; --c3:#5fc394; --c4:#c39be0; --shade:rgba(127,168,230,.30); --grid:#262e3a;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#11151c; --paper:#1a2029; --ink:#e4e8ef; --muted:#9aa4b4; --line:#2b3340; --line-strong:#3c4656;
+  --accent:#7fa8e6; --accent-soft:#1e2b3f;
+  --core:#6cc79d; --core-soft:#173025; --chal:#e5a64a; --chal-soft:#33281a; --str:#c39be0; --str-soft:#2a2135;
+  --bad:#ef8a80; --bad-soft:#3a1f1d;
+  --code-bg:#0e131a; --code-ink:#d6e2f5;
+  --c1:#7fa8e6; --c2:#eb9c4c; --c3:#5fc394; --c4:#c39be0; --shade:rgba(127,168,230,.30); --grid:#262e3a;
+  color-scheme:dark}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.6;margin:0;padding-inline:16px;padding-block:0 72px}
+a{color:var(--accent)}
+.topnav{max-width:820px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;padding-block:14px;border-bottom:1px solid var(--line);font-size:15px}
+.topnav .brand{font-weight:700;margin-right:auto;color:var(--ink);text-decoration:none}
+.topnav a.wk{color:var(--muted);text-decoration:none;padding:2px 8px;border-radius:6px}
+.topnav a.wk:hover{color:var(--accent)}
+.topnav a.wk[aria-current="page"]{background:var(--accent-soft);color:var(--accent);font-weight:600}
+.wrap{max-width:820px;margin:0 auto;display:flex;flex-direction:column;gap:40px}
+header.hero{padding-block:32px 4px;display:flex;flex-direction:column;gap:10px}
+.eyebrow{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;line-height:1.2;margin:0}
+h1{font-size:clamp(30px,6vw,44px)}
+h2{font-size:27px}
+h3{font-size:20px}
+p{margin:0}
+.lead{color:var(--muted);font-size:18.5px;max-width:65ch}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font-size:13px;font-weight:600;border:1px solid var(--line-strong);border-radius:999px;padding:3px 10px;color:var(--muted)}
+.toc{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:15px;padding:12px 16px;background:var(--paper);border:1px solid var(--line);border-radius:10px}
+.toc a{text-decoration:none}
+section{display:flex;flex-direction:column;gap:16px;scroll-margin-top:16px}
+.sec-head{display:flex;flex-direction:column;gap:4px}
+.sec-num{font-family:var(--f-mono);font-size:13px;color:var(--accent);font-weight:600}
+.prose{display:flex;flex-direction:column;gap:12px;max-width:68ch}
+ul.list,ol.list{margin:0;padding-left:1.3em;display:flex;flex-direction:column;gap:4px}
+.lo-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.lo-list li{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:baseline}
+.lo{font-family:var(--f-mono);font-size:12px;font-weight:600;background:var(--accent-soft);color:var(--accent);padding:2px 8px;border-radius:4px;white-space:nowrap}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.grid2.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media (max-width:600px){.grid2.two{grid-template-columns:1fr}}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.card h3{font-size:18px}
+.card .k{font-size:13px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:700}
+.code{position:relative;background:var(--code-bg);border:1px solid var(--line);border-radius:8px;min-width:0}
+.code pre{margin:0;padding:14px 16px;overflow-x:auto;font-family:var(--f-mono);font-size:14px;color:var(--code-ink);line-height:1.55}
+.code .copy{position:absolute;top:8px;right:8px}
+.copy,.btn{font:600 13px var(--f-body);background:var(--paper);color:var(--muted);border:1px solid var(--line-strong);border-radius:6px;padding:5px 11px;cursor:pointer}
+.copy:hover,.btn:hover{color:var(--accent);border-color:var(--accent)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--paper)}
+.btn.primary:hover{opacity:.9;color:var(--paper)}
+code{font-family:var(--f-mono);font-size:.88em;background:var(--code-bg);padding:1px 5px;border-radius:4px}
+.callout{border-left:3px solid var(--accent);background:var(--accent-soft);padding:12px 16px;border-radius:0 8px 8px 0}
+.callout.warn{border-color:var(--chal);background:var(--chal-soft)}
+.callout.good{border-color:var(--core);background:var(--core-soft)}
+/* figures and explorers */
+figure{margin:0}
+.figure{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.figure figcaption,.caption{font-size:14.5px;color:var(--muted)}
+.figure svg{width:100%;height:auto;display:block;overflow:visible}
+.explorer{border-color:var(--line-strong)}
+.explorer .title{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.explorer .title h3{font-size:19px}
+.tagx{font:700 11px var(--f-body);letter-spacing:.09em;text-transform:uppercase;padding:3px 8px;border-radius:999px;background:var(--accent-soft);color:var(--accent)}
+.controls{display:flex;flex-wrap:wrap;gap:12px 18px;align-items:flex-end}
+.ctl{display:flex;flex-direction:column;gap:4px;font-size:14px;color:var(--muted);min-width:0}
+.ctl b{color:var(--ink);font-family:var(--f-mono);font-weight:600}
+.ctl input[type=range]{width:min(220px,70vw);accent-color:var(--accent)}
+.ctl input[type=number],.ctl input[type=text],.ctl select{font:15px var(--f-mono);padding:5px 8px;border:1px solid var(--line-strong);border-radius:6px;background:var(--bg);color:var(--ink);width:7.5em}
+.ctl input[type=text]{width:12em}
+.ctl select{width:auto;font-family:var(--f-body)}
+.console{background:var(--code-bg);border:1px solid var(--line);border-radius:8px;padding:10px 14px;font-family:var(--f-mono);font-size:14px;color:var(--code-ink);overflow-x:auto;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.55}
+.console .p{color:var(--muted)}
+.kpis{display:flex;flex-wrap:wrap;gap:10px}
+.kpi{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 12px;display:flex;flex-direction:column;min-width:110px}
+.kpi span{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+.kpi b{font-family:var(--f-mono);font-size:19px;font-variant-numeric:tabular-nums}
+/* svg classes */
+.ax{stroke:var(--line-strong);stroke-width:1}
+.gridl{stroke:var(--grid);stroke-width:1}
+.tick{fill:var(--muted);font:12px var(--f-body)}
+.lab{fill:var(--ink);font:13px var(--f-body)}
+.labm{fill:var(--muted);font:12px var(--f-body)}
+.mono{font-family:var(--f-mono)}
+.curve{fill:none;stroke:var(--c1);stroke-width:2.2}
+.curve2{fill:none;stroke:var(--c2);stroke-width:2.2}
+.area{fill:var(--shade);stroke:none}
+.bar{fill:var(--c1)}
+.bar2{fill:var(--c2)}
+.bar3{fill:var(--c3)}
+.barmuted{fill:var(--line-strong)}
+.vline{stroke:var(--c2);stroke-width:2}
+.vline2{stroke:var(--c3);stroke-width:2;stroke-dasharray:5 4}
+.dot{fill:var(--c1)}
+/* vector cells */
+.vec{display:flex;flex-wrap:wrap;gap:4px}
+.cell{display:flex;flex-direction:column;align-items:center;min-width:46px;border:1px solid var(--line-strong);border-radius:6px;background:var(--paper);overflow:hidden;transition:background .15s,border-color .15s}
+.cell .v{font-family:var(--f-mono);font-size:15px;font-weight:600;padding:6px 6px 2px}
+.cell .i{font-family:var(--f-mono);font-size:11px;color:var(--muted);padding:0 6px 4px}
+.cell .t{font-family:var(--f-mono);font-size:10.5px;padding:2px 4px;width:100%;text-align:center;border-top:1px solid var(--line)}
+.cell.on{background:var(--core-soft);border-color:var(--core)}
+.cell.on .t{color:var(--core);font-weight:700}
+.cell.off{opacity:.55}
+.cell.off .t{color:var(--bad)}
+.cell.rec{border-style:dashed;opacity:.75}
+/* tiers and tasks */
+.tier{display:flex;flex-direction:column;gap:12px}
+.tier-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.tag{font:700 12px var(--f-body);letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:999px}
+.t-core .tag{background:var(--core-soft);color:var(--core)}
+.t-chal .tag{background:var(--chal-soft);color:var(--chal)}
+.t-str .tag{background:var(--str-soft);color:var(--str)}
+.note{color:var(--muted);font-size:15px}
+ol.tasks{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px}
+.task{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:14px 16px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.task-q{display:grid;grid-template-columns:2.4em 1fr;gap:4px}
+.task-q > span:last-child{min-width:0}
+.num{font-family:var(--f-mono);font-weight:600;color:var(--muted)}
+details{font-size:15px}
+summary{cursor:pointer;color:var(--accent);font-weight:600;width:max-content;max-width:100%}
+details > *:not(summary){margin-top:8px}
+summary:focus-visible,.copy:focus-visible,.btn:focus-visible,button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+/* tables */
+.tbl{overflow-x:auto;background:var(--paper);border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th,td{text-align:left;padding:8px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:none}
+th{font-weight:700;color:var(--muted);font-size:12.5px;text-transform:uppercase;letter-spacing:.06em;background:var(--bg)}
+td.m,th.m{font-family:var(--f-mono);font-size:14px;white-space:nowrap}
+td.n{text-align:right;font-variant-numeric:tabular-nums;font-family:var(--f-mono);font-size:14px}
+/* quiz */
+.quiz{display:flex;flex-direction:column;gap:14px}
+.q{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.q .opts{display:flex;flex-direction:column;gap:6px}
+.q button.opt{text-align:left;font:15px var(--f-body);background:var(--bg);color:var(--ink);border:1px solid var(--line-strong);border-radius:8px;padding:8px 12px;cursor:pointer}
+.q button.opt:hover{border-color:var(--accent)}
+.q button.opt.right{background:var(--core-soft);border-color:var(--core)}
+.q button.opt.wrong{background:var(--bad-soft);border-color:var(--bad)}
+.q .fb{font-size:15px;color:var(--muted)}
+.q .fb b.ok{color:var(--core)} .q .fb b.no{color:var(--bad)}
+/* rating */
+.rate{display:flex;flex-direction:column;gap:10px}
+.rate-row{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:10px 14px}
+.rate-row > span{min-width:0;flex:1 1 240px}
+.btns{display:flex;gap:6px}
+.btns button{font:600 14px var(--f-body);border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:6px;padding:6px 12px;cursor:pointer;min-width:44px}
+.btns button[aria-pressed="true"][data-v="1"]{background:var(--chal-soft);border-color:var(--chal);color:var(--chal)}
+.btns button[aria-pressed="true"][data-v="2"]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.btns button[aria-pressed="true"][data-v="3"]{background:var(--core-soft);border-color:var(--core);color:var(--core)}
+footer{max-width:820px;margin:48px auto 0;padding-bottom:8px;border-top:1px solid var(--line);padding-top:16px;color:var(--muted);font-size:14px;display:flex;flex-wrap:wrap;gap:8px 20px;justify-content:space-between}
+@media (max-width:520px){ body{font-size:16px} .card,.figure{padding:14px} .cell{min-width:40px} }
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+.wrap > *, section > *, .figure > *, .card > *{min-width:0;max-width:100%}
+p code, span code, li code, td code{overflow-wrap:anywhere}
+a.wkcard{text-decoration:none;color:var(--ink);transition:border-color .15s}
+a.wkcard:hover{border-color:var(--accent)}
+a.wkcard .go{color:var(--accent);font-weight:600;font-size:15px;margin-top:auto}
+@media (max-width:560px){
+  .figure svg .tick, .figure svg .labm{font-size:22px}
+  .figure svg .lab{font-size:23px}
+}
+/* ---------- module layout: left menu + main column ---------- */
+.layout{display:grid;grid-template-columns:270px minmax(0,1fr);gap:36px;max-width:1220px;margin:0 auto}
+.side{position:sticky;top:0;align-self:start;height:100vh;overflow-y:auto;padding:22px 6px 40px 0;border-right:1px solid var(--line);font-size:14.5px}
+.main{min-width:0}
+.side-brand{display:block;font-weight:700;font-size:16px;color:var(--ink);text-decoration:none;margin-bottom:14px}
+.side-group{font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:18px 0 6px}
+.side-list,.side-secs{list-style:none;margin:0;padding:0}
+.side-wk{display:grid;grid-template-columns:2.2em 1fr;gap:4px;align-items:baseline;padding:5px 8px;border-radius:6px;color:var(--ink);text-decoration:none;line-height:1.35}
+.side-wk:hover{background:var(--accent-soft)}
+.side-wk .wn{font-family:var(--f-mono);font-size:12.5px;color:var(--muted);font-weight:600}
+.side-wk[aria-current="page"]{background:var(--accent-soft);color:var(--accent);font-weight:600}
+.side-wk[aria-current="page"] .wn{color:var(--accent)}
+.side-secs{margin:4px 0 8px 2.6em;border-left:2px solid var(--line);padding-left:10px;display:flex;flex-direction:column;gap:2px}
+.side-secs a{color:var(--muted);text-decoration:none;font-size:13.5px;display:block;padding:2px 0;line-height:1.35}
+.side-secs a:hover{color:var(--accent)}
+.mobilebar{display:none}
+.pager{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px}
+.pager a{display:flex;flex-direction:column;gap:2px;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:var(--paper);text-decoration:none;color:var(--ink);font-weight:600;font-size:15px}
+.pager a:hover{border-color:var(--accent)}
+.pager a .k{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.pager a.nx{text-align:right}
+@media (max-width:1000px){
+  .layout{display:block}
+  .side{display:none}
+  .mobilebar{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding-block:12px;border-bottom:1px solid var(--line);position:relative}
+  .mobilebar .side-brand{margin:6px 0 0}
+  .mnav summary{list-style:none;cursor:pointer;font-weight:600;font-size:14px;color:var(--accent);border:1px solid var(--line-strong);border-radius:6px;padding:6px 12px;width:auto;background:var(--paper)}
+  .mnav summary::-webkit-details-marker{display:none}
+  .mnav[open] summary{background:var(--accent-soft)}
+  .mnav-panel{position:absolute;left:0;right:0;top:100%;z-index:20;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:14px 14px 18px;box-shadow:0 12px 30px rgba(0,0,0,.18);max-height:75vh;overflow-y:auto}
+  .mnav-panel .side-brand{display:none}
+}
+@media (max-width:520px){ .pager{grid-template-columns:1fr} .pager a.nx{text-align:left} }
+@media (min-width:1001px){ .toc{display:none} }
+.side-secs a.on{color:var(--accent);font-weight:600}
+
+</style>
+</head>
+<body data-page="week04">
+<div class="layout">
+<aside class="side" aria-label="Module weeks"><a class="side-brand" href="index.html">COM747 R Labs</a><p class="side-group">Foundations</p><ul class="side-list"><li><a class="side-wk" href="week01.html"><span class="wn">1</span><span>Data, Questions and R</span></a></li><li><a class="side-wk" href="week02a.html"><span class="wn">2A</span><span>Statistical Computing with R</span></a></li><li><a class="side-wk" href="week02b.html"><span class="wn">2B</span><span>Probability Distributions and EDA</span></a></li><li><a class="side-wk" href="week03.html"><span class="wn">3</span><span>Inferential Statistics</span></a></li></ul><p class="side-group">Modelling</p><ul class="side-list"><li><a class="side-wk" href="week04.html" aria-current="page"><span class="wn">4</span><span>Regression and Time Series</span></a><ul class="side-secs"><li><a href="#question">Can we predict a runner&#x27;s final distance?</a></li><li><a href="#correlation">Correlation: strength of association</a></li><li><a href="#ols">Simple linear regression</a></li><li><a href="#fit">How good is the fit?</a></li><li><a href="#multiple">Multiple regression on rundata</a></li><li><a href="#pitfalls">Pitfalls and extensions</a></li><li><a href="#logistic">Logistic regression: predicting yes or no</a></li><li><a href="#timeseries">Time series analysis</a></li><li><a href="#forecast">Forecasting with ARIMA</a></li><li><a href="#survival">Survival analysis</a></li><li><a href="#tasks">Your R tasks</a></li><li><a href="#quiz">Check yourself</a></li><li><a href="#glossary">Key terms</a></li><li><a href="#exit">Exit self-check</a></li></ul></li><li><a class="side-wk" href="week05.html"><span class="wn">5</span><span>Supervised ML and Feature Engineering</span></a></li><li><a class="side-wk" href="week06.html"><span class="wn">6</span><span>Ethics, Evaluation and Logistic Regression</span></a></li><li><a class="side-wk" href="week07.html"><span class="wn">7</span><span>ML Optimisation and Text Mining</span></a></li></ul><p class="side-group">Unsupervised learning</p><ul class="side-list"><li><a class="side-wk" href="week08.html"><span class="wn">8</span><span>Clustering and PCA</span></a></li><li><a class="side-wk" href="week09.html"><span class="wn">9</span><span>Association Rule Mining</span></a></li></ul><p class="side-group">Wider practice</p><ul class="side-list"><li><a class="side-wk" href="week10.html"><span class="wn">10</span><span>Data Analytics and Engineering</span></a></li><li><a class="side-wk" href="week11.html"><span class="wn">11</span><span>Maths and the R Toolkit</span></a></li><li><a class="side-wk" href="week12.html"><span class="wn">12</span><span>Teamwork and Process Mining</span></a></li></ul></aside>
+<div class="main">
+<div class="mobilebar"><a class="side-brand" href="index.html">COM747 R Labs</a><details class="mnav"><summary>Menu</summary><nav class="mnav-panel" aria-label="Module weeks"><a class="side-brand" href="index.html">COM747 R Labs</a><p class="side-group">Foundations</p><ul class="side-list"><li><a class="side-wk" href="week01.html"><span class="wn">1</span><span>Data, Questions and R</span></a></li><li><a class="side-wk" href="week02a.html"><span class="wn">2A</span><span>Statistical Computing with R</span></a></li><li><a class="side-wk" href="week02b.html"><span class="wn">2B</span><span>Probability Distributions and EDA</span></a></li><li><a class="side-wk" href="week03.html"><span class="wn">3</span><span>Inferential Statistics</span></a></li></ul><p class="side-group">Modelling</p><ul class="side-list"><li><a class="side-wk" href="week04.html" aria-current="page"><span class="wn">4</span><span>Regression and Time Series</span></a><ul class="side-secs"><li><a href="#question">Can we predict a runner&#x27;s final distance?</a></li><li><a href="#correlation">Correlation: strength of association</a></li><li><a href="#ols">Simple linear regression</a></li><li><a href="#fit">How good is the fit?</a></li><li><a href="#multiple">Multiple regression on rundata</a></li><li><a href="#pitfalls">Pitfalls and extensions</a></li><li><a href="#logistic">Logistic regression: predicting yes or no</a></li><li><a href="#timeseries">Time series analysis</a></li><li><a href="#forecast">Forecasting with ARIMA</a></li><li><a href="#survival">Survival analysis</a></li><li><a href="#tasks">Your R tasks</a></li><li><a href="#quiz">Check yourself</a></li><li><a href="#glossary">Key terms</a></li><li><a href="#exit">Exit self-check</a></li></ul></li><li><a class="side-wk" href="week05.html"><span class="wn">5</span><span>Supervised ML and Feature Engineering</span></a></li><li><a class="side-wk" href="week06.html"><span class="wn">6</span><span>Ethics, Evaluation and Logistic Regression</span></a></li><li><a class="side-wk" href="week07.html"><span class="wn">7</span><span>ML Optimisation and Text Mining</span></a></li></ul><p class="side-group">Unsupervised learning</p><ul class="side-list"><li><a class="side-wk" href="week08.html"><span class="wn">8</span><span>Clustering and PCA</span></a></li><li><a class="side-wk" href="week09.html"><span class="wn">9</span><span>Association Rule Mining</span></a></li></ul><p class="side-group">Wider practice</p><ul class="side-list"><li><a class="side-wk" href="week10.html"><span class="wn">10</span><span>Data Analytics and Engineering</span></a></li><li><a class="side-wk" href="week11.html"><span class="wn">11</span><span>Maths and the R Toolkit</span></a></li><li><a class="side-wk" href="week12.html"><span class="wn">12</span><span>Teamwork and Process Mining</span></a></li></ul></nav></details></div>
+<div class="wrap">
+<header class="hero">
+  <div class="eyebrow">COM747 Data Science &amp; Machine Learning · Week 4</div>
+  <h1>Regression and Time Series</h1>
+  <p class="lead">Measure how strongly variables move together, fit a line that predicts one from another, judge how good that line is, predict a yes/no outcome, and model data that changes over time.</p>
+  <div class="chips"><span class="chip">Lecture + lab</span><span class="chip">RStudio</span><span class="chip">Datasets: <a href="data/rundata.csv">rundata.csv</a> · <a href="data/nybirths.dat">nybirths.dat</a> · <a href="data/titanic.csv">titanic.csv</a> · iris, AirPassengers (built in)</span></div>
+</header>
+
+<nav class="toc" aria-label="On this page">
+  <a href="#question">The question</a><a href="#correlation">Correlation</a><a href="#ols">Linear regression</a><a href="#fit">Goodness of fit</a><a href="#multiple">Multiple regression</a><a href="#pitfalls">Pitfalls</a><a href="#logistic">Logistic regression</a><a href="#timeseries">Time series</a><a href="#forecast">Forecasting</a><a href="#survival">Survival</a><a href="#tasks">R tasks</a><a href="#quiz">Quiz</a>
+</nav>
+
+<section id="question">
+  <div class="sec-head"><span class="sec-num">01</span><h2>Can we predict a runner's final distance?</h2></div>
+  <div class="prose"><p>In <code>rundata.csv</code> each of 99 runners did three runs. If a new runner has done only the first two, can we predict how far they will go on the third? This week builds the tools to answer that, and to say how confident we can be.</p></div>
+  <ul class="lo-list">
+    <li><span class="lo">LO1</span><span>Calculate and interpret Pearson and Spearman correlation, and explain why correlation is not causation.</span></li>
+    <li><span class="lo">LO2</span><span>Fit simple and multiple linear regression with <code>lm()</code> and read the output: coefficients, R², p-values.</span></li>
+    <li><span class="lo">LO3</span><span>Evaluate a regression model on a test set with MAE and RMSE.</span></li>
+    <li><span class="lo">LO4</span><span>Fit a logistic regression with <code>glm()</code> and interpret odds ratios.</span></li>
+    <li><span class="lo">LO5</span><span>Describe trend, seasonality, autocorrelation and stationarity; forecast with ARIMA.</span></li>
+  </ul>
+</section>
+
+<section id="correlation">
+  <div class="sec-head"><span class="sec-num">02</span><h2>Correlation: strength of association</h2></div>
+  <div class="prose"><p>The correlation coefficient <b>r</b> runs from −1 (perfect negative) through 0 (no linear relationship) to +1 (perfect positive). <b>Pearson</b> measures straight-line association and assumes roughly normal data. <b>Spearman's rho</b> and <b>Kendall's tau</b> use ranks, so they suit skewed or ordinal data and are less sensitive to outliers.</p></div>
+  <div class="figure explorer">
+    <div class="title"><span class="tagx">Explorer</span><h3>What does r look like?</h3></div>
+    <div class="controls">
+      <label class="ctl" for="cr-r"><span>target r: <b id="cr-rv">0.70</b></span><input type="range" id="cr-r" min="-1" max="1" step="0.05" value="0.7"></label>
+      <label class="ctl" for="cr-n"><span>points: <b id="cr-nv">60</b></span><input type="range" id="cr-n" min="10" max="300" step="10" value="60"></label>
+      <label class="ctl" for="cr-o">add an outlier<select id="cr-o"><option value="0">no</option><option value="1">yes</option></select></label>
+      <button class="btn primary" type="button" id="cr-go">New sample</button>
+    </div>
+    <svg id="cr-svg" role="img" aria-label="Scatter plot with the chosen correlation"></svg>
+    <div class="kpis"><div class="kpi"><span>Pearson r</span><b id="cr-p"></b></div><div class="kpi"><span>Spearman rho</span><b id="cr-s"></b></div></div>
+    <p class="caption">Add the outlier: one extreme point drags Pearson's r a long way, while Spearman (ranks) barely moves.</p>
+  </div>
+  <div class="figure explorer">
+    <div class="title"><span class="tagx">Explorer</span><h3>Anscombe's quartet: always plot your data</h3></div>
+    <div class="controls"><span class="note">Dataset</span><button class="btn" type="button" data-an="0">I</button><button class="btn" type="button" data-an="1">II</button><button class="btn" type="button" data-an="2">III</button><button class="btn" type="button" data-an="3">IV</button></div>
+    <svg id="an-svg" role="img" aria-label="Anscombe dataset with regression line"></svg>
+    <div class="console" id="an-out"></div>
+    <p class="caption">All four datasets have the same mean, variance, correlation (0.82) and regression line, but completely different shapes. Built into R as <code>anscombe</code>.</p>
+  </div>
+  <div class="grid2 two">
+    <div class="card"><span class="k">Correlation is not causation</span><p>Ice-cream sales and drownings both rise in summer. A third variable (temperature) drives both. The rooster crows before sunrise; it does not cause it.</p></div>
+    <div class="card"><span class="k">Many variables at once</span><p><code>cor(iris[, 1:4])</code> gives a correlation (adjacency) matrix; <code>pairs()</code> or <code>psych::pairs.panels()</code> draws a scatterplot matrix (SPLOM).</p></div>
+  </div>
+</section>
+
+<section id="ols">
+  <div class="sec-head"><span class="sec-num">03</span><h2>Simple linear regression</h2></div>
+  <div class="prose"><p>Regression models a <b>dependent</b> (target) variable from one or more <b>independent</b> variables (features). Simple linear regression fits <code>ŷ = b0 + b1·x</code>: <b>b0</b> is the intercept (ŷ when x = 0) and <b>b1</b> the slope (change in ŷ for each 1-unit increase in x). <b>Ordinary least squares</b> (OLS) picks the b0 and b1 that make the sum of squared residuals as small as possible.</p></div>
+  <div class="figure explorer">
+    <div class="title"><span class="tagx">Explorer</span><h3>Fit the line yourself, then let OLS do it</h3></div>
+    <p class="caption">Data: hours studied vs exam score (10 students). Drag any point. Turn on "my line" and use the sliders to beat OLS. You can't: OLS has the smallest squared error by definition.</p>
+    <div class="controls">
+      <label class="ctl" for="ol-mode">line<select id="ol-mode"><option value="ols">OLS (lm)</option><option value="mine">my line</option></select></label>
+      <label class="ctl" for="ol-b0"><span>my intercept b0: <b id="ol-b0v">50</b></span><input type="range" id="ol-b0" min="20" max="80" step="0.5" value="50"></label>
+      <label class="ctl" for="ol-b1"><span>my slope b1: <b id="ol-b1v">2.5</b></span><input type="range" id="ol-b1" min="-2" max="6" step="0.05" value="2.5"></label>
+      <label class="ctl" for="ol-sq">show squares<select id="ol-sq"><option value="1">yes</option><option value="0">no</option></select></label>
+      <button class="btn" type="button" id="ol-reset">Reset points</button>
+    </div>
+    <svg id="ol-svg" role="img" aria-label="Scatter plot with regression line and residuals" style="touch-action:none"></svg>
+    <div class="kpis"><div class="kpi"><span>equation</span><b id="ol-eq"></b></div><div class="kpi"><span>sum of squared residuals</span><b id="ol-sse"></b></div><div class="kpi"><span>OLS minimum</span><b id="ol-min"></b></div><div class="kpi"><span>R²</span><b id="ol-r2"></b></div></div>
+    <div class="console" id="ol-code"></div>
+  </div>
+  <div class="callout">Why "regression"? Francis Galton found that very tall parents tend to have children who are tall, but less extreme: heights <b>regress towards the mean</b>. The name stuck to the method.</div>
+</section>
+
+<section id="fit">
+  <div class="sec-head"><span class="sec-num">04</span><h2>How good is the fit?</h2></div>
+  <div class="grid2 two">
+    <div class="card"><span class="k">Residual</span><p><code>e = y − ŷ</code>: observed minus predicted. Good models have residuals scattered randomly around 0 with no pattern.</p></div>
+    <div class="card"><span class="k">R² (coefficient of determination)</span><p>The proportion of variance in y the model explains, from 0 to 1. <b>Adjusted R²</b> penalises extra predictors, because plain R² can only go up when you add variables.</p></div>
+    <div class="card"><span class="k">F-test</span><p>H0: an intercept-only model fits as well as yours. A small p-value says your predictors help.</p></div>
+    <div class="card"><span class="k">MAE and RMSE</span><p>Mean absolute error and root mean squared error on a <b>test set</b>: average prediction error in the units of y. RMSE punishes big misses more.</p></div>
+  </div>
+  <figure class="figure">
+    <svg id="res-svg" role="img" aria-label="Residual plot for the current explorer data"></svg>
+    <figcaption>Residual plot for the data in the explorer above (it updates as you drag points). A curve or funnel shape here means a straight line is the wrong model.</figcaption>
+  </figure>
+</section>
+
+<section id="multiple">
+  <div class="sec-head"><span class="sec-num">05</span><h2>Multiple regression on rundata</h2></div>
+  <div class="prose"><p>Multiple regression uses several features: <code>ŷ = b0 + b1·x1 + b2·x2 + …</code>. Each coefficient is the effect of that feature <i>holding the others constant</i>.</p></div>
+  <div class="code"><pre>lma &lt;- lm(FinalRun ~ FirstRun + SecondRun, data = rundata)
+summary(lma)
+# FinalRun = 5.54 - 0.28 * FirstRun + 1.29 * SecondRun     R² = 0.926</pre></div>
+  <div class="figure explorer">
+    <div class="title"><span class="tagx">Explorer</span><h3>Predict a new runner</h3></div>
+    <div class="controls">
+      <label class="ctl" for="mp-1"><span>FirstRun: <b id="mp-1v">22</b> km</span><input type="range" id="mp-1" min="0" max="60" step="0.5" value="22"></label>
+      <label class="ctl" for="mp-2"><span>SecondRun: <b id="mp-2v">25</b> km</span><input type="range" id="mp-2" min="0" max="60" step="0.5" value="25"></label>
+    </div>
+    <div class="kpis"><div class="kpi"><span>predicted FinalRun</span><b id="mp-out"></b></div></div>
+    <div class="console" id="mp-code"></div>
+  </div>
+  <div class="figure explorer">
+    <div class="title"><span class="tagx">Result</span><h3>Train on 80 runners, test on 19</h3></div>
+    <svg id="tt-svg" role="img" aria-label="Predicted against actual final run for the 19 test runners"></svg>
+    <div class="kpis"><div class="kpi"><span>MAE</span><b>1.81 km</b></div><div class="kpi"><span>RMSE</span><b>2.49 km</b></div><div class="kpi"><span>within 2 km</span><b>13 of 19</b></div><div class="kpi"><span>over-predicted</span><b>11 of 19</b></div></div>
+    <p class="caption">Shuffled with <code>set.seed(12345)</code>, trained on rows 1–80, tested on 81–99, exactly as in the lecture. Points on the dashed line are perfect predictions. The model was never shown these 19 runners, so this is an honest estimate of how it would do on new people.</p>
+  </div>
+</section>
+
+<section id="pitfalls">
+  <div class="sec-head"><span class="sec-num">06</span><h2>Pitfalls and extensions</h2></div>
+  <div class="figure explorer">
+    <div class="title"><span class="tagx">Explorer</span><h3>Simpson's paradox: kidney stone treatments</h3></div>
+    <div class="controls"><label class="ctl" for="sp-v">view<select id="sp-v"><option value="all">All patients combined</option><option value="small">Small stones only</option><option value="large">Large stones only</option></select></label></div>
+    <svg id="sp-svg" role="img" aria-label="Success rates for treatments A and B"></svg>
+    <p class="caption">Treatment A (open surgery) wins for small stones <i>and</i> for large stones, yet B looks better overall. Doctors gave A to the harder, large-stone cases. Stone size is a <b>confounder</b>. (Charig et al. 1986, as discussed by Julious &amp; Mullee 1994.)</p>
+  </div>
+  <div class="grid2 two">
+    <div class="card"><span class="k">Multicollinearity</span><p>When predictors are highly correlated (FirstRun and SecondRun: r = 0.98), coefficients become unstable and hard to interpret. That is why FirstRun gets a <i>negative</i> coefficient above. Check with <code>car::vif()</code>; VIF above 5–10 is a warning.</p></div>
+    <div class="card"><span class="k">Building a model</span><p>Forward selection adds the most useful predictor one at a time; backward elimination starts with all and removes the weakest. <code>step(lma)</code> automates this using AIC.</p></div>
+    <div class="card"><span class="k">Curves and interactions</span><p>Add <code>I(x^2)</code> for a curved relationship. <code>y ~ x1 * x2</code> adds an interaction: the effect of x1 depends on x2.</p></div>
+    <div class="card"><span class="k">Segmented regression</span><p>Also called piecewise or broken-stick: different straight lines either side of a break point.</p></div>
+  </div>
+</section>
+
+<section id="logistic">
+  <div class="sec-head"><span class="sec-num">07</span><h2>Logistic regression: predicting yes or no</h2></div>
+  <div class="prose"><p>When the target is binary (pass/fail, survived/died), a straight line can predict impossible values like 1.4. Logistic regression passes the linear part through the <b>sigmoid</b> function so the output is always a probability between 0 and 1: <code>p = 1 / (1 + e<sup>−(b0 + b1·x)</sup>)</code>. The coefficients are on the <b>log-odds</b> scale; <code>exp(b1)</code> is the <b>odds ratio</b> for a 1-unit increase in x.</p></div>
+  <div class="figure explorer">
+    <div class="title"><span class="tagx">Explorer</span><h3>The sigmoid and the "super run"</h3></div>
+    <p class="caption">Each dot is a runner: 1 if their FinalRun was 45 km or more ("super run"), 0 otherwise, plotted against SecondRun. Move the sliders, or snap to the glm() fit.</p>
+    <div class="controls">
+      <label class="ctl" for="lg-b0"><span>b0: <b id="lg-b0v">−30.5</b></span><input type="range" id="lg-b0" min="-50" max="0" step="0.5" value="-30.5"></label>
+      <label class="ctl" for="lg-b1"><span>b1: <b id="lg-b1v">0.81</b></span><input type="range" id="lg-b1" min="0" max="1.6" step="0.01" value="0.81"></label>
+      <label class="ctl" for="lg-x"><span>SecondRun x: <b id="lg-xv">38</b></span><input type="range" id="lg-x" min="5" max="60" step="0.5" value="38"></label>
+      <button class="btn" type="button" id="lg-fit">Snap to glm() fit</button>
+    </div>
+    <svg id="lg-svg" role="img" aria-label="Logistic curve with runner data"></svg>
+    <div class="kpis"><div class="kpi"><span>P(super run)</span><b id="lg-p"></b></div><div class="kpi"><span>odds</span><b id="lg-odds"></b></div><div class="kpi"><span>odds ratio exp(b1)</span><b id="lg-or"></b></div></div>
+  </div>
+  <div class="callout"><b>Odds versus probability.</b> Won 5, lost 3: probability of a win = 5/8 = 0.625, odds = 5/3 = 1.67 (1.67 wins for every loss). In the explorer (SecondRun only) exp(b1) ≈ 2.2: each extra km on the second run multiplies the odds of a super run by about 2.2. With FirstRun also in the model (task 6) the SecondRun odds ratio is 2.6.</div>
+</section>
+
+<section id="timeseries">
+  <div class="sec-head"><span class="sec-num">08</span><h2>Time series analysis</h2></div>
+  <div class="prose"><p>A time series is a sequence of measurements in time order: monthly births, hourly helpline calls, daily A&amp;E admissions. We look for <b>trend</b> (long-run rise or fall), <b>seasonality</b> (a pattern that repeats every period) and the <b>random</b> part left over. Data: monthly births in New York City, January 1946 to December 1959.</p></div>
+  <div class="code"><pre>births &lt;- scan("nybirths.dat")     # or the URL from the lecture
+birthstimeseries &lt;- ts(births, frequency = 12, start = c(1946, 1))
+plot.ts(birthstimeseries)</pre></div>
+  <div class="figure explorer">
+    <div class="title"><span class="tagx">Explorer</span><h3>Take the series apart</h3></div>
+    <div class="controls">
+      <label class="ctl" for="ts-v">show<select id="ts-v">
+        <option value="raw">Raw series + regression trend line</option>
+        <option value="sma">Simple moving average (SMA)</option>
+        <option value="dec">Decomposition: trend, seasonal, random</option>
+        <option value="adj">Seasonally adjusted (minus seasonal)</option>
+        <option value="diff">First-order differencing</option>
+      </select></label>
+      <label class="ctl" for="ts-n"><span>SMA window n: <b id="ts-nv">15</b></span><input type="range" id="ts-n" min="2" max="36" value="15"></label>
+    </div>
+    <svg id="ts-svg" role="img" aria-label="NY births time series"></svg>
+    <div class="console" id="ts-code"></div>
+  </div>
+  <div class="figure explorer">
+    <div class="title"><span class="tagx">Explorer</span><h3>Autocorrelation: does the series correlate with its own past?</h3></div>
+    <div class="controls"><label class="ctl" for="ac-l"><span>lag: <b id="ac-lv">1</b> month</span><input type="range" id="ac-l" min="1" max="24" value="1"></label></div>
+    <div class="grid2 two">
+      <div><p class="caption">Value at t against value at t − lag</p><svg id="ac-sc" role="img" aria-label="Lag scatter plot"></svg></div>
+      <div><p class="caption">Correlogram: <code>acf(birthstimeseries, lag.max = 24)</code></p><svg id="ac-bar" role="img" aria-label="Autocorrelation function bars"></svg></div>
+    </div>
+    <p class="caption">Lag 1 gives r = 0.79 (each month resembles the last). The peak at lag 12 is the yearly seasonality. Dashed lines are the ±1.96/√n significance bounds that R draws. A series with no autocorrelation is <b>white noise</b>.</p>
+  </div>
+  <div class="grid2 two">
+    <div class="card"><span class="k">Stationarity</span><p>A series is stationary when its mean and variance stay constant over time. Trend or seasonality break this. Many forecasting models need a stationary series.</p></div>
+    <div class="card"><span class="k">Testing and fixing it</span><p>Augmented Dickey–Fuller: <code>tseries::adf.test(x)</code>, H0 = non-stationary. Differencing (<code>diff(x)</code>, Y<sub>t</sub> − Y<sub>t−1</sub>) removes trend; <code>diff(x, lag = 12)</code> removes yearly seasonality.</p></div>
+  </div>
+  <div class="callout warn"><b>Read the ADF result carefully.</b> On the births series <code>adf.test()</code> gives p ≈ 0.01. The default test includes a linear trend, so that says the series is stationary <i>around a trend</i>. It does not mean there is no trend or seasonality. Always plot the series as well.</div>
+</section>
+
+<section id="forecast">
+  <div class="sec-head"><span class="sec-num">09</span><h2>Forecasting with ARIMA</h2></div>
+  <div class="prose"><p><b>ARIMA(p, d, q)</b> combines an <b>A</b>uto<b>R</b>egressive part (regress on p past values), <b>I</b>ntegration (d rounds of differencing) and a <b>M</b>oving <b>A</b>verage part (q past forecast errors). Seasonal ARIMA adds the same three for the seasonal lag. <code>forecast::auto.arima()</code> searches for good values for you.</p></div>
+  <figure class="figure">
+    <svg id="fc-svg" role="img" aria-label="AirPassengers training data, test data and ARIMA forecast with 95 percent interval"></svg>
+    <figcaption>AirPassengers: trained on 1949–1957 (108 months), forecast 36 months ahead and compared with the real 1958–1960 values. auto.arima chose ARIMA(1,1,0)(0,1,0)[12]. Mean absolute error on the test years: 17.8 thousand passengers. The shaded band is the 95% prediction interval.</figcaption>
+  </figure>
+  <div class="code"><pre>library(forecast)
+AirPassengersTrain &lt;- ts(AirPassengers[1:108],   frequency = 12, start = c(1949, 1))
+AirPassengersTest  &lt;- ts(AirPassengers[109:144], frequency = 12, start = c(1958, 1))
+modelfit  &lt;- auto.arima(AirPassengersTrain)
+forecasts &lt;- forecast(modelfit, h = 36)
+accuracy(forecasts, AirPassengersTest)</pre></div>
+</section>
+
+<section id="survival">
+  <div class="sec-head"><span class="sec-num">10</span><h2>Survival analysis</h2></div>
+  <div class="prose"><p>Survival analysis studies <b>time until an event</b>: death, relapse, or a user leaving an app. Some people haven't had the event when the study ends; they are <b>censored</b>, and the Kaplan–Meier estimator uses them correctly instead of throwing them away.</p></div>
+  <figure class="figure">
+    <svg id="km-svg" role="img" aria-label="Kaplan-Meier survival curves for two treatment groups"></svg>
+    <figcaption>Kaplan–Meier curves for the <code>pbc</code> liver disease trial in the <code>survival</code> package: D-penicillamine vs placebo. The curves overlap and the log-rank test gives p = 0.75: no evidence the drug changes survival.</figcaption>
+  </figure>
+  <div class="code"><pre>library(survival)
+km &lt;- survfit(Surv(time, status == 2) ~ trt, data = pbc)
+plot(km, col = c("blue", "orange"))
+survdiff(Surv(time, status == 2) ~ trt, data = pbc)   # log-rank test</pre></div>
+</section>
+
+<section id="tasks">
+  <div class="sec-head"><span class="sec-num">11</span><h2>Your R tasks</h2></div>
+  <div class="tier t-core">
+    <div class="tier-head"><span class="tag">Core</span><span class="note">LO1–LO2</span></div>
+    <ol class="tasks">
+      <li class="task"><div class="task-q"><span class="num">1</span><span>Correlate <code>iris$Sepal.Length</code> with <code>iris$Sepal.Width</code>, test it, then draw the scatter plot. Is the result what you expected?</span></div>
+        <details><summary>Check your answer</summary><div class="code"><pre>cor.test(iris$Sepal.Length, iris$Sepal.Width, method = "pearson")   # r = -0.12, p = 0.15
+plot(iris$Sepal.Length, iris$Sepal.Width, col = iris$Species)
+# Weak and not significant overall, but within each species the
+# relationship is positive: Simpson's paradox again.</pre></div></details></li>
+      <li class="task"><div class="task-q"><span class="num">2</span><span>Create the correlation matrix for the four iris measurements. Which pair correlates most strongly?</span></div>
+        <details><summary>Check your answer</summary><div class="code"><pre>round(cor(iris[, 1:4]), 2)   # Petal.Length–Petal.Width: 0.96</pre></div></details></li>
+      <li class="task"><div class="task-q"><span class="num">3</span><span>Plot SecondRun against FirstRun with a regression line. Report r and whether it is significant.</span></div>
+        <details><summary>Check your answer</summary><div class="code"><pre>plot(rundata$FirstRun, rundata$SecondRun)
+reg1 &lt;- lm(SecondRun ~ FirstRun, data = rundata)
+abline(reg1, col = "red")
+cor.test(rundata$FirstRun, rundata$SecondRun)   # r = 0.976, p &lt; 0.001</pre></div></details></li>
+      <li class="task"><div class="task-q"><span class="num">4</span><span>Fit <code>FinalRun ~ FirstRun + SecondRun</code>. Write the equation and predict the final run for a runner with 22 and 25 km.</span></div>
+        <details><summary>Check your answer</summary><div class="code"><pre>lma &lt;- lm(FinalRun ~ FirstRun + SecondRun, data = rundata)
+summary(lma)   # FinalRun = 5.54 - 0.28*FirstRun + 1.29*SecondRun, R² = 0.93
+predict(lma, data.frame(FirstRun = 22, SecondRun = 25))   # 31.58 km</pre></div></details></li>
+    </ol>
+  </div>
+  <div class="tier t-chal">
+    <div class="tier-head"><span class="tag">Challenge</span><span class="note">LO3–LO4</span></div>
+    <ol class="tasks">
+      <li class="task"><div class="task-q"><span class="num">5</span><span>Shuffle rundata with <code>set.seed(12345)</code>, train on 80 rows and test on 19. Calculate MAE, RMSE and how many predictions are within 2 km.</span></div>
+        <details><summary>Check your answer</summary><div class="code"><pre>set.seed(12345)
+run2 &lt;- rundata[order(runif(99)), ]
+lmt &lt;- lm(FinalRun ~ FirstRun + SecondRun, data = run2[1:80, ])
+testing &lt;- run2[81:99, ]
+pred &lt;- predict(lmt, testing)
+diff &lt;- pred - testing$FinalRun
+mean(abs(diff))          # MAE  1.81
+sqrt(mean(diff^2))       # RMSE 2.49
+sum(abs(diff) &lt;= 2)      # 13</pre></div></details></li>
+      <li class="task"><div class="task-q"><span class="num">6</span><span>Create <code>superrun</code> (1 if FinalRun ≥ 45) and fit a logistic regression on FirstRun and SecondRun. Calculate the odds ratios with confidence intervals.</span></div>
+        <details><summary>Check your answer</summary><div class="code"><pre>rundata$superrun &lt;- ifelse(rundata$FinalRun &gt;= 45, 1, 0)
+logitModel &lt;- glm(superrun ~ FirstRun + SecondRun, data = rundata, family = binomial)
+summary(logitModel)
+exp(cbind(OR = coef(logitModel), confint(logitModel)))
+# SecondRun OR ≈ 2.60: each extra km multiplies the odds by 2.6</pre></div></details></li>
+      <li class="task"><div class="task-q"><span class="num">7</span><span>Titanic: predict <code>Survived</code> from <code>Pclass</code>, <code>Sex</code> and <code>Age</code> with logistic regression. Which feature has the biggest effect?</span></div>
+        <details><summary>Check your answer</summary><div class="code"><pre>titanic &lt;- read.csv("titanic.csv")
+titanic$Pclass &lt;- factor(titanic$Pclass)
+m &lt;- glm(Survived ~ Pclass + Sex + Age, data = titanic, family = binomial)
+summary(m)          # 177 rows with missing Age are dropped automatically
+exp(coef(m))        # Sexmale OR ≈ 0.08: men had about 1/12 the odds of surviving</pre></div></details></li>
+    </ol>
+  </div>
+  <div class="tier t-str">
+    <div class="tier-head"><span class="tag">Stretch</span><span class="note">LO5</span></div>
+    <ol class="tasks">
+      <li class="task"><div class="task-q"><span class="num">8</span><span>Decompose the NY births series and plot the seasonally adjusted series. Which month has the highest seasonal effect?</span></div>
+        <details><summary>Check your answer</summary><div class="code"><pre>bts &lt;- ts(scan("nybirths.dat"), frequency = 12, start = c(1946, 1))
+comp &lt;- decompose(bts)
+plot(comp)
+plot.ts(bts - comp$seasonal)
+round(comp$figure, 2)   # July is highest (+1.46), February lowest (−2.08)</pre></div></details></li>
+      <li class="task"><div class="task-q"><span class="num">9</span><span>Compute the lag-1 autocorrelation by hand, then with <code>acf()</code>. Which lag (apart from 0) is highest?</span></div>
+        <details><summary>Check your answer</summary><div class="code"><pre>cor(bts[2:168], bts[1:167])   # 0.788
+acf(bts, lag.max = 24)        # spikes at 12 and 24: yearly seasonality</pre></div></details></li>
+      <li class="task"><div class="task-q"><span class="num">10</span><span>Train auto.arima on the first 9 years of AirPassengers, forecast the last 3 and compute the test MAE. Plot forecast vs actual.</span></div>
+        <details><summary>Check your answer</summary><div class="code"><pre>library(forecast)
+train &lt;- ts(AirPassengers[1:108], frequency = 12, start = c(1949, 1))
+test  &lt;- ts(AirPassengers[109:144], frequency = 12, start = c(1958, 1))
+fc &lt;- forecast(auto.arima(train), h = 36)
+mean(abs(test - fc$mean))     # about 17.8
+plot(test, col = "red"); lines(fc$mean, col = "blue")</pre></div></details></li>
+    </ol>
+  </div>
+</section>
+
+<section id="quiz">
+  <div class="sec-head"><span class="sec-num">12</span><h2>Check yourself</h2></div>
+  <div class="quiz">
+    <div class="q" data-answer="1" data-why="r = 0 means no linear relationship. There could still be a strong curved one, which is why you always plot.">
+      <p><b>1.</b> A Pearson correlation of 0 means…</p>
+      <div class="opts"><button class="opt">The variables are unrelated in every way</button><button class="opt">There is no linear relationship</button><button class="opt">One variable causes the other</button></div><p class="fb"></p></div>
+    <div class="q" data-answer="2" data-why="OLS minimises the sum of squared residuals: observed minus predicted, squared, added up.">
+      <p><b>2.</b> Ordinary least squares chooses the line that…</p>
+      <div class="opts"><button class="opt">Passes through the most points</button><button class="opt">Has the steepest slope</button><button class="opt">Minimises the sum of squared residuals</button></div><p class="fb"></p></div>
+    <div class="q" data-answer="0" data-why="Adding any variable can only increase plain R², even noise. Adjusted R² penalises the extra complexity.">
+      <p><b>3.</b> Why report adjusted R² for multiple regression?</p>
+      <div class="opts"><button class="opt">R² rises whenever you add a predictor, useful or not</button><button class="opt">Adjusted R² is always larger</button><button class="opt">R² can't be calculated with two predictors</button></div><p class="fb"></p></div>
+    <div class="q" data-answer="1" data-why="Logistic regression coefficients are log-odds; exp() turns them into odds ratios.">
+      <p><b>4.</b> In logistic regression, <code>exp(coef(model))</code> gives…</p>
+      <div class="opts"><button class="opt">Probabilities</button><button class="opt">Odds ratios</button><button class="opt">Residuals</button></div><p class="fb"></p></div>
+    <div class="q" data-answer="2" data-why="The 12-month lag matches the yearly cycle in monthly data.">
+      <p><b>5.</b> Monthly data has a big autocorrelation spike at lag 12. This suggests…</p>
+      <div class="opts"><button class="opt">A linear trend</button><button class="opt">White noise</button><button class="opt">Yearly seasonality</button></div><p class="fb"></p></div>
+    <div class="q" data-answer="0" data-why="The d in ARIMA(p, d, q) is the number of differences taken to make the series stationary.">
+      <p><b>6.</b> In ARIMA(1, 1, 0), the middle 1 means…</p>
+      <div class="opts"><button class="opt">The series is differenced once</button><button class="opt">One moving-average term</button><button class="opt">A one-year season</button></div><p class="fb"></p></div>
+  </div>
+</section>
+
+<section id="glossary">
+  <div class="sec-head"><span class="sec-num">13</span><h2>Key terms</h2></div>
+  <div class="tbl"><table><thead><tr><th>Term</th><th>Meaning</th></tr></thead><tbody>
+    <tr><td>Dependent / independent</td><td>The variable predicted (target) / the variables used to predict it (features).</td></tr>
+    <tr><td>Intercept, coefficient</td><td>ŷ when all x are 0 / change in ŷ per 1-unit change in x.</td></tr>
+    <tr><td>Residual</td><td>Observed minus predicted value.</td></tr>
+    <tr><td>R², adjusted R²</td><td>Proportion of variance explained; adjusted penalises extra predictors.</td></tr>
+    <tr><td>Multicollinearity</td><td>Predictors highly correlated with each other; unstable coefficients.</td></tr>
+    <tr><td>Odds ratio</td><td>How the odds of the outcome multiply for a 1-unit increase in a feature.</td></tr>
+    <tr><td>Trend, seasonality</td><td>Long-run direction / a pattern repeating every period.</td></tr>
+    <tr><td>Autocorrelation</td><td>Correlation of a series with a lagged copy of itself.</td></tr>
+    <tr><td>Stationary</td><td>Mean and variance constant over time.</td></tr>
+    <tr><td>Censoring</td><td>The event hasn't happened by the end of observation.</td></tr>
+  </tbody></table></div>
+</section>
+
+<section id="exit">
+  <div class="sec-head"><span class="sec-num">14</span><h2>Exit self-check</h2></div>
+  <p class="note">1 = I need help · 2 = nearly there · 3 = confident. Your choices stay on this device.</p>
+  <div class="rate">
+    <div class="rate-row"><span><span class="lo">LO1</span> Correlation and causation.</span><div class="btns" data-k="lo1"><button data-v="1">1</button><button data-v="2">2</button><button data-v="3">3</button></div></div>
+    <div class="rate-row"><span><span class="lo">LO2</span> Fitting and reading lm() output.</span><div class="btns" data-k="lo2"><button data-v="1">1</button><button data-v="2">2</button><button data-v="3">3</button></div></div>
+    <div class="rate-row"><span><span class="lo">LO3</span> Testing a model with MAE and RMSE.</span><div class="btns" data-k="lo3"><button data-v="1">1</button><button data-v="2">2</button><button data-v="3">3</button></div></div>
+    <div class="rate-row"><span><span class="lo">LO4</span> Logistic regression and odds ratios.</span><div class="btns" data-k="lo4"><button data-v="1">1</button><button data-v="2">2</button><button data-v="3">3</button></div></div>
+    <div class="rate-row"><span><span class="lo">LO5</span> Trend, seasonality, ACF, ARIMA.</span><div class="btns" data-k="lo5"><button data-v="1">1</button><button data-v="2">2</button><button data-v="3">3</button></div></div>
+  </div>
+</section>
+
+<nav class="pager" aria-label="Previous and next week"><a href="week03.html"><span class="k">← Week 3</span>Inferential Statistics</a><a class="nx" href="week05.html"><span class="k">Week 5 →</span>Supervised ML and Feature Engineering</a></nav>
+</div>
+<footer><span>COM747 Data Science &amp; Machine Learning · QA Higher Education / Ulster University</span><span>Keep RStudio open beside this page.</span></footer>
+</div>
+</div>
+<script>
+/* Shared helpers for COM747 student pages: copy buttons, quizzes, self-ratings, stats maths, SVG charts */
+(function(){
+"use strict";
+/* ---------- copy buttons ---------- */
+document.querySelectorAll('.code').forEach(function(box){
+  if (box.dataset.nocopy !== undefined) return;
+  var pre = box.querySelector('pre'); if (!pre) return;
+  var btn = document.createElement('button'); btn.type='button'; btn.className='copy'; btn.textContent='Copy';
+  box.appendChild(btn);
+  btn.addEventListener('click', function(){
+    var text = pre.innerText;
+    var done = function(){ btn.textContent='Copied'; setTimeout(function(){btn.textContent='Copy';},1500); };
+    var fallback = function(){ var r=document.createRange(); r.selectNodeContents(pre); var s=window.getSelection(); s.removeAllRanges(); s.addRange(r); btn.textContent='Press Ctrl+C'; };
+    try { navigator.clipboard.writeText(text).then(done, fallback); } catch(e){ fallback(); }
+  });
+});
+/* ---------- quizzes: <div class="q" data-answer="1" data-why="..."> ---------- */
+document.querySelectorAll('.q').forEach(function(q){
+  var ans = +q.dataset.answer; var fb = q.querySelector('.fb');
+  var opts = q.querySelectorAll('button.opt');
+  opts.forEach(function(b, i){
+    b.type='button';
+    b.addEventListener('click', function(){
+      opts.forEach(function(o){ o.classList.remove('right','wrong'); });
+      if (i === ans){ b.classList.add('right'); fb.innerHTML = '<b class="ok">Correct.</b> ' + (q.dataset.why||''); }
+      else { b.classList.add('wrong'); fb.innerHTML = '<b class="no">Not quite.</b> Try another option.'; }
+    });
+  });
+});
+/* ---------- self-rating ---------- */
+var key = 'com747-' + (document.body.dataset.page || 'page');
+var saved = {};
+try { saved = JSON.parse(localStorage.getItem(key) || '{}'); } catch(e){}
+document.querySelectorAll('.btns').forEach(function(group){
+  var k = group.dataset.k;
+  var set = function(v){ group.querySelectorAll('button').forEach(function(b){ b.setAttribute('aria-pressed', String(b.dataset.v === v)); }); };
+  group.querySelectorAll('button').forEach(function(b){ b.type='button'; b.setAttribute('aria-pressed','false'); });
+  if (saved[k]) set(saved[k]);
+  group.addEventListener('click', function(e){
+    var b = e.target.closest('button'); if(!b) return;
+    set(b.dataset.v); saved[k]=b.dataset.v;
+    try { localStorage.setItem(key, JSON.stringify(saved)); } catch(e){}
+  });
+});
+
+/* ---------- stats maths ---------- */
+var S = {};
+S.mean = function(a){ var s=0; for (var i=0;i<a.length;i++) s+=a[i]; return s/a.length; };
+S.variance = function(a){ var m=S.mean(a), s=0; for (var i=0;i<a.length;i++) s+=(a[i]-m)*(a[i]-m); return s/(a.length-1); };
+S.sd = function(a){ return Math.sqrt(S.variance(a)); };
+S.median = function(a){ var b=a.slice().sort(function(x,y){return x-y;}); var n=b.length; return n%2? b[(n-1)/2] : (b[n/2-1]+b[n/2])/2; };
+S.erf = function(x){ /* Abramowitz-Stegun 7.1.26, |err|<1.5e-7 */
+  var s = x<0?-1:1; x=Math.abs(x);
+  var t=1/(1+0.3275911*x);
+  var y=1-(((((1.061405429*t-1.453152027)*t)+1.421413741)*t-0.284496736)*t+0.254829592)*t*Math.exp(-x*x);
+  return s*y; };
+S.dnorm = function(x,m,s){ m=m||0; s=s||1; var z=(x-m)/s; return Math.exp(-0.5*z*z)/(s*Math.sqrt(2*Math.PI)); };
+S.pnorm = function(x,m,s){ m=m||0; s=s||1; return 0.5*(1+S.erf((x-m)/(s*Math.SQRT2))); };
+S.qnorm = function(p){ /* Acklam */
+  var a=[-3.969683028665376e+01,2.209460984245205e+02,-2.759285104469687e+02,1.383577518672690e+02,-3.066479806614716e+01,2.506628277459239e+00],
+      b=[-5.447609879822406e+01,1.615858368580409e+02,-1.556989798598866e+02,6.680131188771972e+01,-1.328068155288572e+01],
+      c=[-7.784894002430293e-03,-3.223964580411365e-01,-2.400758277161838e+00,-2.549732539343734e+00,4.374664141464968e+00,2.938163982698783e+00],
+      d=[7.784695709041462e-03,3.224671290700398e-01,2.445134137142996e+00,3.754408661907416e+00];
+  var q,r; if (p<=0) return -Infinity; if (p>=1) return Infinity;
+  if (p<0.02425){ q=Math.sqrt(-2*Math.log(p)); return (((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5])/((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1); }
+  if (p>1-0.02425){ q=Math.sqrt(-2*Math.log(1-p)); return -(((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5])/((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1); }
+  q=p-0.5; r=q*q; return (((((a[0]*r+a[1])*r+a[2])*r+a[3])*r+a[4])*r+a[5])*q/(((((b[0]*r+b[1])*r+b[2])*r+b[3])*r+b[4])*r+1); };
+S.lgamma = function(x){ var c=[76.18009172947146,-86.50532032941677,24.01409824083091,-1.231739572450155,0.1208650973866179e-2,-0.5395239384953e-5];
+  var y=x, t=x+5.5; t-=(x+0.5)*Math.log(t); var s=1.000000000190015; for (var j=0;j<6;j++) s+=c[j]/++y; return -t+Math.log(2.5066282746310005*s/x); };
+function betacf(a,b,x){ var MAXIT=200,EPS=3e-14,FPMIN=1e-300; var qab=a+b,qap=a+1,qam=a-1,c=1,d=1-qab*x/qap; if(Math.abs(d)<FPMIN)d=FPMIN; d=1/d; var h=d;
+  for (var m=1;m<=MAXIT;m++){ var m2=2*m, aa=m*(b-m)*x/((qam+m2)*(a+m2)); d=1+aa*d; if(Math.abs(d)<FPMIN)d=FPMIN; c=1+aa/c; if(Math.abs(c)<FPMIN)c=FPMIN; d=1/d; h*=d*c;
+    aa=-(a+m)*(qab+m)*x/((a+m2)*(qap+m2)); d=1+aa*d; if(Math.abs(d)<FPMIN)d=FPMIN; c=1+aa/c; if(Math.abs(c)<FPMIN)c=FPMIN; d=1/d; var del=d*c; h*=del; if(Math.abs(del-1)<EPS)break; }
+  return h; }
+S.ibeta = function(x,a,b){ if (x<=0) return 0; if (x>=1) return 1;
+  var bt=Math.exp(S.lgamma(a+b)-S.lgamma(a)-S.lgamma(b)+a*Math.log(x)+b*Math.log(1-x));
+  return x<(a+1)/(a+b+2) ? bt*betacf(a,b,x)/a : 1-bt*betacf(b,a,1-x)/b; };
+S.pt = function(t,df){ var x=df/(df+t*t); var tail=0.5*S.ibeta(x,df/2,0.5); return t>0? 1-tail : tail; };
+S.dt = function(t,df){ return Math.exp(S.lgamma((df+1)/2)-S.lgamma(df/2))/Math.sqrt(df*Math.PI)*Math.pow(1+t*t/df,-(df+1)/2); };
+S.qt = function(p,df){ var lo=-60,hi=60; for (var i=0;i<100;i++){ var mid=(lo+hi)/2; if (S.pt(mid,df)<p) lo=mid; else hi=mid; } return (lo+hi)/2; };
+S.choose = function(n,k){ var r=1; for (var i=1;i<=k;i++) r=r*(n-k+i)/i; return r; };
+S.dbinom = function(k,n,p){ return S.choose(n,k)*Math.pow(p,k)*Math.pow(1-p,n-k); };
+S.rnorm = function(m,s){ var u=0,v=0; while(u===0)u=Math.random(); while(v===0)v=Math.random(); return m + s*Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v); };
+S.welch = function(x,y){ var mx=S.mean(x),my=S.mean(y),vx=S.variance(x),vy=S.variance(y),nx=x.length,ny=y.length;
+  var se=Math.sqrt(vx/nx+vy/ny), t=(mx-my)/se; var df=Math.pow(vx/nx+vy/ny,2)/(Math.pow(vx/nx,2)/(nx-1)+Math.pow(vy/ny,2)/(ny-1));
+  return {t:t, df:df, p:2*(1-S.pt(Math.abs(t),df))}; };
+S.fmt = function(x,d){ if (!isFinite(x)) return String(x); d = d===undefined?2:d; var s=x.toFixed(d); return s==='-0'+(d?'.'+'0'.repeat(d):'')? s.slice(1): s; };
+S.sig = function(x,n){ n=n||4; if (x===0) return '0'; if (Math.abs(x)<1e-4) return x.toExponential(2); return String(+x.toPrecision(n)); };
+window.S = S;
+
+/* ---------- SVG helpers ---------- */
+var NS='http://www.w3.org/2000/svg';
+function el(tag, attrs, parent){ var e=document.createElementNS(NS,tag); for (var k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; }
+function txt(parent, x, y, s, cls, anchor){ var t=el('text',{x:x,y:y,'class':cls||'tick','text-anchor':anchor||'middle'},parent); t.textContent=s; return t; }
+function niceTicks(lo, hi, n){ var span=hi-lo; if (span<=0) return [lo]; var step=Math.pow(10,Math.floor(Math.log10(span/n))); var err=n/span*step;
+  if (err<=0.15) step*=10; else if (err<=0.35) step*=5; else if (err<=0.75) step*=2;
+  var out=[]; for (var v=Math.ceil(lo/step)*step; v<=hi+1e-9; v+=step) out.push(+v.toFixed(10)); return out; }
+/* Chart frame: returns {g, x(), y(), W, H} */
+function frame(svg, opts){
+  while (svg.firstChild) svg.removeChild(svg.firstChild);
+  var W=opts.W||640, H=opts.H||260, m=opts.m||{l:48,r:16,t:14,b:38};
+  svg.setAttribute('viewBox','0 0 '+W+' '+H);
+  var x=function(v){ return m.l + (v-opts.x0)/(opts.x1-opts.x0)*(W-m.l-m.r); };
+  var y=function(v){ return H-m.b - (v-opts.y0)/(opts.y1-opts.y0)*(H-m.t-m.b); };
+  var g=el('g',{},svg);
+  if (opts.ygrid!==false){ niceTicks(opts.y0,opts.y1,opts.ny||4).forEach(function(v){ el('line',{x1:m.l,x2:W-m.r,y1:y(v),y2:y(v),'class':'gridl'},g); if (opts.ylabels!==false) txt(g,m.l-6,y(v)+4,opts.yfmt?opts.yfmt(v):S.sig(v,3),'tick','end'); }); }
+  el('line',{x1:m.l,x2:W-m.r,y1:H-m.b,y2:H-m.b,'class':'ax'},g);
+  (opts.xticks || niceTicks(opts.x0,opts.x1,opts.nx||6)).forEach(function(v){ el('line',{x1:x(v),x2:x(v),y1:H-m.b,y2:H-m.b+4,'class':'ax'},g); txt(g,x(v),H-m.b+17,opts.xfmt?opts.xfmt(v):S.sig(v,4)); });
+  if (opts.xlab) txt(g,(m.l+W-m.r)/2,H-4,opts.xlab,'labm');
+  if (opts.ylab){ var t=txt(g,12,(m.t+H-m.b)/2,opts.ylab,'labm'); t.setAttribute('transform','rotate(-90 12 '+((m.t+H-m.b)/2)+')'); }
+  return {g:g, x:x, y:y, W:W, H:H, m:m};
+}
+function pathFrom(pts){ return pts.map(function(p,i){ return (i?'L':'M')+p[0].toFixed(2)+' '+p[1].toFixed(2); }).join(''); }
+/* histogram of values into bins: returns {edges, counts} */
+function bins(vals, lo, hi, k){ var w=(hi-lo)/k, c=new Array(k).fill(0); vals.forEach(function(v){ var i=Math.floor((v-lo)/w); if (i===k) i=k-1; if (i>=0&&i<k) c[i]++; }); var e=[]; for (var i=0;i<=k;i++) e.push(lo+i*w); return {edges:e, counts:c, w:w}; }
+window.G = {el:el, txt:txt, frame:frame, path:pathFrom, ticks:niceTicks, bins:bins};
+})();
+/* scroll-spy: highlight the current section in the left menu */
+(function(){
+  var links = Array.prototype.slice.call(document.querySelectorAll('.side .side-secs a'));
+  if (!links.length || !('IntersectionObserver' in window)) return;
+  var map = {}; links.forEach(function(a){ map[a.getAttribute('href').slice(1)] = a; });
+  var obs = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){ if (e.isIntersecting){ links.forEach(function(a){ a.classList.remove('on'); }); var a = map[e.target.id]; if (a) a.classList.add('on'); } });
+  }, {rootMargin: '-20% 0px -70% 0px'});
+  Object.keys(map).forEach(function(id){ var s = document.getElementById(id); if (s) obs.observe(s); });
+})();
+
+</script>
+<script>
+(function(){
+"use strict";
+var W4={"births":[26.663,23.598,26.931,24.74,25.806,24.364,24.477,23.901,23.175,23.227,21.672,21.87,21.439,21.089,23.709,21.669,21.752,20.761,23.479,23.824,23.105,23.11,21.759,22.073,21.937,20.035,23.59,21.672,22.222,22.123,23.95,23.504,22.238,23.142,21.059,21.573,21.548,20,22.424,20.615,21.761,22.874,24.104,23.748,23.262,22.907,21.519,22.025,22.604,20.894,24.677,23.673,25.32,23.583,24.671,24.454,24.122,24.252,22.084,22.991,23.287,23.049,25.076,24.037,24.43,24.667,26.451,25.618,25.014,25.11,22.964,23.981,23.798,22.27,24.775,22.646,23.988,24.737,26.276,25.816,25.21,25.199,23.162,24.707,24.364,22.644,25.565,24.062,25.431,24.635,27.009,26.606,26.268,26.462,25.246,25.18,24.657,23.304,26.982,26.199,27.21,26.122,26.706,26.878,26.152,26.379,24.712,25.688,24.99,24.239,26.721,23.475,24.767,26.219,28.361,28.599,27.914,27.784,25.693,26.881,26.217,24.218,27.914,26.975,28.527,27.139,28.982,28.169,28.056,29.136,26.291,26.987,26.589,24.848,27.543,26.896,28.878,27.39,28.065,28.141,29.048,28.484,26.634,27.735,27.132,24.924,28.963,26.589,27.931,28.009,29.229,28.759,28.405,27.945,25.912,26.619,26.076,25.286,27.66,25.951,26.398,25.565,28.865,30,29.261,29.012,26.992,27.897],"trend":["NA","NA","NA","NA","NA","NA",23.9843,23.6621,23.4233,23.1611,22.8643,22.5452,22.3535,22.3087,22.3026,22.2948,22.2935,22.3056,22.3348,22.3117,22.2628,22.258,22.2777,22.354,22.4304,22.4367,22.3872,22.3524,22.3246,22.2746,22.2375,22.2199,22.1698,22.0772,22.014,22.026,22.0637,22.0803,22.1332,22.166,22.1754,22.2134,22.2763,22.3575,22.4886,22.7099,22.9856,23.1635,23.2166,23.2697,23.3349,23.4268,23.5064,23.5702,23.6389,23.7571,23.8635,23.8953,23.8734,23.8815,24.0008,24.1235,24.2092,24.2821,24.3545,24.4324,24.495,24.4838,24.4388,24.3683,24.2919,24.2764,24.272,24.273,24.2894,24.3013,24.3132,24.3517,24.4056,24.4447,24.4932,24.5852,24.7043,24.7602,24.7865,24.8499,24.9269,25.0236,25.1631,25.2696,25.3015,25.3412,25.4278,25.5759,25.739,25.8751,25.9245,25.9232,25.9297,25.9214,25.8957,25.8946,25.9296,25.9825,26.0105,25.8862,25.6709,25.5731,25.6461,25.7868,25.9319,26.0639,26.1633,26.2539,26.3547,26.405,26.4538,26.6493,26.9518,27.1468,27.211,27.219,27.207,27.2693,27.3505,27.3798,27.3997,27.4415,27.4523,27.4335,27.4449,27.47,27.4422,27.4028,27.443,27.4572,27.4443,27.4898,27.5435,27.5693,27.6317,27.678,27.6258,27.6121,27.6864,27.7607,27.7596,27.7104,27.6578,27.5812,27.4907,27.4618,27.4226,27.3417,27.2513,27.0856,26.9686,27.0051,27.0925,27.1726,27.2621,27.3603,"NA","NA","NA","NA","NA","NA"],"seasonal":[-0.6772,-2.083,0.8625,-0.8017,0.2517,-0.1533,1.456,1.1646,0.6916,0.7752,-1.1098,-0.3768],"lm_coef":{"(Intercept)":5.53754,"FirstRun":-0.27832,"SecondRun":1.28658},"lm_r2":0.926051790760364,"lm_adjr2":0.924511203067872,"test_actual":[28.67,38.1,47.76,42.11,25.96,38.91,40.38,32.64,39.39,51.89,50.81,66.67,40.83,45.16,37.37,45.55,57.8,43.9,45.25],"test_pred":[29.638,32.793,48.992,42.186,27.439,36.342,40.57,33.375,41.709,48.029,50.602,64.064,40.467,43.765,39.003,52.008,56.331,45.394,45.327],"test_first":[21.08,25.39,28.05,31.58,13.87,24.16,30.71,20.19,29.59,35.74,34.17,56.14,30.08,31.76,26.27,38.49,40.92,26.61,34.24],"test_second":[23.46,26.94,39.38,35.45,19.86,29.16,34.04,25.91,34.55,40.83,42.25,58.1,33.79,36.64,31.67,44.47,48.27,36.38,38.46],"lmt_coef":{"(Intercept)":5.29427,"FirstRun":-0.38635,"SecondRun":1.38484},"lg1":{"(Intercept)":-30.5413,"SecondRun":0.80887},"lg2":{"(Intercept)":-31.29028,"FirstRun":-0.14795,"SecondRun":0.95414},"superrun":[0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,1,1,0,1,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,1,1,0,0,0,0,1,0,1,1,0,0,0,1,1,1,1,1,1,1,0,0,0,1,0,1,1,0,1,0,0,1,0,0,0,0,0,1,0,1,0,1,0,1,0,1,1,1],"second":[11.2,29.16,41.84,34.04,37.64,30.67,39.62,26.06,36.06,38.46,34.84,19.11,24.22,25.76,35.83,54.83,16.73,32.18,42,33.79,31,29.49,44.47,38.54,44.02,36.74,22.69,36.53,16.42,36.03,30.48,36.83,53.01,34.43,38.82,38.54,35.45,25.91,8.48,28.6,21.33,7.91,34.55,32.61,33.8,39.76,25.41,54.92,24.82,30.1,31.67,39.38,47.84,31.88,20.67,34,30.69,40.88,25.7,42.86,54.54,36.31,36.38,31.23,48.27,50.66,58.1,38.75,42.18,42.25,40.95,24.73,19.06,32.85,35.68,29.18,36.64,40.88,36.26,39.19,19.86,18.42,36.62,22.6,24.73,32.71,26.94,32.66,42.52,30.92,40.83,23.46,52.83,36.17,40.46,22.19,40.84,41.04,40.71],"air":[112,118,132,129,121,135,148,148,136,119,104,118,115,126,141,135,125,149,170,170,158,133,114,140,145,150,178,163,172,178,199,199,184,162,146,166,171,180,193,181,183,218,230,242,209,191,172,194,196,196,236,235,229,243,264,272,237,211,180,201,204,188,235,227,234,264,302,293,259,229,203,229,242,233,267,269,270,315,364,347,312,274,237,278,284,277,317,313,318,374,413,405,355,306,271,306,315,301,356,348,355,422,465,467,404,347,305,336,340,318,362,348,363,435,491,505,404,359,310,337,360,342,406,396,420,472,548,559,463,407,362,405,417,391,419,461,472,535,622,606,508,461,390,432],"fc_mean":[345.96,331.73,386.79,378.77,385.78,452.78,495.78,497.78,434.78,377.78,335.78,366.78,376.74,362.51,417.57,409.55,416.55,483.55,526.55,528.55,465.55,408.55,366.55,397.55,407.52,393.29,448.34,440.33,447.33,514.33,557.33,559.33,496.33,439.33,397.33,428.33],"fc_lo":[326.99,307.91,358.37,346.52,350.08,413.95,454.04,453.33,387.77,328.35,284.04,312.83,312.83,292.04,340.66,326.81,328.34,390.19,428.31,425.66,358.21,296.94,250.83,277.86,277.97,256.15,303.67,288.57,288.79,349.29,386.04,382,313.16,250.51,203.02,228.68],"fc_hi":[364.94,355.55,415.21,411.02,421.47,491.61,537.51,542.22,481.78,427.2,387.51,420.73,440.65,432.98,494.47,492.29,504.77,576.92,624.8,631.45,572.9,520.17,482.28,517.25,537.07,530.42,593.02,592.08,605.87,679.37,728.63,736.66,679.5,628.15,591.65,627.99],"fc_model":"ARIMA(1,1,0)(0,1,0)[12]","fc_mae":17.8078082686612,"km":{"trt=1":{"time":[41,71,131,140,179,198,223,334,348,388,400,515,673,694,750,762,799,824,904,971,980,999,1000,1012,1037,1077,1083,1152,1170,1191,1235,1297,1350,1360,1434,1492,1576,1657,1682,1690,1741,1827,1925,2055,2081,2105,2224,2256,2288,2297,2386,2400,2540,2583,2598,2689,3086,3222,3282,3574,3584,4079,4191],"surv":[0.9937,0.9873,0.981,0.9747,0.9684,0.962,0.9557,0.9494,0.943,0.9367,0.9304,0.9241,0.9177,0.9113,0.9048,0.8984,0.8919,0.8855,0.8788,0.8722,0.8655,0.8589,0.8522,0.8456,0.8389,0.8322,0.8256,0.8189,0.8122,0.7988,0.792,0.785,0.7779,0.7709,0.7635,0.7559,0.7481,0.7401,0.732,0.7159,0.7077,0.6991,0.6901,0.6805,0.6709,0.6613,0.6512,0.6408,0.6303,0.6198,0.6083,0.5969,0.5842,0.5703,0.5564,0.5417,0.5224,0.5006,0.4778,0.4513,0.4247,0.3717,0.3186]},"trt=2":{"time":[51,77,110,130,186,191,207,216,264,304,321,326,460,549,552,597,611,708,733,769,786,790,797,850,853,859,890,930,943,974,1080,1165,1212,1217,1356,1413,1427,1444,1487,1536,1786,1847,2090,2419,2466,2503,2769,2796,2847,3090,3170,3244,3358,3395,3428,3445,3762,3839,3853],"surv":[0.9935,0.987,0.9805,0.974,0.9675,0.961,0.9545,0.9481,0.9351,0.9286,0.9221,0.9156,0.9091,0.9026,0.8961,0.8896,0.8831,0.8766,0.8701,0.8636,0.8571,0.8506,0.8441,0.8375,0.8309,0.8243,0.8177,0.8111,0.8045,0.7979,0.7911,0.7843,0.7774,0.7704,0.7629,0.7553,0.7476,0.7398,0.7318,0.7238,0.7146,0.7052,0.695,0.6826,0.6697,0.6566,0.6401,0.6233,0.6055,0.5866,0.5663,0.5461,0.5251,0.5032,0.4804,0.4575,0.427,0.3941,0.3613]}},"km_p":0.749792518855271}, RUN={"FirstRun":[7.47,24.16,35.06,30.71,31.03,25.74,35.85,22.38,34.3,34.24,27.93,17.54,21.48,17.37,30.06,48.38,16.29,29.24,33.1,30.08,24.36,25.52,38.49,34.84,42.0,32.71,19.52,30.96,13.05,29.73,25.03,30.2,46.78,29.34,34.18,34.81,31.58,20.19,7.79,23.3,17.39,2.64,29.59,28.59,24.32,34.07,22.02,49.26,19.16,23.79,26.27,28.05,43.36,27.65,18.14,31.87,28.95,35.29,20.91,34.71,46.92,33.05,26.61,23.8,40.92,45.16,56.14,30.89,37.47,34.17,37.61,20.01,13.54,25.62,28.96,24.42,31.76,33.51,32.23,32.54,13.87,7.93,28.84,20.11,19.0,25.5,25.39,23.78,37.26,26.95,35.74,21.08,47.78,27.74,34.71,18.91,36.19,32.93,33.36],"SecondRun":[11.2,29.16,41.84,34.04,37.64,30.67,39.62,26.06,36.06,38.46,34.84,19.11,24.22,25.76,35.83,54.83,16.73,32.18,42.0,33.79,31.0,29.49,44.47,38.54,44.02,36.74,22.69,36.53,16.42,36.03,30.48,36.83,53.01,34.43,38.82,38.54,35.45,25.91,8.48,28.6,21.33,7.91,34.55,32.61,33.8,39.76,25.41,54.92,24.82,30.1,31.67,39.38,47.84,31.88,20.67,34.0,30.69,40.88,25.7,42.86,54.54,36.31,36.38,31.23,48.27,50.66,58.1,38.75,42.18,42.25,40.95,24.73,19.06,32.85,35.68,29.18,36.64,40.88,36.26,39.19,19.86,18.42,36.62,22.6,24.73,32.71,26.94,32.66,42.52,30.92,40.83,23.46,52.83,36.17,40.46,22.19,40.84,41.04,40.71],"FinalRun":[23.4,38.91,47.85,40.38,41.04,35.08,43.45,33.6,42.51,45.25,41.97,19.85,27.14,29.02,38.41,65.03,18.35,40.79,44.08,40.83,39.05,31.28,45.55,45.38,50.94,44.23,33.1,38.38,19.67,44.12,37.42,47.25,63.83,44.56,45.88,43.74,42.11,32.64,17.21,36.79,28.71,22.04,39.39,38.01,40.71,45.27,28.0,63.72,27.43,39.94,37.37,47.76,56.8,41.63,28.69,41.87,36.91,46.02,31.92,51.14,64.83,40.38,43.9,40.68,57.8,55.27,66.67,47.7,52.34,50.81,48.31,35.75,26.93,40.72,48.11,34.14,45.16,51.66,43.67,46.62,25.96,26.59,55.14,28.83,31.7,41.18,38.1,44.61,47.37,40.71,51.89,28.67,62.17,41.58,47.8,29.0,47.21,49.57,48.78]};
+function lin(xs, ys){ var mx=S.mean(xs), my=S.mean(ys), sxy=0, sxx=0; for (var i=0;i<xs.length;i++){ sxy+=(xs[i]-mx)*(ys[i]-my); sxx+=(xs[i]-mx)*(xs[i]-mx); } var b1=sxy/sxx; return {b0:my-b1*mx, b1:b1}; }
+function pearson(a,b){ var ma=S.mean(a), mb=S.mean(b), s=0, sa=0, sb=0; for (var i=0;i<a.length;i++){ s+=(a[i]-ma)*(b[i]-mb); sa+=(a[i]-ma)*(a[i]-ma); sb+=(b[i]-mb)*(b[i]-mb); } return s/Math.sqrt(sa*sb); }
+function ranks(a){ var idx=a.map(function(v,i){return [v,i];}).sort(function(p,q){return p[0]-q[0];}), r=new Array(a.length);
+  for (var i=0;i<idx.length;){ var j=i; while (j+1<idx.length && idx[j+1][0]===idx[i][0]) j++; var avg=(i+j)/2+1; for (var k=i;k<=j;k++) r[idx[k][1]]=avg; i=j+1; } return r; }
+function dot(g,x,y,r,style){ return G.el('circle',{cx:x,cy:y,r:r,style:style},g); }
+
+/* ---------- correlation explorer ---------- */
+(function(){
+  var rS=document.getElementById('cr-r'), nS=document.getElementById('cr-n'), oS=document.getElementById('cr-o'), svg=document.getElementById('cr-svg');
+  var base=[];
+  function sample(){ base=[]; for (var i=0;i<300;i++) base.push([S.rnorm(0,1), S.rnorm(0,1)]); }
+  function draw(){
+    var r=+rS.value, n=+nS.value; document.getElementById('cr-rv').textContent=S.fmt(r,2); document.getElementById('cr-nv').textContent=n;
+    var xs=[], ys=[]; for (var i=0;i<n;i++){ xs.push(base[i][0]); ys.push(r*base[i][0]+Math.sqrt(Math.max(0,1-r*r))*base[i][1]); }
+    if (oS.value==='1'){ xs.push(3.6); ys.push(r>=0? -3.6 : 3.6); }
+    var f=G.frame(svg,{W:640,H:300,x0:-4,x1:4,y0:-4,y1:4,ny:4,xlab:'x',ylab:'y',m:{l:40,r:16,t:12,b:38}});
+    xs.forEach(function(x,i){ var out=oS.value==='1'&&i===xs.length-1; dot(f.g,f.x(x),f.y(Math.max(-4,Math.min(4,ys[i]))),out?6:3.5, out?'fill:var(--c2)':'fill:var(--c1);opacity:.6'); });
+    var L=lin(xs,ys); G.el('line',{x1:f.x(-4),x2:f.x(4),y1:f.y(Math.max(-6,Math.min(6,L.b0-4*L.b1))),y2:f.y(Math.max(-6,Math.min(6,L.b0+4*L.b1))),style:'stroke:var(--ink);stroke-width:1.5;stroke-dasharray:5 4'},f.g);
+    document.getElementById('cr-p').textContent=S.fmt(pearson(xs,ys),3);
+    document.getElementById('cr-s').textContent=S.fmt(pearson(ranks(xs),ranks(ys)),3);
+  }
+  sample();
+  [rS,nS,oS].forEach(function(e){ e.addEventListener('input',draw); });
+  document.getElementById('cr-go').addEventListener('click',function(){ sample(); draw(); });
+  draw();
+})();
+
+/* ---------- Anscombe ---------- */
+(function(){
+  var X=[10,8,13,9,11,14,6,4,12,7,5], X4=[8,8,8,8,8,8,8,19,8,8,8];
+  var Y=[[8.04,6.95,7.58,8.81,8.33,9.96,7.24,4.26,10.84,4.82,5.68],[9.14,8.14,8.74,8.77,9.26,8.10,6.13,3.10,9.13,7.26,4.74],[7.46,6.77,12.74,7.11,7.81,8.84,6.08,5.39,8.15,6.42,5.73],[6.58,5.76,7.71,8.84,8.47,7.04,5.25,12.50,5.56,7.91,6.89]];
+  var svg=document.getElementById('an-svg'), out=document.getElementById('an-out');
+  function show(k){
+    var xs=k===3?X4:X, ys=Y[k], L=lin(xs,ys);
+    var f=G.frame(svg,{W:640,H:260,x0:2,x1:20,y0:2,y1:14,ny:4,xlab:'x'+(k+1),ylab:'y'+(k+1),m:{l:40,r:16,t:12,b:38}});
+    G.el('line',{x1:f.x(2),x2:f.x(20),y1:f.y(L.b0+2*L.b1),y2:f.y(L.b0+20*L.b1),style:'stroke:var(--c2);stroke-width:2'},f.g);
+    xs.forEach(function(x,i){ dot(f.g,f.x(x),f.y(ys[i]),5,'fill:var(--c1)'); });
+    out.textContent='mean x = '+S.fmt(S.mean(xs),2)+'   mean y = '+S.fmt(S.mean(ys),2)+'   r = '+S.fmt(pearson(xs,ys),3)+'   line: y = '+S.fmt(L.b0,2)+' + '+S.fmt(L.b1,3)+'x';
+    document.querySelectorAll('[data-an]').forEach(function(b){ b.classList.toggle('primary', +b.dataset.an===k); });
+  }
+  document.querySelectorAll('[data-an]').forEach(function(b){ b.addEventListener('click',function(){ show(+b.dataset.an); }); });
+  show(0);
+})();
+
+/* ---------- OLS explorer with draggable points ---------- */
+(function(){
+  var X0=[2,4,6,8,10,12,14,16,18,20], Y0=[50,60,70,80,90,85,95,100,98,99];
+  var X=X0.slice(), Y=Y0.slice();
+  var svg=document.getElementById('ol-svg'), res=document.getElementById('res-svg');
+  var mode=document.getElementById('ol-mode'), b0S=document.getElementById('ol-b0'), b1S=document.getElementById('ol-b1'), sq=document.getElementById('ol-sq');
+  var f, drag=-1;
+  function sse(b0,b1){ var s=0; for (var i=0;i<X.length;i++){ var e=Y[i]-(b0+b1*X[i]); s+=e*e; } return s; }
+  function draw(){
+    var L=lin(X,Y), mine=mode.value==='mine';
+    var b0=mine?+b0S.value:L.b0, b1=mine?+b1S.value:L.b1;
+    document.getElementById('ol-b0v').textContent=b0S.value; document.getElementById('ol-b1v').textContent=b1S.value;
+    f=G.frame(svg,{W:640,H:320,x0:0,x1:22,y0:20,y1:120,ny:5,xlab:'hours studied',ylab:'exam score',m:{l:44,r:16,t:12,b:38}});
+    var pxPerY=(f.y(0)-f.y(1));
+    if (sq.value==='1') X.forEach(function(x,i){ var e=Y[i]-(b0+b1*x), s=Math.abs(e)*pxPerY; var yt=f.y(Math.max(Y[i],b0+b1*x));
+      G.el('rect',{x:f.x(x),y:yt,width:s,height:s,style:'fill:var(--c2);opacity:.13;stroke:var(--c2);stroke-opacity:.5'},f.g); });
+    X.forEach(function(x,i){ G.el('line',{x1:f.x(x),x2:f.x(x),y1:f.y(Y[i]),y2:f.y(b0+b1*x),style:'stroke:var(--c2);stroke-width:1.5'},f.g); });
+    G.el('line',{x1:f.x(0),x2:f.x(22),y1:f.y(b0),y2:f.y(b0+22*b1),style:'stroke:var(--c1);stroke-width:2.5'},f.g);
+    X.forEach(function(x,i){ var c=dot(f.g,f.x(x),f.y(Y[i]),8,'fill:var(--c1);stroke:var(--paper);stroke-width:2;cursor:grab'); c.dataset.i=i; });
+    var my=S.mean(Y), sst=0; Y.forEach(function(y){ sst+=(y-my)*(y-my); });
+    var e=sse(b0,b1), emin=sse(L.b0,L.b1);
+    document.getElementById('ol-eq').textContent='ŷ = '+S.fmt(b0,2)+' + '+S.fmt(b1,3)+'x';
+    document.getElementById('ol-sse').textContent=S.fmt(e,1);
+    document.getElementById('ol-min').textContent=S.fmt(emin,1);
+    document.getElementById('ol-r2').textContent=S.fmt(1-e/sst,3);
+    var r=pearson(X,Y);
+    document.getElementById('ol-code').innerHTML='<span class="p">&gt;</span> model &lt;- lm(exam_scores ~ hours_studied)\n<span class="p">&gt;</span> coef(model)\n(Intercept) hours_studied\n'+
+      S.fmt(L.b0,4)+'      '+S.fmt(L.b1,4)+'\n<span class="p"># r = '+S.fmt(r,4)+',  R² = r² = '+S.fmt(r*r,4)+'</span>';
+    // residual plot
+    var rr=X.map(function(x,i){ return Y[i]-(L.b0+L.b1*x); }), m=Math.max(5,Math.max.apply(null,rr.map(Math.abs)))*1.2;
+    var g=G.frame(res,{W:640,H:200,x0:0,x1:22,y0:-m,y1:m,ny:4,xlab:'hours studied',ylab:'residual',m:{l:44,r:16,t:12,b:38}});
+    G.el('line',{x1:g.x(0),x2:g.x(22),y1:g.y(0),y2:g.y(0),style:'stroke:var(--ink);stroke-dasharray:4 4'},g.g);
+    X.forEach(function(x,i){ G.el('line',{x1:g.x(x),x2:g.x(x),y1:g.y(0),y2:g.y(rr[i]),style:'stroke:var(--line-strong)'},g.g); dot(g.g,g.x(x),g.y(rr[i]),5,'fill:var(--c2)'); });
+  }
+  function pt(ev){ var p=svg.createSVGPoint(); p.x=ev.clientX; p.y=ev.clientY; return p.matrixTransform(svg.getScreenCTM().inverse()); }
+  svg.addEventListener('pointerdown',function(ev){ if (ev.target.dataset && ev.target.dataset.i!==undefined){ drag=+ev.target.dataset.i; svg.setPointerCapture(ev.pointerId); ev.preventDefault(); } });
+  svg.addEventListener('pointermove',function(ev){ if (drag<0) return; var p=pt(ev);
+    var inv=function(px,a0,a1,p0,p1){ return a0+(px-p0)/(p1-p0)*(a1-a0); };
+    X[drag]=Math.max(0.5,Math.min(21.5,inv(p.x,0,22,f.x(0),f.x(22)))); Y[drag]=Math.max(22,Math.min(118,inv(p.y,20,120,f.y(20),f.y(120)))); draw(); });
+  svg.addEventListener('pointerup',function(){ drag=-1; }); svg.addEventListener('pointercancel',function(){ drag=-1; });
+  [mode,b0S,b1S,sq].forEach(function(e){ e.addEventListener('input',draw); e.addEventListener('change',draw); });
+  document.getElementById('ol-reset').addEventListener('click',function(){ X=X0.slice(); Y=Y0.slice(); draw(); });
+  draw();
+})();
+
+/* ---------- multiple regression prediction ---------- */
+(function(){
+  var c=W4.lm_coef, s1=document.getElementById('mp-1'), s2=document.getElementById('mp-2');
+  var b0=c['(Intercept)'], b1=c.FirstRun, b2=c.SecondRun;
+  function upd(){ var a=+s1.value, b=+s2.value, y=b0+b1*a+b2*b;
+    document.getElementById('mp-1v').textContent=a; document.getElementById('mp-2v').textContent=b;
+    document.getElementById('mp-out').textContent=S.fmt(y,2)+' km';
+    document.getElementById('mp-code').innerHTML='<span class="p">&gt;</span> predict(lma, data.frame(FirstRun = '+a+', SecondRun = '+b+'))\n'+S.fmt(y,4)+
+      '\n<span class="p"># = '+S.fmt(b0,3)+' + ('+S.fmt(b1,3)+' × '+a+') + ('+S.fmt(b2,3)+' × '+b+')</span>'; }
+  s1.addEventListener('input',upd); s2.addEventListener('input',upd); upd();
+  var svg=document.getElementById('tt-svg'), A=W4.test_actual, P=W4.test_pred;
+  var f=G.frame(svg,{W:640,H:300,x0:15,x1:70,y0:15,y1:70,ny:5,xlab:'actual FinalRun (km)',ylab:'predicted (km)',m:{l:44,r:16,t:12,b:38}});
+  G.el('line',{x1:f.x(15),x2:f.x(70),y1:f.y(15),y2:f.y(70),style:'stroke:var(--ink);stroke-dasharray:5 4'},f.g);
+  A.forEach(function(a,i){ var ok=Math.abs(P[i]-a)<=2; G.el('line',{x1:f.x(a),x2:f.x(a),y1:f.y(a),y2:f.y(P[i]),style:'stroke:var(--line-strong)'},f.g); dot(f.g,f.x(a),f.y(P[i]),5.5,'fill:'+(ok?'var(--c3)':'var(--c2)')); });
+  G.txt(f.g,f.x(18),f.y(66),'green: within 2 km · orange: further out','labm','start');
+})();
+
+/* ---------- Simpson's paradox ---------- */
+(function(){
+  var D={all:{A:[273,350],B:[289,350]}, small:{A:[81,87],B:[234,270]}, large:{A:[192,263],B:[55,80]}};
+  var sel=document.getElementById('sp-v'), svg=document.getElementById('sp-svg');
+  function draw(){ var d=D[sel.value];
+    var f=G.frame(svg,{W:640,H:220,x0:0,x1:2,y0:0,y1:1,xticks:[],ny:4,yfmt:function(v){return Math.round(v*100)+'%';},ylab:'success rate',m:{l:52,r:16,t:16,b:40}});
+    ['A','B'].forEach(function(k,i){ var p=d[k][0]/d[k][1], x=f.x(i+0.5), w=120;
+      G.el('rect',{x:x-w/2,y:f.y(p),width:w,height:f.y(0)-f.y(p),rx:4,'class':i?'bar2':'bar'},f.g);
+      G.txt(f.g,x,f.y(p)-8,S.fmt(p*100,1)+'%  ('+d[k][0]+'/'+d[k][1]+')','lab').setAttribute('style','font-weight:700');
+      G.txt(f.g,x,f.H-f.m.b+20,'Treatment '+k+(i?' (nephrolithotomy)':' (open surgery)'),'lab'); });
+  }
+  sel.addEventListener('change',draw); draw();
+})();
+
+/* ---------- logistic regression ---------- */
+(function(){
+  var b0S=document.getElementById('lg-b0'), b1S=document.getElementById('lg-b1'), xS=document.getElementById('lg-x'), svg=document.getElementById('lg-svg');
+  var X=W4.second, Yv=W4.superrun;
+  function draw(){ var b0=+b0S.value, b1=+b1S.value, x=+xS.value;
+    document.getElementById('lg-b0v').textContent=S.fmt(b0,1); document.getElementById('lg-b1v').textContent=S.fmt(b1,2); document.getElementById('lg-xv').textContent=x;
+    var f=G.frame(svg,{W:640,H:280,x0:5,x1:60,y0:-0.08,y1:1.08,xticks:[10,20,30,40,50,60],ny:4,ylabels:true,yfmt:function(v){return S.fmt(v,1);},xlab:'SecondRun (km)',ylab:'P(super run)',m:{l:44,r:16,t:12,b:38}});
+    X.forEach(function(v,i){ dot(f.g,f.x(v),f.y(Yv[i])+(Math.random()-0.5)*10,4,'fill:'+(Yv[i]?'var(--c3)':'var(--c2)')+';opacity:.6'); });
+    var pts=[]; for (var t=5;t<=60;t+=0.25){ pts.push([f.x(t),f.y(1/(1+Math.exp(-(b0+b1*t))))]); }
+    G.el('path',{d:G.path(pts),'class':'curve'},f.g);
+    var p=1/(1+Math.exp(-(b0+b1*x)));
+    G.el('line',{x1:f.x(x),x2:f.x(x),y1:f.y(0),y2:f.y(p),'class':'vline'},f.g);
+    G.el('line',{x1:f.x(5),x2:f.x(x),y1:f.y(p),y2:f.y(p),'class':'vline',style:'stroke-dasharray:4 3'},f.g);
+    dot(f.g,f.x(x),f.y(p),6,'fill:var(--paper);stroke:var(--c2);stroke-width:2.5');
+    G.el('line',{x1:f.x(5),x2:f.x(60),y1:f.y(0.5),y2:f.y(0.5),style:'stroke:var(--line-strong);stroke-dasharray:2 4'},f.g);
+    document.getElementById('lg-p').textContent=S.fmt(p,3);
+    document.getElementById('lg-odds').textContent=p>0.9999?'> 9999':S.sig(p/(1-p),3);
+    document.getElementById('lg-or').textContent=S.fmt(Math.exp(b1),3);
+  }
+  [b0S,b1S,xS].forEach(function(e){ e.addEventListener('input',draw); });
+  document.getElementById('lg-fit').addEventListener('click',function(){ b0S.value=W4.lg1['(Intercept)']; b1S.value=W4.lg1.SecondRun; draw(); });
+  b0S.value=W4.lg1['(Intercept)']; b1S.value=W4.lg1.SecondRun; draw();
+})();
+
+/* ---------- time series ---------- */
+var B=W4.births, N=B.length, T=B.map(function(_,i){ return 1946+i/12; });
+(function(){
+  var view=document.getElementById('ts-v'), nS=document.getElementById('ts-n'), svg=document.getElementById('ts-svg'), code=document.getElementById('ts-code');
+  var trend=W4.trend, seas=B.map(function(_,i){ return W4.seasonal[i%12]; });
+  function plotLines(series, opts){
+    var all=[]; series.forEach(function(s){ s.y.forEach(function(v){ if (v!==null&&isFinite(v)) all.push(v); }); });
+    var lo=Math.min.apply(null,all), hi=Math.max.apply(null,all), pad=(hi-lo)*0.08||1;
+    var f=G.frame(svg,{W:640,H:opts.H||280,x0:1946,x1:1960,y0:lo-pad,y1:hi+pad,ny:4,xlab:'year',ylab:opts.ylab||'births',xticks:[1946,1948,1950,1952,1954,1956,1958,1960],xfmt:function(v){return String(v);},m:{l:46,r:16,t:12,b:38}});
+    series.forEach(function(s){ var seg=[], d=''; s.y.forEach(function(v,i){ if (v===null||!isFinite(v)){ if (seg.length) d+=G.path(seg); seg=[]; } else seg.push([f.x(T[i]),f.y(v)]); }); if (seg.length) d+=G.path(seg);
+      G.el('path',{d:d,style:'fill:none;stroke:'+s.col+';stroke-width:'+(s.w||1.8)+(s.dash?';stroke-dasharray:'+s.dash:'')},f.g); });
+    return f;
+  }
+  function draw(){
+    var v=view.value, n=+nS.value; document.getElementById('ts-nv').textContent=n;
+    nS.disabled = v!=='sma';
+    if (v==='raw'){ var L=lin(T,B); plotLines([{y:B,col:'var(--c1)'},{y:T.map(function(t){return L.b0+L.b1*t;}),col:'var(--c2)',w:2.5}],{});
+      code.innerHTML='<span class="p">&gt;</span> plot.ts(birthstimeseries)\n<span class="p">&gt;</span> abline(reg = lm(birthstimeseries ~ time(birthstimeseries)))\n<span class="p"># the straight line models the trend but nothing else</span>'; }
+    else if (v==='sma'){ var sm=B.map(function(_,i){ if (i<n-1) return null; var s=0; for (var k=i-n+1;k<=i;k++) s+=B[k]; return s/n; });
+      plotLines([{y:B,col:'var(--line-strong)',w:1.2},{y:sm,col:'var(--c1)',w:2.5}],{});
+      code.innerHTML='<span class="p">&gt;</span> library(TTR)\n<span class="p">&gt;</span> plot.ts(SMA(birthstimeseries, n = '+n+'))\n<span class="p"># each point = mean of the last '+n+' months. Bigger n: smoother, but slower to react. n = 12 cancels the season exactly.</span>'; }
+    else if (v==='dec'){ var rnd=B.map(function(b,i){ return trend[i]===null?null:b-trend[i]-seas[i]; });
+      var lo=Math.min.apply(null,B), hi=Math.max.apply(null,B);
+      // stacked: offset seasonal and random below the observed range for one compact view
+      var off1=lo-4, off2=lo-8;
+      plotLines([{y:B,col:'var(--line-strong)',w:1},{y:trend,col:'var(--c1)',w:2.5},{y:seas.map(function(s){return s+off1;}),col:'var(--c3)',w:1.6},{y:rnd.map(function(r){return r===null?null:r+off2;}),col:'var(--c2)',w:1.4}],{H:340,ylab:'births (components shifted down)'});
+      code.innerHTML='<span class="p">&gt;</span> comp &lt;- decompose(birthstimeseries)\n<span class="p">&gt;</span> plot(comp)\n<span class="p"># grey: observed · blue: trend (2×12 moving average) · green: seasonal (same 12 values every year) · orange: random = observed − trend − seasonal</span>'; }
+    else if (v==='adj'){ plotLines([{y:B,col:'var(--line-strong)',w:1.2},{y:B.map(function(b,i){return b-seas[i];}),col:'var(--c1)',w:2}],{});
+      code.innerHTML='<span class="p">&gt;</span> adjusted &lt;- birthstimeseries - comp$seasonal\n<span class="p">&gt;</span> plot.ts(adjusted)\n<span class="p"># the yearly wiggle is gone; trend and noise remain</span>'; }
+    else { var d=B.map(function(b,i){ return i? b-B[i-1] : null; }); plotLines([{y:d,col:'var(--c1)',w:1.6},{y:B.map(function(){return 0;}),col:'var(--ink)',w:1,dash:'4 4'}],{ylab:'change from previous month'});
+      code.innerHTML='<span class="p">&gt;</span> plot.ts(diff(birthstimeseries))\n<span class="p"># Y(t) − Y(t−1): the trend has gone and the mean is now constant around 0</span>'; }
+  }
+  view.addEventListener('change',draw); nS.addEventListener('input',draw); draw();
+})();
+
+/* ---------- ACF ---------- */
+(function(){
+  var lS=document.getElementById('ac-l'), sc=document.getElementById('ac-sc'), bar=document.getElementById('ac-bar');
+  var m=S.mean(B), den=0; B.forEach(function(v){ den+=(v-m)*(v-m); });
+  var acf=[]; for (var k=0;k<=24;k++){ var s=0; for (var t=0;t+k<N;t++) s+=(B[t]-m)*(B[t+k]-m); acf.push(s/den); }
+  var lo=Math.min.apply(null,B)-0.5, hi=Math.max.apply(null,B)+0.5, bound=1.96/Math.sqrt(N);
+  function draw(){ var k=+lS.value; document.getElementById('ac-lv').textContent=k;
+    var f=G.frame(sc,{W:320,H:260,x0:lo,x1:hi,y0:lo,y1:hi,nx:4,ny:4,xlab:'births at t − '+k,ylab:'births at t',m:{l:38,r:10,t:10,b:36}});
+    var a=[], b=[]; for (var t=k;t<N;t++){ a.push(B[t-k]); b.push(B[t]); dot(f.g,f.x(B[t-k]),f.y(B[t]),2.6,'fill:var(--c1);opacity:.55'); }
+    G.txt(f.g,f.x(lo)+8,f.y(hi)+14,'r = '+S.fmt(pearson(a,b),3),'lab','start').setAttribute('style','font-weight:700');
+    var g=G.frame(bar,{W:320,H:260,x0:-0.5,x1:24.5,y0:-0.4,y1:1,ny:4,xticks:[0,6,12,18,24],xlab:'lag (months)',ylab:'ACF',m:{l:38,r:10,t:10,b:36}});
+    [bound,-bound].forEach(function(bd){ G.el('line',{x1:g.x(-0.5),x2:g.x(24.5),y1:g.y(bd),y2:g.y(bd),style:'stroke:var(--c1);stroke-dasharray:4 3'},g.g); });
+    G.el('line',{x1:g.x(-0.5),x2:g.x(24.5),y1:g.y(0),y2:g.y(0),'class':'ax'},g.g);
+    acf.forEach(function(v,i){ G.el('line',{x1:g.x(i),x2:g.x(i),y1:g.y(0),y2:g.y(v),style:'stroke:'+(i===k?'var(--c2)':'var(--ink)')+';stroke-width:'+(i===k?4:2)},g.g); });
+  }
+  lS.addEventListener('input',draw); draw();
+})();
+
+/* ---------- AirPassengers forecast ---------- */
+(function(){
+  var svg=document.getElementById('fc-svg'), A=W4.air, t=A.map(function(_,i){ return 1949+i/12; });
+  var f=G.frame(svg,{W:640,H:300,x0:1949,x1:1961,y0:0,y1:750,ny:5,xlab:'year',ylab:'passengers (thousands)',xticks:[1949,1951,1953,1955,1957,1959,1961],xfmt:function(v){return String(v);},m:{l:48,r:16,t:12,b:38}});
+  var band=[]; for (var i=0;i<36;i++) band.push([f.x(t[108+i]),f.y(W4.fc_hi[i])]); for (var j=35;j>=0;j--) band.push([f.x(t[108+j]),f.y(W4.fc_lo[j])]);
+  G.el('path',{d:G.path(band)+'Z','class':'area'},f.g);
+  G.el('path',{d:G.path(A.slice(0,108).map(function(v,i){return [f.x(t[i]),f.y(v)];})),style:'fill:none;stroke:var(--ink);stroke-width:1.6'},f.g);
+  G.el('path',{d:G.path(A.slice(108).map(function(v,i){return [f.x(t[108+i]),f.y(v)];})),style:'fill:none;stroke:var(--c2);stroke-width:2'},f.g);
+  G.el('path',{d:G.path(W4.fc_mean.map(function(v,i){return [f.x(t[108+i]),f.y(v)];})),style:'fill:none;stroke:var(--c1);stroke-width:2.2;stroke-dasharray:6 4'},f.g);
+  G.el('line',{x1:f.x(1958),x2:f.x(1958),y1:f.y(0),y2:f.y(750),style:'stroke:var(--line-strong);stroke-dasharray:3 3'},f.g);
+  G.txt(f.g,f.x(1951),f.y(680),'training (1949–57)','labm','start');
+  G.txt(f.g,f.x(1957.8),f.y(720),'test: actual (orange) vs forecast (blue) →','labm','end');
+})();
+
+/* ---------- Kaplan-Meier ---------- */
+(function(){
+  var svg=document.getElementById('km-svg'), K=W4.km, keys=Object.keys(K);
+  var f=G.frame(svg,{W:640,H:280,x0:0,x1:4600,y0:0,y1:1,ny:4,yfmt:function(v){return Math.round(v*100)+'%';},xlab:'days',ylab:'survival probability',m:{l:52,r:16,t:12,b:38}});
+  var cols=['var(--c1)','var(--c2)'], labs=['D-penicillamine (trt = 1)','placebo (trt = 2)'];
+  keys.forEach(function(k,j){ var d=K[k], p=[[f.x(0),f.y(1)]], last=1;
+    d.time.forEach(function(tm,i){ p.push([f.x(tm),f.y(last)]); p.push([f.x(tm),f.y(d.surv[i])]); last=d.surv[i]; });
+    p.push([f.x(4600),f.y(last)]);
+    G.el('path',{d:G.path(p),style:'fill:none;stroke:'+cols[j]+';stroke-width:2.2'},f.g);
+    G.el('line',{x1:f.x(2900),x2:f.x(3150),y1:f.y(0.92-j*0.1),y2:f.y(0.92-j*0.1),style:'stroke:'+cols[j]+';stroke-width:3'},f.g);
+    G.txt(f.g,f.x(3200),f.y(0.92-j*0.1)+4,labs[j],'labm','start'); });
+})();
+})();
+
+</script>
+</body>
+</html>

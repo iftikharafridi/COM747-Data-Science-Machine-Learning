@@ -1,0 +1,881 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>COM747 Week 7 Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: single-column lab notebook, ~800px measure. Concept sections, then interactive "explorers", then tiered R tasks. */
+:root{
+  --bg:#f5f6f8; --paper:#ffffff; --ink:#1b2330; --muted:#5a6474; --line:#dce1e9; --line-strong:#c3cad6;
+  --accent:#2b5fa6; --accent-soft:#e5edf8;
+  --core:#2f7d5b; --core-soft:#e2f1e9;
+  --chal:#b26a00; --chal-soft:#fbefd9;
+  --str:#7a3fa0; --str-soft:#f1e7f8;
+  --bad:#b3372f; --bad-soft:#f9e3e1;
+  --code-bg:#eef2f7; --code-ink:#1c2a44;
+  --c1:#2b5fa6; --c2:#d0791a; --c3:#2f8a62; --c4:#8a4bb3; --shade:rgba(43,95,166,.28); --grid:#e6e9ef;
+  --f-display:"Source Serif 4", Georgia, "Times New Roman", serif;
+  --f-body:"Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, Consolas, monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#11151c; --paper:#1a2029; --ink:#e4e8ef; --muted:#9aa4b4; --line:#2b3340; --line-strong:#3c4656;
+  --accent:#7fa8e6; --accent-soft:#1e2b3f;
+  --core:#6cc79d; --core-soft:#173025; --chal:#e5a64a; --chal-soft:#33281a; --str:#c39be0; --str-soft:#2a2135;
+  --bad:#ef8a80; --bad-soft:#3a1f1d;
+  --code-bg:#0e131a; --code-ink:#d6e2f5;
+  --c1:#7fa8e6; --c2:#eb9c4c; --c3:#5fc394; --c4:#c39be0; --shade:rgba(127,168,230,.30); --grid:#262e3a;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#11151c; --paper:#1a2029; --ink:#e4e8ef; --muted:#9aa4b4; --line:#2b3340; --line-strong:#3c4656;
+  --accent:#7fa8e6; --accent-soft:#1e2b3f;
+  --core:#6cc79d; --core-soft:#173025; --chal:#e5a64a; --chal-soft:#33281a; --str:#c39be0; --str-soft:#2a2135;
+  --bad:#ef8a80; --bad-soft:#3a1f1d;
+  --code-bg:#0e131a; --code-ink:#d6e2f5;
+  --c1:#7fa8e6; --c2:#eb9c4c; --c3:#5fc394; --c4:#c39be0; --shade:rgba(127,168,230,.30); --grid:#262e3a;
+  color-scheme:dark}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.6;margin:0;padding-inline:16px;padding-block:0 72px}
+a{color:var(--accent)}
+.topnav{max-width:820px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;padding-block:14px;border-bottom:1px solid var(--line);font-size:15px}
+.topnav .brand{font-weight:700;margin-right:auto;color:var(--ink);text-decoration:none}
+.topnav a.wk{color:var(--muted);text-decoration:none;padding:2px 8px;border-radius:6px}
+.topnav a.wk:hover{color:var(--accent)}
+.topnav a.wk[aria-current="page"]{background:var(--accent-soft);color:var(--accent);font-weight:600}
+.wrap{max-width:820px;margin:0 auto;display:flex;flex-direction:column;gap:40px}
+header.hero{padding-block:32px 4px;display:flex;flex-direction:column;gap:10px}
+.eyebrow{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;line-height:1.2;margin:0}
+h1{font-size:clamp(30px,6vw,44px)}
+h2{font-size:27px}
+h3{font-size:20px}
+p{margin:0}
+.lead{color:var(--muted);font-size:18.5px;max-width:65ch}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font-size:13px;font-weight:600;border:1px solid var(--line-strong);border-radius:999px;padding:3px 10px;color:var(--muted)}
+.toc{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:15px;padding:12px 16px;background:var(--paper);border:1px solid var(--line);border-radius:10px}
+.toc a{text-decoration:none}
+section{display:flex;flex-direction:column;gap:16px;scroll-margin-top:16px}
+.sec-head{display:flex;flex-direction:column;gap:4px}
+.sec-num{font-family:var(--f-mono);font-size:13px;color:var(--accent);font-weight:600}
+.prose{display:flex;flex-direction:column;gap:12px;max-width:68ch}
+ul.list,ol.list{margin:0;padding-left:1.3em;display:flex;flex-direction:column;gap:4px}
+.lo-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.lo-list li{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:baseline}
+.lo{font-family:var(--f-mono);font-size:12px;font-weight:600;background:var(--accent-soft);color:var(--accent);padding:2px 8px;border-radius:4px;white-space:nowrap}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.grid2.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media (max-width:600px){.grid2.two{grid-template-columns:1fr}}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.card h3{font-size:18px}
+.card .k{font-size:13px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:700}
+.code{position:relative;background:var(--code-bg);border:1px solid var(--line);border-radius:8px;min-width:0}
+.code pre{margin:0;padding:14px 16px;overflow-x:auto;font-family:var(--f-mono);font-size:14px;color:var(--code-ink);line-height:1.55}
+.code .copy{position:absolute;top:8px;right:8px}
+.copy,.btn{font:600 13px var(--f-body);background:var(--paper);color:var(--muted);border:1px solid var(--line-strong);border-radius:6px;padding:5px 11px;cursor:pointer}
+.copy:hover,.btn:hover{color:var(--accent);border-color:var(--accent)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--paper)}
+.btn.primary:hover{opacity:.9;color:var(--paper)}
+code{font-family:var(--f-mono);font-size:.88em;background:var(--code-bg);padding:1px 5px;border-radius:4px}
+.callout{border-left:3px solid var(--accent);background:var(--accent-soft);padding:12px 16px;border-radius:0 8px 8px 0}
+.callout.warn{border-color:var(--chal);background:var(--chal-soft)}
+.callout.good{border-color:var(--core);background:var(--core-soft)}
+/* figures and explorers */
+figure{margin:0}
+.figure{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.figure figcaption,.caption{font-size:14.5px;color:var(--muted)}
+.figure svg{width:100%;height:auto;display:block;overflow:visible}
+.explorer{border-color:var(--line-strong)}
+.explorer .title{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.explorer .title h3{font-size:19px}
+.tagx{font:700 11px var(--f-body);letter-spacing:.09em;text-transform:uppercase;padding:3px 8px;border-radius:999px;background:var(--accent-soft);color:var(--accent)}
+.controls{display:flex;flex-wrap:wrap;gap:12px 18px;align-items:flex-end}
+.ctl{display:flex;flex-direction:column;gap:4px;font-size:14px;color:var(--muted);min-width:0}
+.ctl b{color:var(--ink);font-family:var(--f-mono);font-weight:600}
+.ctl input[type=range]{width:min(220px,70vw);accent-color:var(--accent)}
+.ctl input[type=number],.ctl input[type=text],.ctl select{font:15px var(--f-mono);padding:5px 8px;border:1px solid var(--line-strong);border-radius:6px;background:var(--bg);color:var(--ink);width:7.5em}
+.ctl input[type=text]{width:12em}
+.ctl select{width:auto;font-family:var(--f-body)}
+.console{background:var(--code-bg);border:1px solid var(--line);border-radius:8px;padding:10px 14px;font-family:var(--f-mono);font-size:14px;color:var(--code-ink);overflow-x:auto;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.55}
+.console .p{color:var(--muted)}
+.kpis{display:flex;flex-wrap:wrap;gap:10px}
+.kpi{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 12px;display:flex;flex-direction:column;min-width:110px}
+.kpi span{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+.kpi b{font-family:var(--f-mono);font-size:19px;font-variant-numeric:tabular-nums}
+/* svg classes */
+.ax{stroke:var(--line-strong);stroke-width:1}
+.gridl{stroke:var(--grid);stroke-width:1}
+.tick{fill:var(--muted);font:12px var(--f-body)}
+.lab{fill:var(--ink);font:13px var(--f-body)}
+.labm{fill:var(--muted);font:12px var(--f-body)}
+.mono{font-family:var(--f-mono)}
+.curve{fill:none;stroke:var(--c1);stroke-width:2.2}
+.curve2{fill:none;stroke:var(--c2);stroke-width:2.2}
+.area{fill:var(--shade);stroke:none}
+.bar{fill:var(--c1)}
+.bar2{fill:var(--c2)}
+.bar3{fill:var(--c3)}
+.barmuted{fill:var(--line-strong)}
+.vline{stroke:var(--c2);stroke-width:2}
+.vline2{stroke:var(--c3);stroke-width:2;stroke-dasharray:5 4}
+.dot{fill:var(--c1)}
+/* vector cells */
+.vec{display:flex;flex-wrap:wrap;gap:4px}
+.cell{display:flex;flex-direction:column;align-items:center;min-width:46px;border:1px solid var(--line-strong);border-radius:6px;background:var(--paper);overflow:hidden;transition:background .15s,border-color .15s}
+.cell .v{font-family:var(--f-mono);font-size:15px;font-weight:600;padding:6px 6px 2px}
+.cell .i{font-family:var(--f-mono);font-size:11px;color:var(--muted);padding:0 6px 4px}
+.cell .t{font-family:var(--f-mono);font-size:10.5px;padding:2px 4px;width:100%;text-align:center;border-top:1px solid var(--line)}
+.cell.on{background:var(--core-soft);border-color:var(--core)}
+.cell.on .t{color:var(--core);font-weight:700}
+.cell.off{opacity:.55}
+.cell.off .t{color:var(--bad)}
+.cell.rec{border-style:dashed;opacity:.75}
+/* tiers and tasks */
+.tier{display:flex;flex-direction:column;gap:12px}
+.tier-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.tag{font:700 12px var(--f-body);letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:999px}
+.t-core .tag{background:var(--core-soft);color:var(--core)}
+.t-chal .tag{background:var(--chal-soft);color:var(--chal)}
+.t-str .tag{background:var(--str-soft);color:var(--str)}
+.note{color:var(--muted);font-size:15px}
+ol.tasks{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px}
+.task{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:14px 16px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.task-q{display:grid;grid-template-columns:2.4em 1fr;gap:4px}
+.task-q > span:last-child{min-width:0}
+.num{font-family:var(--f-mono);font-weight:600;color:var(--muted)}
+details{font-size:15px}
+summary{cursor:pointer;color:var(--accent);font-weight:600;width:max-content;max-width:100%}
+details > *:not(summary){margin-top:8px}
+summary:focus-visible,.copy:focus-visible,.btn:focus-visible,button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+/* tables */
+.tbl{overflow-x:auto;background:var(--paper);border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th,td{text-align:left;padding:8px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:none}
+th{font-weight:700;color:var(--muted);font-size:12.5px;text-transform:uppercase;letter-spacing:.06em;background:var(--bg)}
+td.m,th.m{font-family:var(--f-mono);font-size:14px;white-space:nowrap}
+td.n{text-align:right;font-variant-numeric:tabular-nums;font-family:var(--f-mono);font-size:14px}
+/* quiz */
+.quiz{display:flex;flex-direction:column;gap:14px}
+.q{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.q .opts{display:flex;flex-direction:column;gap:6px}
+.q button.opt{text-align:left;font:15px var(--f-body);background:var(--bg);color:var(--ink);border:1px solid var(--line-strong);border-radius:8px;padding:8px 12px;cursor:pointer}
+.q button.opt:hover{border-color:var(--accent)}
+.q button.opt.right{background:var(--core-soft);border-color:var(--core)}
+.q button.opt.wrong{background:var(--bad-soft);border-color:var(--bad)}
+.q .fb{font-size:15px;color:var(--muted)}
+.q .fb b.ok{color:var(--core)} .q .fb b.no{color:var(--bad)}
+/* rating */
+.rate{display:flex;flex-direction:column;gap:10px}
+.rate-row{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:10px 14px}
+.rate-row > span{min-width:0;flex:1 1 240px}
+.btns{display:flex;gap:6px}
+.btns button{font:600 14px var(--f-body);border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:6px;padding:6px 12px;cursor:pointer;min-width:44px}
+.btns button[aria-pressed="true"][data-v="1"]{background:var(--chal-soft);border-color:var(--chal);color:var(--chal)}
+.btns button[aria-pressed="true"][data-v="2"]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.btns button[aria-pressed="true"][data-v="3"]{background:var(--core-soft);border-color:var(--core);color:var(--core)}
+footer{max-width:820px;margin:48px auto 0;padding-bottom:8px;border-top:1px solid var(--line);padding-top:16px;color:var(--muted);font-size:14px;display:flex;flex-wrap:wrap;gap:8px 20px;justify-content:space-between}
+@media (max-width:520px){ body{font-size:16px} .card,.figure{padding:14px} .cell{min-width:40px} }
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+.wrap > *, section > *, .figure > *, .card > *{min-width:0;max-width:100%}
+p code, span code, li code, td code{overflow-wrap:anywhere}
+a.wkcard{text-decoration:none;color:var(--ink);transition:border-color .15s}
+a.wkcard:hover{border-color:var(--accent)}
+a.wkcard .go{color:var(--accent);font-weight:600;font-size:15px;margin-top:auto}
+@media (max-width:560px){
+  .figure svg .tick, .figure svg .labm{font-size:22px}
+  .figure svg .lab{font-size:23px}
+}
+/* ---------- module layout: left menu + main column ---------- */
+.layout{display:grid;grid-template-columns:270px minmax(0,1fr);gap:36px;max-width:1220px;margin:0 auto}
+.side{position:sticky;top:0;align-self:start;height:100vh;overflow-y:auto;padding:22px 6px 40px 0;border-right:1px solid var(--line);font-size:14.5px}
+.main{min-width:0}
+.side-brand{display:block;font-weight:700;font-size:16px;color:var(--ink);text-decoration:none;margin-bottom:14px}
+.side-group{font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:18px 0 6px}
+.side-list,.side-secs{list-style:none;margin:0;padding:0}
+.side-wk{display:grid;grid-template-columns:2.2em 1fr;gap:4px;align-items:baseline;padding:5px 8px;border-radius:6px;color:var(--ink);text-decoration:none;line-height:1.35}
+.side-wk:hover{background:var(--accent-soft)}
+.side-wk .wn{font-family:var(--f-mono);font-size:12.5px;color:var(--muted);font-weight:600}
+.side-wk[aria-current="page"]{background:var(--accent-soft);color:var(--accent);font-weight:600}
+.side-wk[aria-current="page"] .wn{color:var(--accent)}
+.side-secs{margin:4px 0 8px 2.6em;border-left:2px solid var(--line);padding-left:10px;display:flex;flex-direction:column;gap:2px}
+.side-secs a{color:var(--muted);text-decoration:none;font-size:13.5px;display:block;padding:2px 0;line-height:1.35}
+.side-secs a:hover{color:var(--accent)}
+.mobilebar{display:none}
+.pager{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px}
+.pager a{display:flex;flex-direction:column;gap:2px;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:var(--paper);text-decoration:none;color:var(--ink);font-weight:600;font-size:15px}
+.pager a:hover{border-color:var(--accent)}
+.pager a .k{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.pager a.nx{text-align:right}
+@media (max-width:1000px){
+  .layout{display:block}
+  .side{display:none}
+  .mobilebar{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding-block:12px;border-bottom:1px solid var(--line);position:relative}
+  .mobilebar .side-brand{margin:6px 0 0}
+  .mnav summary{list-style:none;cursor:pointer;font-weight:600;font-size:14px;color:var(--accent);border:1px solid var(--line-strong);border-radius:6px;padding:6px 12px;width:auto;background:var(--paper)}
+  .mnav summary::-webkit-details-marker{display:none}
+  .mnav[open] summary{background:var(--accent-soft)}
+  .mnav-panel{position:absolute;left:0;right:0;top:100%;z-index:20;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:14px 14px 18px;box-shadow:0 12px 30px rgba(0,0,0,.18);max-height:75vh;overflow-y:auto}
+  .mnav-panel .side-brand{display:none}
+}
+@media (max-width:520px){ .pager{grid-template-columns:1fr} .pager a.nx{text-align:left} }
+@media (min-width:1001px){ .toc{display:none} }
+.side-secs a.on{color:var(--accent);font-weight:600}
+
+</style>
+</head>
+<body data-page="week07">
+<div class="layout">
+<aside class="side" aria-label="Module weeks"><a class="side-brand" href="index.html">COM747 R Labs</a><p class="side-group">Foundations</p><ul class="side-list"><li><a class="side-wk" href="week01.html"><span class="wn">1</span><span>Data, Questions and R</span></a></li><li><a class="side-wk" href="week02a.html"><span class="wn">2A</span><span>Statistical Computing with R</span></a></li><li><a class="side-wk" href="week02b.html"><span class="wn">2B</span><span>Probability Distributions and EDA</span></a></li><li><a class="side-wk" href="week03.html"><span class="wn">3</span><span>Inferential Statistics</span></a></li></ul><p class="side-group">Modelling</p><ul class="side-list"><li><a class="side-wk" href="week04.html"><span class="wn">4</span><span>Regression and Time Series</span></a></li><li><a class="side-wk" href="week05.html"><span class="wn">5</span><span>Supervised ML and Feature Engineering</span></a></li><li><a class="side-wk" href="week06.html"><span class="wn">6</span><span>Ethics, Evaluation and Logistic Regression</span></a></li><li><a class="side-wk" href="week07.html" aria-current="page"><span class="wn">7</span><span>ML Optimisation and Text Mining</span></a><ul class="side-secs"><li><a href="#question">Small gains, many times</a></li><li><a href="#gd">Gradient descent: how a model learns its weights</a></li><li><a href="#hyper">Parameters and hyperparameters</a></li><li><a href="#grid">Grid search with caret</a></li><li><a href="#beyond">Beyond grid search</a></li><li><a href="#text">The text-mining pipeline</a></li><li><a href="#tfidf">tf-idf: words that characterise a document</a></li><li><a href="#sentiment">Sentiment analysis</a></li><li><a href="#nb">Naive Bayes: is this message spam?</a></li><li><a href="#embed">Topics and word embeddings</a></li><li><a href="#tasks">Your R tasks</a></li><li><a href="#quiz">Check yourself</a></li><li><a href="#glossary">Key terms</a></li><li><a href="#exit">Exit self-check</a></li></ul></li></ul><p class="side-group">Unsupervised learning</p><ul class="side-list"><li><a class="side-wk" href="week08.html"><span class="wn">8</span><span>Clustering and PCA</span></a></li><li><a class="side-wk" href="week09.html"><span class="wn">9</span><span>Association Rule Mining</span></a></li></ul><p class="side-group">Wider practice</p><ul class="side-list"><li><a class="side-wk" href="week10.html"><span class="wn">10</span><span>Data Analytics and Engineering</span></a></li><li><a class="side-wk" href="week11.html"><span class="wn">11</span><span>Maths and the R Toolkit</span></a></li><li><a class="side-wk" href="week12.html"><span class="wn">12</span><span>Teamwork and Process Mining</span></a></li></ul></aside>
+<div class="main">
+<div class="mobilebar"><a class="side-brand" href="index.html">COM747 R Labs</a><details class="mnav"><summary>Menu</summary><nav class="mnav-panel" aria-label="Module weeks"><a class="side-brand" href="index.html">COM747 R Labs</a><p class="side-group">Foundations</p><ul class="side-list"><li><a class="side-wk" href="week01.html"><span class="wn">1</span><span>Data, Questions and R</span></a></li><li><a class="side-wk" href="week02a.html"><span class="wn">2A</span><span>Statistical Computing with R</span></a></li><li><a class="side-wk" href="week02b.html"><span class="wn">2B</span><span>Probability Distributions and EDA</span></a></li><li><a class="side-wk" href="week03.html"><span class="wn">3</span><span>Inferential Statistics</span></a></li></ul><p class="side-group">Modelling</p><ul class="side-list"><li><a class="side-wk" href="week04.html"><span class="wn">4</span><span>Regression and Time Series</span></a></li><li><a class="side-wk" href="week05.html"><span class="wn">5</span><span>Supervised ML and Feature Engineering</span></a></li><li><a class="side-wk" href="week06.html"><span class="wn">6</span><span>Ethics, Evaluation and Logistic Regression</span></a></li><li><a class="side-wk" href="week07.html" aria-current="page"><span class="wn">7</span><span>ML Optimisation and Text Mining</span></a><ul class="side-secs"><li><a href="#question">Small gains, many times</a></li><li><a href="#gd">Gradient descent: how a model learns its weights</a></li><li><a href="#hyper">Parameters and hyperparameters</a></li><li><a href="#grid">Grid search with caret</a></li><li><a href="#beyond">Beyond grid search</a></li><li><a href="#text">The text-mining pipeline</a></li><li><a href="#tfidf">tf-idf: words that characterise a document</a></li><li><a href="#sentiment">Sentiment analysis</a></li><li><a href="#nb">Naive Bayes: is this message spam?</a></li><li><a href="#embed">Topics and word embeddings</a></li><li><a href="#tasks">Your R tasks</a></li><li><a href="#quiz">Check yourself</a></li><li><a href="#glossary">Key terms</a></li><li><a href="#exit">Exit self-check</a></li></ul></li></ul><p class="side-group">Unsupervised learning</p><ul class="side-list"><li><a class="side-wk" href="week08.html"><span class="wn">8</span><span>Clustering and PCA</span></a></li><li><a class="side-wk" href="week09.html"><span class="wn">9</span><span>Association Rule Mining</span></a></li></ul><p class="side-group">Wider practice</p><ul class="side-list"><li><a class="side-wk" href="week10.html"><span class="wn">10</span><span>Data Analytics and Engineering</span></a></li><li><a class="side-wk" href="week11.html"><span class="wn">11</span><span>Maths and the R Toolkit</span></a></li><li><a class="side-wk" href="week12.html"><span class="wn">12</span><span>Teamwork and Process Mining</span></a></li></ul></nav></details></div>
+<div class="wrap">
+<header class="hero">
+  <div class="eyebrow">COM747 Data Science &amp; Machine Learning · Week 7</div>
+  <h1>ML Optimisation and Text Mining</h1>
+  <p class="lead">How models learn their weights (gradient descent), how we tune their settings (hyperparameters and grid search), and how to turn unstructured text into numbers a model can use.</p>
+  <div class="chips"><span class="chip">Lecture + lab</span><span class="chip">RStudio</span><span class="chip">Dataset: <a href="data/data.csv">data.csv</a> · text built into tm, topicmodels, janeaustenr</span></div>
+</header>
+
+<nav class="toc" aria-label="On this page">
+  <a href="#question">The question</a><a href="#gd">Gradient descent</a><a href="#hyper">Hyperparameters</a><a href="#grid">Grid search</a><a href="#beyond">Beyond grid search</a><a href="#text">Text pipeline</a><a href="#tfidf">tf-idf</a><a href="#sentiment">Sentiment</a><a href="#nb">Naive Bayes</a><a href="#embed">Topics and embeddings</a><a href="#tasks">R tasks</a><a href="#quiz">Quiz</a>
+</nav>
+
+<section id="question">
+  <div class="sec-head"><span class="sec-num">01</span><h2>Small gains, many times</h2></div>
+  <div class="prose"><p>British Cycling's "aggregation of marginal gains" improved many small things by 1% each. ML optimisation works the same way: a model improves its weights a little at a time to reduce its error, and we improve its settings a little at a time to raise its accuracy. Text mining then opens up the 80–90% of the world's data that is unstructured.</p></div>
+  <ul class="lo-list">
+    <li><span class="lo">LO1</span><span>Explain gradient descent, learning rate, and local versus global minima.</span></li>
+    <li><span class="lo">LO2</span><span>Distinguish parameters from hyperparameters; tune models with caret grid search, custom grids and oneSE.</span></li>
+    <li><span class="lo">LO3</span><span>Pre-process text: tokenise, lowercase, remove stop words, stem or lemmatise.</span></li>
+    <li><span class="lo">LO4</span><span>Build a document-term matrix, weight it with tf-idf, and find frequent terms and associations.</span></li>
+    <li><span class="lo">LO5</span><span>Describe sentiment analysis, Naive Bayes, topic modelling and word embeddings.</span></li>
+  </ul>
+</section>
+
+<section id="gd">
+  <div class="sec-head"><span class="sec-num">02</span><h2>Gradient descent: how a model learns its weights</h2></div>
+  <div class="prose"><p>A neural network multiplies each input by a <b>weight</b>, sums them and passes the total through an <b>activation function</b>. Weights start random. A <b>cost function</b> measures the error between predictions and labels. <b>Gradient descent</b> repeatedly nudges each weight a small step <i>downhill</i> on the cost surface: <code>w ← w − learning rate × slope</code>. In a network, back-propagation works out the slope for every weight.</p></div>
+  <div class="figure explorer">
+    <div class="title"><span class="tagx">Explorer</span><h3>Walk downhill</h3></div>
+    <div class="controls">
+      <label class="ctl" for="gd-f">cost surface<select id="gd-f"><option value="bowl">One valley (convex)</option><option value="two">Two valleys (local and global minimum)</option></select></label>
+      <label class="ctl" for="gd-lr"><span>learning rate: <b id="gd-lrv">0.10</b></span><input type="range" id="gd-lr" min="0.01" max="1.05" step="0.01" value="0.1"></label>
+      <label class="ctl" for="gd-w0"><span>starting weight: <b id="gd-w0v">−3.5</b></span><input type="range" id="gd-w0" min="-4" max="4" step="0.1" value="-3.5"></label>
+      <button class="btn primary" type="button" id="gd-step">Take 1 step</button>
+      <button class="btn" type="button" id="gd-run">Take 20 steps</button>
+      <button class="btn" type="button" id="gd-reset">Reset</button>
+    </div>
+    <svg id="gd-svg" role="img" aria-label="Cost curve with the path taken by gradient descent"></svg>
+    <div class="console" id="gd-out"></div>
+    <p class="caption">Try a learning rate of 1.0 on the single valley: the steps overshoot and bounce. Start at +3 on the two-valley surface: you settle in the shallow local minimum and never find the deeper one.</p>
+  </div>
+  <div class="figure explorer">
+    <div class="title"><span class="tagx">Explorer</span><h3>Gradient descent fits a regression line</h3></div>
+    <p class="caption">Two weights this time: slope m and intercept b for SecondRun = m × FirstRun + b (rundata, features standardised so the steps are well behaved). Each step lowers the mean squared error.</p>
+    <div class="controls">
+      <label class="ctl" for="gl-lr"><span>learning rate: <b id="gl-lrv">0.05</b></span><input type="range" id="gl-lr" min="0.005" max="0.5" step="0.005" value="0.05"></label>
+      <button class="btn primary" type="button" id="gl-step">10 steps</button>
+      <button class="btn" type="button" id="gl-reset">Reset to random weights</button>
+    </div>
+    <div class="grid2 two">
+      <div><p class="caption">Data and current line</p><svg id="gl-fit" role="img" aria-label="Scatter plot with the current fitted line"></svg></div>
+      <div><p class="caption">Cost (MSE) by iteration</p><svg id="gl-cost" role="img" aria-label="Cost against iteration"></svg></div>
+    </div>
+    <div class="console" id="gl-out"></div>
+  </div>
+</section>
+
+<section id="hyper">
+  <div class="sec-head"><span class="sec-num">03</span><h2>Parameters and hyperparameters</h2></div>
+  <div class="prose"><p><b>Parameters</b> are learned from the data (regression coefficients, network weights). <b>Hyperparameters</b> are settings you choose before training. Tuning means searching for the hyperparameter values that give the best performance on data the model hasn't seen.</p></div>
+  <div class="tbl"><table><thead><tr><th>Model</th><th>Hyperparameters</th><th>caret method</th></tr></thead><tbody>
+    <tr><td>k-NN</td><td>k</td><td class="m">"knn"</td></tr>
+    <tr><td>C5.0 decision tree</td><td>model (tree or rules), trials (boosting), winnow (feature selection)</td><td class="m">"C5.0"</td></tr>
+    <tr><td>Support vector machine</td><td>C (cost of misclassification), kernel width</td><td class="m">"svmLinear", "svmRadial"</td></tr>
+    <tr><td>Random forest</td><td>mtry (features tried at each split), number of trees</td><td class="m">"rf"</td></tr>
+    <tr><td>Neural network</td><td>hidden layers, nodes per layer, learning rate, momentum, batch size, weight decay, activation</td><td class="m">"nnet"</td></tr>
+    <tr><td>Linear regression</td><td>none</td><td class="m">"lm"</td></tr>
+  </tbody></table></div>
+  <div class="code"><pre>library(caret)
+modelLookup("C5.0")    # which hyperparameters caret can tune for C5.0</pre></div>
+</section>
+
+<section id="grid">
+  <div class="sec-head"><span class="sec-num">04</span><h2>Grid search with caret</h2></div>
+  <div class="prose"><p>By default caret tries 3 values of each hyperparameter (3<sup>p</sup> combinations) and resamples each one (bootstrap, 25 times). For C5.0 that is model × winnow × trials = 2 × 2 × 3 = <b>12</b> combinations. It keeps the most accurate.</p></div>
+  <div class="figure explorer">
+    <div class="title"><span class="tagx">Result</span><h3>C5.0 on the breast cancer training data</h3></div>
+    <div class="controls"><label class="ctl" for="gr-m">metric<select id="gr-m"><option value="Accuracy">Accuracy</option><option value="Kappa">Kappa</option></select></label></div>
+    <svg id="gr-svg" role="img" aria-label="Heatmap of accuracy for 12 C5.0 settings"></svg>
+    <p class="caption">From <code>train(diagnosis ~ ., method = "C5.0", data = trainingData)</code> with <code>set.seed(1)</code> and a 70/30 split. The best setting (outlined) is a boosted tree with 20 trials, winnow off: 95.9% resampled accuracy, 95.3% on the test set. Most settings are within about one point of each other.</p>
+  </div>
+  <div class="grid2 two">
+    <div class="card"><span class="k">selectionFunction = "oneSE"</span><p>Instead of the single best, choose the <b>simplest</b> model whose accuracy is within one standard error of the best. Simpler models generalise better. Here oneSE picks rules with 10 trials instead of a tree with 20.</p><div class="code" data-nocopy><pre>control &lt;- trainControl(method = "cv", number = 10,
+                        selectionFunction = "oneSE")</pre></div></div>
+    <div class="card"><span class="k">Custom grid</span><p>Choose the values yourself with <code>expand.grid()</code> and pass them as <code>tuneGrid</code>. Change the selection metric with <code>metric = "Kappa"</code>.</p><div class="code" data-nocopy><pre>customGrid &lt;- expand.grid(model = c("rules", "tree"),
+  trials = c(20, 25, 30, 35, 40), winnow = FALSE)
+train(..., tuneGrid = customGrid)</pre></div></div>
+  </div>
+  <figure class="figure">
+    <svg id="cg-svg" role="img" aria-label="Accuracy against number of boosting trials for rules and tree models"></svg>
+    <figcaption>The custom grid: accuracy against boosting trials. Gains beyond 20 trials are tiny (0.1 points) while training time grows linearly. Diminishing returns are typical of tuning.</figcaption>
+  </figure>
+</section>
+
+<section id="beyond">
+  <div class="sec-head"><span class="sec-num">05</span><h2>Beyond grid search</h2></div>
+  <div class="grid3">
+    <div class="card"><span class="k">Random search</span><p>Sample combinations at random. Often finds good settings faster than a full grid when only a few hyperparameters matter.</p></div>
+    <div class="card"><span class="k">Genetic algorithms</span><p>A population of models; keep the fittest (most accurate); combine and mutate their settings to create the next generation; repeat.</p></div>
+    <div class="card"><span class="k">Ensembles</span><p><b>Bagging</b> (models on bootstrap samples, vote), <b>boosting</b> (each model fixes the previous one's errors), <b>random forest</b> (bagged trees with random feature subsets).</p></div>
+  </div>
+</section>
+
+<section id="text">
+  <div class="sec-head"><span class="sec-num">06</span><h2>The text-mining pipeline</h2></div>
+  <div class="prose"><p>A collection of documents is a <b>corpus</b>. Before analysis, text is broken into tokens and cleaned. Then each document becomes a row of numbers in a <b>document-term matrix</b> (DTM): one column per word, counting how often it appears. This is the <b>bag of words</b>: word order is lost.</p></div>
+  <div class="figure explorer">
+    <div class="title"><span class="tagx">Explorer</span><h3>Clean three documents and count the words</h3></div>
+    <div class="controls" style="flex-direction:column;align-items:stretch">
+      <label class="ctl" for="tx-1">Document 1<input type="text" id="tx-1" style="width:100%" value="I liked this programming course and liked the lectures"></label>
+      <label class="ctl" for="tx-2">Document 2<input type="text" id="tx-2" style="width:100%" value="The course and lectures are useful as a primer for programming"></label>
+      <label class="ctl" for="tx-3">Document 3<input type="text" id="tx-3" style="width:100%" value="I liked the programming aspects of the course"></label>
+    </div>
+    <div class="controls">
+      <label class="ctl" for="tx-lc">lowercase<select id="tx-lc"><option value="1">yes</option><option value="0">no</option></select></label>
+      <label class="ctl" for="tx-sw">remove stop words<select id="tx-sw"><option value="0">no (tm default)</option><option value="1">yes</option></select></label>
+      <label class="ctl" for="tx-st">stemming<select id="tx-st"><option value="0">no</option><option value="1">yes (simplified)</option></select></label>
+      <label class="ctl" for="tx-min">min word length<select id="tx-min"><option value="1">1</option><option value="3" selected>3 (tm default)</option></select></label>
+    </div>
+    <div class="console" id="tx-tok"></div>
+    <div class="tbl" id="tx-dtm"></div>
+    <svg id="tx-bar" role="img" aria-label="Bar chart of term frequencies across the corpus"></svg>
+    <p class="caption">With the defaults this matches R exactly: <code>DocumentTermMatrix(VCorpus(VectorSource(txt)))</code> lowercases and keeps words of 3+ letters. <code>findFreqTerms(dtm, 3)</code> → course, liked, programming, the.</p>
+  </div>
+  <div class="tbl"><table><thead><tr><th>Step</th><th>Example</th><th>R</th></tr></thead><tbody>
+    <tr><td>Tokenise</td><td>"I Love Data Science" → I · Love · Data · Science</td><td class="m">Boost_tokenizer(), unnest_tokens()</td></tr>
+    <tr><td>Stem</td><td>trouble, troubled, troubles → troubl (troublesome → troublesom)</td><td class="m">SnowballC::wordStem()</td></tr>
+    <tr><td>Lemmatise</td><td>troubled → trouble; studies → study; better → good</td><td class="m">textstem::lemmatize_words()</td></tr>
+    <tr><td>Stop words</td><td>Remove "I", "and", "the", "of"…</td><td class="m">tm::removeWords(x, stopwords("en"))</td></tr>
+    <tr><td>Sparse terms</td><td>Drop words in very few documents</td><td class="m">removeSparseTerms(dtm, 0.4)</td></tr>
+    <tr><td>Associations</td><td>Which words co-occur with "lectures"?</td><td class="m">findAssocs(dtm, "lectures", 0.4)</td></tr>
+    <tr><td>n-grams</td><td>"I Love", "Love Data", "Data Science" (keeps some context)</td><td class="m">tidytext::unnest_tokens(token = "ngrams", n = 2)</td></tr>
+  </tbody></table></div>
+</section>
+
+<section id="tfidf">
+  <div class="sec-head"><span class="sec-num">07</span><h2>tf-idf: words that characterise a document</h2></div>
+  <div class="prose"><p>"The" appears everywhere, so it says nothing about any one document. <b>tf-idf</b> multiplies a word's frequency in a document (<b>tf</b>) by how rare it is across the corpus: <b>idf</b> = log₂(number of documents ÷ documents containing the word). A word in every document gets idf = 0.</p></div>
+  <div class="figure explorer">
+    <div class="title"><span class="tagx">Explorer</span><h3>tf-idf for the three documents above</h3></div>
+    <div class="tbl" id="tf-tbl"></div>
+    <div class="console" id="tf-out"></div>
+  </div>
+</section>
+
+<section id="sentiment">
+  <div class="sec-head"><span class="sec-num">08</span><h2>Sentiment analysis</h2></div>
+  <div class="prose"><p>Sentiment mining scores text as negative (&lt; 0), neutral (0) or positive (&gt; 0) using a dictionary of word polarities. Better tools such as <code>sentimentr</code> also handle <b>valence shifters</b>: negators ("not happy"), amplifiers ("very happy") and "but" clauses.</p></div>
+  <div class="figure explorer">
+    <div class="title"><span class="tagx">Explorer</span><h3>Score some sentences</h3></div>
+    <label class="ctl" for="se-in" style="width:100%">One sentence per line<textarea id="se-in" rows="5" style="width:100%;font:15px var(--f-mono);padding:8px;border:1px solid var(--line-strong);border-radius:6px;background:var(--bg);color:var(--ink)">I am very happy
+I am not very happy
+The lectures were useful but the room was cold
+This module is great and I love the labs
+The test was terrible</textarea></label>
+    <svg id="se-svg" role="img" aria-label="Sentiment score per sentence"></svg>
+    <p class="caption">A simplified scorer with a small dictionary, negators and amplifiers, to show the idea. R's <code>sentimentr::sentiment()</code> uses a lexicon of about 11,700 words: it gives 0.675 for "I am very happy" and −0.067 for "I am not very happy".</p>
+  </div>
+</section>
+
+<section id="nb">
+  <div class="sec-head"><span class="sec-num">09</span><h2>Naive Bayes: is this message spam?</h2></div>
+  <div class="prose"><p>Naive Bayes applies Bayes' theorem word by word: P(spam | words) ∝ P(spam) × Π P(word | spam). It is "naive" because it treats every word as independent of the others. It is fast and works well for spam filtering.</p></div>
+  <div class="figure explorer">
+    <div class="title"><span class="tagx">Explorer</span><h3>Classify a text message</h3></div>
+    <label class="ctl" for="nb-in" style="width:100%">Message<input type="text" id="nb-in" style="width:100%" value="Congratulations, you have won a holiday! Reply now"></label>
+    <div class="controls"><span class="note">Try:</span><button class="btn" type="button" data-nb="Congratulations, you have won a holiday! Reply now">Prize message</button><button class="btn" type="button" data-nb="Hi there, hope you are well. See you later?">Friendly message</button><button class="btn" type="button" data-nb="Call now to claim your free prize, see you">Mixed</button></div>
+    <div class="tbl" id="nb-tbl"></div>
+    <div class="kpis"><div class="kpi"><span>P(spam | message)</span><b id="nb-p"></b></div><div class="kpi"><span>prediction</span><b id="nb-c"></b></div></div>
+    <p class="caption">Word counts come from a toy training set of 40 spam and 60 ham messages, with Laplace smoothing (add 1) so unseen words don't make a probability zero. In R: <code>naivebayes::naive_bayes()</code> or <code>e1071::naiveBayes()</code>.</p>
+  </div>
+</section>
+
+<section id="embed">
+  <div class="sec-head"><span class="sec-num">10</span><h2>Topics and word embeddings</h2></div>
+  <div class="prose"><p><b>Topic modelling</b> with Latent Dirichlet Allocation (LDA) assumes documents on similar topics use similar words, and that each document mixes several topics. You choose k, the number of topics.</p></div>
+  <div class="grid2 two" id="lda-cards"></div>
+  <p class="note">Top 10 terms for <code>LDA(AssociatedPress, k = 4)</code> on 2,246 news articles. You name the topics: crime/local news, international politics, economy/business, courts.</p>
+  <div class="prose"><p>One-hot vectors (man = [1,0,0,…]) are huge and treat every pair of words as equally different. <b>Word2vec</b> trains a small neural network (CBOW or skip-gram) so that words used in similar contexts get similar short vectors. Similarity is measured with <b>cosine similarity</b> or Euclidean distance.</p></div>
+  <figure class="figure">
+    <svg id="w2v-svg" role="img" aria-label="Two-dimensional word embeddings from Sense and Sensibility"></svg>
+    <figcaption>Words from <i>Sense and Sensibility</i> embedded in just 2 dimensions (<code>word2vec(..., type = "cbow", dim = 2, iter = 20)</code>, <code>set.seed(1)</code>). Two dimensions are far too few to be reliable; the lab uses 15. Click a word to see its nearest neighbours in the 15-dimensional model.</figcaption>
+  </figure>
+  <div class="console" id="w2v-out">Click "Lucy" or "Elinor".</div>
+</section>
+
+<section id="tasks">
+  <div class="sec-head"><span class="sec-num">11</span><h2>Your R tasks</h2></div>
+  <div class="tier t-core">
+    <div class="tier-head"><span class="tag">Core</span><span class="note">Tuning (LO2)</span></div>
+    <ol class="tasks">
+      <li class="task"><div class="task-q"><span class="num">1</span><span>Look up the tunable parameters for C5.0, knn, rf and svmRadial with <code>modelLookup()</code>.</span></div>
+        <details><summary>Check your answer</summary><div class="code"><pre>library(caret)
+modelLookup("C5.0")       # trials, model, winnow
+modelLookup("knn")        # k
+modelLookup("rf")         # mtry
+modelLookup("svmRadial")  # sigma, C</pre></div></details></li>
+      <li class="task"><div class="task-q"><span class="num">2</span><span>Tune C5.0 on the cancer training set (70/30, <code>set.seed(1)</code>). Which settings win? What is the test accuracy?</span></div>
+        <details><summary>Check your answer</summary><div class="code"><pre>data &lt;- read.csv("data.csv")[, 2:32]
+data$diagnosis &lt;- factor(data$diagnosis)
+set.seed(1)
+partition &lt;- createDataPartition(data$diagnosis, p = 0.7, list = FALSE)
+trainingData &lt;- data[partition, ]; testData &lt;- data[-partition, ]
+set.seed(1)
+model &lt;- train(diagnosis ~ ., method = "C5.0", data = trainingData)
+model$bestTune      # trials 20, model tree, winnow FALSE
+confusionMatrix(predict(model, testData), testData$diagnosis)   # 95.3%</pre></div></details></li>
+    </ol>
+  </div>
+  <div class="tier t-chal">
+    <div class="tier-head"><span class="tag">Challenge</span><span class="note">Text (LO3–LO4)</span></div>
+    <ol class="tasks">
+      <li class="task"><div class="task-q"><span class="num">3</span><span>Build the DTM for the three lecture sentences, find terms used 3+ times and draw a word cloud.</span></div>
+        <details><summary>Check your answer</summary><div class="code"><pre>library(tm); library(wordcloud)
+txt &lt;- c("I liked this programming course and liked the lectures",
+         "The course and lectures are useful as a primer for programming",
+         "I liked the programming aspects of the course")
+docTermMat &lt;- DocumentTermMatrix(VCorpus(VectorSource(txt)))
+inspect(docTermMat)
+findFreqTerms(docTermMat, 3)          # course, liked, programming, the
+wordFreq &lt;- colSums(as.matrix(docTermMat))
+barplot(sort(wordFreq, decreasing = TRUE), las = 2)
+wordcloud(words = names(wordFreq), freq = wordFreq, min.freq = 1)</pre></div></details></li>
+      <li class="task"><div class="task-q"><span class="num">4</span><span>Weight the matrix with tf-idf. Why does "programming" get 0 everywhere?</span></div>
+        <details><summary>Check your answer</summary><div class="code"><pre>inspect(weightTfIdf(docTermMat, normalize = FALSE))
+# "programming" is in all 3 documents: idf = log2(3/3) = 0
+# "liked" in doc 1: tf 2 × log2(3/2) = 1.17</pre></div></details></li>
+      <li class="task"><div class="task-q"><span class="num">5</span><span>Compare stemming and lemmatisation on trouble, troubled, troublesome, troubles.</span></div>
+        <details><summary>Check your answer</summary><div class="code"><pre>SnowballC::wordStem(c("trouble", "troubled", "troublesome", "troubles"))
+# "troubl" "troubl" "troublesom" "troubl"   (not always real words)
+textstem::lemmatize_words(c("trouble", "troubled", "troublesome", "troubles"))
+# "trouble" "trouble" "troublesome" "trouble" (dictionary forms)</pre></div></details></li>
+    </ol>
+  </div>
+  <div class="tier t-str">
+    <div class="tier-head"><span class="tag">Stretch</span><span class="note">LO5</span></div>
+    <ol class="tasks">
+      <li class="task"><div class="task-q"><span class="num">6</span><span>Score sentiment for five sentences of your own and plot a histogram of the scores.</span></div>
+        <details><summary>Check your answer</summary><div class="code"><pre>library(sentimentr)
+s &lt;- sentiment(c("I am very happy", "I am not very happy", "The labs were great"))
+s
+hist(s$sentiment)</pre></div></details></li>
+      <li class="task"><div class="task-q"><span class="num">7</span><span>Train word2vec (CBOW, 15 dimensions) on <i>Sense and Sensibility</i>. Find the 10 nearest words to "Lucy" and the cosine similarity of Lucy and Elinor.</span></div>
+        <details><summary>Check your answer</summary><div class="code"><pre>library(word2vec); library(janeaustenr); library(lsa)
+set.seed(1)
+txt &lt;- austen_books()
+model &lt;- word2vec(x = txt$text[txt$book == "Sense &amp; Sensibility"], type = "cbow", dim = 15, iter = 20)
+predict(model, "Lucy", type = "nearest", top_n = 10)
+emb &lt;- as.matrix(model)
+cosine(emb["Lucy", ], emb["Elinor", ])</pre></div></details></li>
+      <li class="task"><div class="task-q"><span class="num">8</span><span>Fit LDA with k = 4 on <code>AssociatedPress</code> and name each topic from its top terms.</span></div>
+        <details><summary>Check your answer</summary><div class="code"><pre>library(topicmodels)
+data("AssociatedPress")
+lda &lt;- LDA(AssociatedPress, k = 4, control = list(seed = 1))
+terms(lda, 10)</pre></div></details></li>
+    </ol>
+  </div>
+</section>
+
+<section id="quiz">
+  <div class="sec-head"><span class="sec-num">12</span><h2>Check yourself</h2></div>
+  <div class="quiz">
+    <div class="q" data-answer="2" data-why="Too large a step jumps across the valley; it can bounce or diverge instead of settling.">
+      <p><b>1.</b> Gradient descent with a very large learning rate…</p>
+      <div class="opts"><button class="opt">Always finds the global minimum faster</button><button class="opt">Takes tiny steps</button><button class="opt">Can overshoot and fail to converge</button></div><p class="fb"></p></div>
+    <div class="q" data-answer="0" data-why="k is chosen before training; it is not learned from the data.">
+      <p><b>2.</b> In k-NN, k is…</p>
+      <div class="opts"><button class="opt">A hyperparameter</button><button class="opt">A learned weight</button><button class="opt">The number of features</button></div><p class="fb"></p></div>
+    <div class="q" data-answer="1" data-why="oneSE picks the simplest model within one standard error of the best, favouring generalisation.">
+      <p><b>3.</b> <code>selectionFunction = "oneSE"</code> chooses…</p>
+      <div class="opts"><button class="opt">The most accurate model</button><button class="opt">The simplest model within one SE of the best</button><button class="opt">A random model</button></div><p class="fb"></p></div>
+    <div class="q" data-answer="2" data-why="idf = log(N / N) = 0 for a word found in every document.">
+      <p><b>4.</b> A word appears in every document. Its idf is…</p>
+      <div class="opts"><button class="opt">1</button><button class="opt">Very large</button><button class="opt">0</button></div><p class="fb"></p></div>
+    <div class="q" data-answer="0" data-why="Lemmatisation uses a dictionary to return real base words; stemming just chops suffixes.">
+      <p><b>5.</b> "studies" → "studi" is…</p>
+      <div class="opts"><button class="opt">Stemming</button><button class="opt">Lemmatisation</button><button class="opt">Tokenisation</button></div><p class="fb"></p></div>
+  </div>
+</section>
+
+<section id="glossary">
+  <div class="sec-head"><span class="sec-num">13</span><h2>Key terms</h2></div>
+  <div class="tbl"><table><thead><tr><th>Term</th><th>Meaning</th></tr></thead><tbody>
+    <tr><td>Cost function</td><td>A measure of error that training tries to minimise.</td></tr>
+    <tr><td>Learning rate</td><td>The size of each gradient descent step.</td></tr>
+    <tr><td>Local minimum</td><td>A low point that isn't the lowest overall.</td></tr>
+    <tr><td>Hyperparameter</td><td>A setting chosen before training (k, trials, C).</td></tr>
+    <tr><td>Grid search</td><td>Trying every combination from a set of hyperparameter values.</td></tr>
+    <tr><td>Corpus</td><td>A collection of documents.</td></tr>
+    <tr><td>Document-term matrix</td><td>Rows = documents, columns = words, cells = counts.</td></tr>
+    <tr><td>tf-idf</td><td>Term frequency × inverse document frequency.</td></tr>
+    <tr><td>Stop words</td><td>Very common words removed before analysis.</td></tr>
+    <tr><td>Word embedding</td><td>A dense numeric vector representing a word's meaning from its contexts.</td></tr>
+  </tbody></table></div>
+</section>
+
+<section id="exit">
+  <div class="sec-head"><span class="sec-num">14</span><h2>Exit self-check</h2></div>
+  <p class="note">1 = I need help · 2 = nearly there · 3 = confident. Your choices stay on this device.</p>
+  <div class="rate">
+    <div class="rate-row"><span><span class="lo">LO1</span> Gradient descent and learning rate.</span><div class="btns" data-k="lo1"><button data-v="1">1</button><button data-v="2">2</button><button data-v="3">3</button></div></div>
+    <div class="rate-row"><span><span class="lo">LO2</span> Tuning with caret.</span><div class="btns" data-k="lo2"><button data-v="1">1</button><button data-v="2">2</button><button data-v="3">3</button></div></div>
+    <div class="rate-row"><span><span class="lo">LO3</span> Text pre-processing.</span><div class="btns" data-k="lo3"><button data-v="1">1</button><button data-v="2">2</button><button data-v="3">3</button></div></div>
+    <div class="rate-row"><span><span class="lo">LO4</span> DTM and tf-idf.</span><div class="btns" data-k="lo4"><button data-v="1">1</button><button data-v="2">2</button><button data-v="3">3</button></div></div>
+    <div class="rate-row"><span><span class="lo">LO5</span> Sentiment, Naive Bayes, topics, embeddings.</span><div class="btns" data-k="lo5"><button data-v="1">1</button><button data-v="2">2</button><button data-v="3">3</button></div></div>
+  </div>
+</section>
+
+<nav class="pager" aria-label="Previous and next week"><a href="week06.html"><span class="k">← Week 6</span>Ethics, Evaluation and Logistic Regression</a><a class="nx" href="week08.html"><span class="k">Week 8 →</span>Clustering and PCA</a></nav>
+</div>
+<footer><span>COM747 Data Science &amp; Machine Learning · QA Higher Education / Ulster University</span><span>Keep RStudio open beside this page.</span></footer>
+</div>
+</div>
+<script>
+/* Shared helpers for COM747 student pages: copy buttons, quizzes, self-ratings, stats maths, SVG charts */
+(function(){
+"use strict";
+/* ---------- copy buttons ---------- */
+document.querySelectorAll('.code').forEach(function(box){
+  if (box.dataset.nocopy !== undefined) return;
+  var pre = box.querySelector('pre'); if (!pre) return;
+  var btn = document.createElement('button'); btn.type='button'; btn.className='copy'; btn.textContent='Copy';
+  box.appendChild(btn);
+  btn.addEventListener('click', function(){
+    var text = pre.innerText;
+    var done = function(){ btn.textContent='Copied'; setTimeout(function(){btn.textContent='Copy';},1500); };
+    var fallback = function(){ var r=document.createRange(); r.selectNodeContents(pre); var s=window.getSelection(); s.removeAllRanges(); s.addRange(r); btn.textContent='Press Ctrl+C'; };
+    try { navigator.clipboard.writeText(text).then(done, fallback); } catch(e){ fallback(); }
+  });
+});
+/* ---------- quizzes: <div class="q" data-answer="1" data-why="..."> ---------- */
+document.querySelectorAll('.q').forEach(function(q){
+  var ans = +q.dataset.answer; var fb = q.querySelector('.fb');
+  var opts = q.querySelectorAll('button.opt');
+  opts.forEach(function(b, i){
+    b.type='button';
+    b.addEventListener('click', function(){
+      opts.forEach(function(o){ o.classList.remove('right','wrong'); });
+      if (i === ans){ b.classList.add('right'); fb.innerHTML = '<b class="ok">Correct.</b> ' + (q.dataset.why||''); }
+      else { b.classList.add('wrong'); fb.innerHTML = '<b class="no">Not quite.</b> Try another option.'; }
+    });
+  });
+});
+/* ---------- self-rating ---------- */
+var key = 'com747-' + (document.body.dataset.page || 'page');
+var saved = {};
+try { saved = JSON.parse(localStorage.getItem(key) || '{}'); } catch(e){}
+document.querySelectorAll('.btns').forEach(function(group){
+  var k = group.dataset.k;
+  var set = function(v){ group.querySelectorAll('button').forEach(function(b){ b.setAttribute('aria-pressed', String(b.dataset.v === v)); }); };
+  group.querySelectorAll('button').forEach(function(b){ b.type='button'; b.setAttribute('aria-pressed','false'); });
+  if (saved[k]) set(saved[k]);
+  group.addEventListener('click', function(e){
+    var b = e.target.closest('button'); if(!b) return;
+    set(b.dataset.v); saved[k]=b.dataset.v;
+    try { localStorage.setItem(key, JSON.stringify(saved)); } catch(e){}
+  });
+});
+
+/* ---------- stats maths ---------- */
+var S = {};
+S.mean = function(a){ var s=0; for (var i=0;i<a.length;i++) s+=a[i]; return s/a.length; };
+S.variance = function(a){ var m=S.mean(a), s=0; for (var i=0;i<a.length;i++) s+=(a[i]-m)*(a[i]-m); return s/(a.length-1); };
+S.sd = function(a){ return Math.sqrt(S.variance(a)); };
+S.median = function(a){ var b=a.slice().sort(function(x,y){return x-y;}); var n=b.length; return n%2? b[(n-1)/2] : (b[n/2-1]+b[n/2])/2; };
+S.erf = function(x){ /* Abramowitz-Stegun 7.1.26, |err|<1.5e-7 */
+  var s = x<0?-1:1; x=Math.abs(x);
+  var t=1/(1+0.3275911*x);
+  var y=1-(((((1.061405429*t-1.453152027)*t)+1.421413741)*t-0.284496736)*t+0.254829592)*t*Math.exp(-x*x);
+  return s*y; };
+S.dnorm = function(x,m,s){ m=m||0; s=s||1; var z=(x-m)/s; return Math.exp(-0.5*z*z)/(s*Math.sqrt(2*Math.PI)); };
+S.pnorm = function(x,m,s){ m=m||0; s=s||1; return 0.5*(1+S.erf((x-m)/(s*Math.SQRT2))); };
+S.qnorm = function(p){ /* Acklam */
+  var a=[-3.969683028665376e+01,2.209460984245205e+02,-2.759285104469687e+02,1.383577518672690e+02,-3.066479806614716e+01,2.506628277459239e+00],
+      b=[-5.447609879822406e+01,1.615858368580409e+02,-1.556989798598866e+02,6.680131188771972e+01,-1.328068155288572e+01],
+      c=[-7.784894002430293e-03,-3.223964580411365e-01,-2.400758277161838e+00,-2.549732539343734e+00,4.374664141464968e+00,2.938163982698783e+00],
+      d=[7.784695709041462e-03,3.224671290700398e-01,2.445134137142996e+00,3.754408661907416e+00];
+  var q,r; if (p<=0) return -Infinity; if (p>=1) return Infinity;
+  if (p<0.02425){ q=Math.sqrt(-2*Math.log(p)); return (((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5])/((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1); }
+  if (p>1-0.02425){ q=Math.sqrt(-2*Math.log(1-p)); return -(((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5])/((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1); }
+  q=p-0.5; r=q*q; return (((((a[0]*r+a[1])*r+a[2])*r+a[3])*r+a[4])*r+a[5])*q/(((((b[0]*r+b[1])*r+b[2])*r+b[3])*r+b[4])*r+1); };
+S.lgamma = function(x){ var c=[76.18009172947146,-86.50532032941677,24.01409824083091,-1.231739572450155,0.1208650973866179e-2,-0.5395239384953e-5];
+  var y=x, t=x+5.5; t-=(x+0.5)*Math.log(t); var s=1.000000000190015; for (var j=0;j<6;j++) s+=c[j]/++y; return -t+Math.log(2.5066282746310005*s/x); };
+function betacf(a,b,x){ var MAXIT=200,EPS=3e-14,FPMIN=1e-300; var qab=a+b,qap=a+1,qam=a-1,c=1,d=1-qab*x/qap; if(Math.abs(d)<FPMIN)d=FPMIN; d=1/d; var h=d;
+  for (var m=1;m<=MAXIT;m++){ var m2=2*m, aa=m*(b-m)*x/((qam+m2)*(a+m2)); d=1+aa*d; if(Math.abs(d)<FPMIN)d=FPMIN; c=1+aa/c; if(Math.abs(c)<FPMIN)c=FPMIN; d=1/d; h*=d*c;
+    aa=-(a+m)*(qab+m)*x/((a+m2)*(qap+m2)); d=1+aa*d; if(Math.abs(d)<FPMIN)d=FPMIN; c=1+aa/c; if(Math.abs(c)<FPMIN)c=FPMIN; d=1/d; var del=d*c; h*=del; if(Math.abs(del-1)<EPS)break; }
+  return h; }
+S.ibeta = function(x,a,b){ if (x<=0) return 0; if (x>=1) return 1;
+  var bt=Math.exp(S.lgamma(a+b)-S.lgamma(a)-S.lgamma(b)+a*Math.log(x)+b*Math.log(1-x));
+  return x<(a+1)/(a+b+2) ? bt*betacf(a,b,x)/a : 1-bt*betacf(b,a,1-x)/b; };
+S.pt = function(t,df){ var x=df/(df+t*t); var tail=0.5*S.ibeta(x,df/2,0.5); return t>0? 1-tail : tail; };
+S.dt = function(t,df){ return Math.exp(S.lgamma((df+1)/2)-S.lgamma(df/2))/Math.sqrt(df*Math.PI)*Math.pow(1+t*t/df,-(df+1)/2); };
+S.qt = function(p,df){ var lo=-60,hi=60; for (var i=0;i<100;i++){ var mid=(lo+hi)/2; if (S.pt(mid,df)<p) lo=mid; else hi=mid; } return (lo+hi)/2; };
+S.choose = function(n,k){ var r=1; for (var i=1;i<=k;i++) r=r*(n-k+i)/i; return r; };
+S.dbinom = function(k,n,p){ return S.choose(n,k)*Math.pow(p,k)*Math.pow(1-p,n-k); };
+S.rnorm = function(m,s){ var u=0,v=0; while(u===0)u=Math.random(); while(v===0)v=Math.random(); return m + s*Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v); };
+S.welch = function(x,y){ var mx=S.mean(x),my=S.mean(y),vx=S.variance(x),vy=S.variance(y),nx=x.length,ny=y.length;
+  var se=Math.sqrt(vx/nx+vy/ny), t=(mx-my)/se; var df=Math.pow(vx/nx+vy/ny,2)/(Math.pow(vx/nx,2)/(nx-1)+Math.pow(vy/ny,2)/(ny-1));
+  return {t:t, df:df, p:2*(1-S.pt(Math.abs(t),df))}; };
+S.fmt = function(x,d){ if (!isFinite(x)) return String(x); d = d===undefined?2:d; var s=x.toFixed(d); return s==='-0'+(d?'.'+'0'.repeat(d):'')? s.slice(1): s; };
+S.sig = function(x,n){ n=n||4; if (x===0) return '0'; if (Math.abs(x)<1e-4) return x.toExponential(2); return String(+x.toPrecision(n)); };
+window.S = S;
+
+/* ---------- SVG helpers ---------- */
+var NS='http://www.w3.org/2000/svg';
+function el(tag, attrs, parent){ var e=document.createElementNS(NS,tag); for (var k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; }
+function txt(parent, x, y, s, cls, anchor){ var t=el('text',{x:x,y:y,'class':cls||'tick','text-anchor':anchor||'middle'},parent); t.textContent=s; return t; }
+function niceTicks(lo, hi, n){ var span=hi-lo; if (span<=0) return [lo]; var step=Math.pow(10,Math.floor(Math.log10(span/n))); var err=n/span*step;
+  if (err<=0.15) step*=10; else if (err<=0.35) step*=5; else if (err<=0.75) step*=2;
+  var out=[]; for (var v=Math.ceil(lo/step)*step; v<=hi+1e-9; v+=step) out.push(+v.toFixed(10)); return out; }
+/* Chart frame: returns {g, x(), y(), W, H} */
+function frame(svg, opts){
+  while (svg.firstChild) svg.removeChild(svg.firstChild);
+  var W=opts.W||640, H=opts.H||260, m=opts.m||{l:48,r:16,t:14,b:38};
+  svg.setAttribute('viewBox','0 0 '+W+' '+H);
+  var x=function(v){ return m.l + (v-opts.x0)/(opts.x1-opts.x0)*(W-m.l-m.r); };
+  var y=function(v){ return H-m.b - (v-opts.y0)/(opts.y1-opts.y0)*(H-m.t-m.b); };
+  var g=el('g',{},svg);
+  if (opts.ygrid!==false){ niceTicks(opts.y0,opts.y1,opts.ny||4).forEach(function(v){ el('line',{x1:m.l,x2:W-m.r,y1:y(v),y2:y(v),'class':'gridl'},g); if (opts.ylabels!==false) txt(g,m.l-6,y(v)+4,opts.yfmt?opts.yfmt(v):S.sig(v,3),'tick','end'); }); }
+  el('line',{x1:m.l,x2:W-m.r,y1:H-m.b,y2:H-m.b,'class':'ax'},g);
+  (opts.xticks || niceTicks(opts.x0,opts.x1,opts.nx||6)).forEach(function(v){ el('line',{x1:x(v),x2:x(v),y1:H-m.b,y2:H-m.b+4,'class':'ax'},g); txt(g,x(v),H-m.b+17,opts.xfmt?opts.xfmt(v):S.sig(v,4)); });
+  if (opts.xlab) txt(g,(m.l+W-m.r)/2,H-4,opts.xlab,'labm');
+  if (opts.ylab){ var t=txt(g,12,(m.t+H-m.b)/2,opts.ylab,'labm'); t.setAttribute('transform','rotate(-90 12 '+((m.t+H-m.b)/2)+')'); }
+  return {g:g, x:x, y:y, W:W, H:H, m:m};
+}
+function pathFrom(pts){ return pts.map(function(p,i){ return (i?'L':'M')+p[0].toFixed(2)+' '+p[1].toFixed(2); }).join(''); }
+/* histogram of values into bins: returns {edges, counts} */
+function bins(vals, lo, hi, k){ var w=(hi-lo)/k, c=new Array(k).fill(0); vals.forEach(function(v){ var i=Math.floor((v-lo)/w); if (i===k) i=k-1; if (i>=0&&i<k) c[i]++; }); var e=[]; for (var i=0;i<=k;i++) e.push(lo+i*w); return {edges:e, counts:c, w:w}; }
+window.G = {el:el, txt:txt, frame:frame, path:pathFrom, ticks:niceTicks, bins:bins};
+})();
+/* scroll-spy: highlight the current section in the left menu */
+(function(){
+  var links = Array.prototype.slice.call(document.querySelectorAll('.side .side-secs a'));
+  if (!links.length || !('IntersectionObserver' in window)) return;
+  var map = {}; links.forEach(function(a){ map[a.getAttribute('href').slice(1)] = a; });
+  var obs = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){ if (e.isIntersecting){ links.forEach(function(a){ a.classList.remove('on'); }); var a = map[e.target.id]; if (a) a.classList.add('on'); } });
+  }, {rootMargin: '-20% 0px -70% 0px'});
+  Object.keys(map).forEach(function(id){ var s = document.getElementById(id); if (s) obs.observe(s); });
+})();
+
+</script>
+<script>
+(function(){
+"use strict";
+var W7={"c50":{"model":["rules","rules","tree","tree","rules","rules","tree","tree","rules","rules","tree","tree"],"winnow":[false,true,false,true,false,true,false,true,false,true,false,true],"trials":[1,1,1,1,10,10,10,10,20,20,20,20],"Accuracy":[0.94235984611422,0.939712957297738,0.93873185343134,0.938756747768183,0.956535691653003,0.948180413643566,0.956091089655056,0.950462617120532,0.956005859182402,0.95227585588158,0.958640044418207,0.949263780557667],"Kappa":[0.876764776999593,0.870549791458203,0.869230943106862,0.868486525373999,0.906696802111279,0.888514945886395,0.905581043018869,0.893853338080318,0.905219864641645,0.89744620579411,0.911060150586152,0.891210371998504],"AccuracySD":[0.0172325773983193,0.0131481489529332,0.015827604080341,0.015337675793097,0.0147820421618539,0.0192801654612607,0.0150113196292272,0.0190682034057822,0.0127396376068958,0.0193470202600578,0.0100620201574743,0.0161646556488459]},"best":{"trials":[20],"model":["tree"],"winnow":[false]},"grid":{"model":["rules","tree","rules","tree","rules","tree","rules","tree","rules","tree"],"trials":[20,20,25,25,30,30,35,35,40,40],"Accuracy":[0.956005859182402,0.958640044418207,0.955729641365734,0.958355739003581,0.957962564755618,0.958363392462611,0.959396221611829,0.958411352361635,0.959643117116368,0.959835550858026],"Kappa":[0.905219864641645,0.911060150586152,0.904920087852394,0.910635008543018,0.909711660046663,0.910604291314834,0.91279285238293,0.910703617801825,0.913454571393467,0.913783097882257]},"emb":{"words":["John","Lucy","Edward","Marianne","Elinor","woman","man","she","he","Colonel","Brandon","rain","weather"],"x":[-0.2103,1.411,1.4131,1.3712,1.4009,1.3707,1.3666,1.4028,1.2661,0.9319,-0.1685,1.1128,0.8262],"y":[-1.3985,0.0951,-0.0562,-0.3461,0.1938,-0.348,0.3638,0.1792,0.6301,1.0637,-1.4041,-0.8728,-1.1478]},"nn":{"Lucy":{"term":["Elinor","Marianne","Edward","Willoughby","daughter","Jennings","husband","he"],"sim":[0.97,0.952,0.93,0.881,0.877,0.877,0.869,0.864]},"Elinor":{"term":["Marianne","Lucy","Jennings","He","Edward","often","he","Charlotte"],"sim":[0.976,0.97,0.94,0.916,0.904,0.901,0.895,0.893]}},"lda":[["people","i","two","police","officials","years","new","city","three","miles"],["soviet","government","president","united","states","military","party","people","two","minister"],["percent","million","new","year","billion","bush","market","last","president","company"],["i","court","state","years","case","new","attorney","two","judge","last"]]}, RUN={"FirstRun":[7.47,24.16,35.06,30.71,31.03,25.74,35.85,22.38,34.3,34.24,27.93,17.54,21.48,17.37,30.06,48.38,16.29,29.24,33.1,30.08,24.36,25.52,38.49,34.84,42.0,32.71,19.52,30.96,13.05,29.73,25.03,30.2,46.78,29.34,34.18,34.81,31.58,20.19,7.79,23.3,17.39,2.64,29.59,28.59,24.32,34.07,22.02,49.26,19.16,23.79,26.27,28.05,43.36,27.65,18.14,31.87,28.95,35.29,20.91,34.71,46.92,33.05,26.61,23.8,40.92,45.16,56.14,30.89,37.47,34.17,37.61,20.01,13.54,25.62,28.96,24.42,31.76,33.51,32.23,32.54,13.87,7.93,28.84,20.11,19.0,25.5,25.39,23.78,37.26,26.95,35.74,21.08,47.78,27.74,34.71,18.91,36.19,32.93,33.36],"SecondRun":[11.2,29.16,41.84,34.04,37.64,30.67,39.62,26.06,36.06,38.46,34.84,19.11,24.22,25.76,35.83,54.83,16.73,32.18,42.0,33.79,31.0,29.49,44.47,38.54,44.02,36.74,22.69,36.53,16.42,36.03,30.48,36.83,53.01,34.43,38.82,38.54,35.45,25.91,8.48,28.6,21.33,7.91,34.55,32.61,33.8,39.76,25.41,54.92,24.82,30.1,31.67,39.38,47.84,31.88,20.67,34.0,30.69,40.88,25.7,42.86,54.54,36.31,36.38,31.23,48.27,50.66,58.1,38.75,42.18,42.25,40.95,24.73,19.06,32.85,35.68,29.18,36.64,40.88,36.26,39.19,19.86,18.42,36.62,22.6,24.73,32.71,26.94,32.66,42.52,30.92,40.83,23.46,52.83,36.17,40.46,22.19,40.84,41.04,40.71],"FinalRun":[23.4,38.91,47.85,40.38,41.04,35.08,43.45,33.6,42.51,45.25,41.97,19.85,27.14,29.02,38.41,65.03,18.35,40.79,44.08,40.83,39.05,31.28,45.55,45.38,50.94,44.23,33.1,38.38,19.67,44.12,37.42,47.25,63.83,44.56,45.88,43.74,42.11,32.64,17.21,36.79,28.71,22.04,39.39,38.01,40.71,45.27,28.0,63.72,27.43,39.94,37.37,47.76,56.8,41.63,28.69,41.87,36.91,46.02,31.92,51.14,64.83,40.38,43.9,40.68,57.8,55.27,66.67,47.7,52.34,50.81,48.31,35.75,26.93,40.72,48.11,34.14,45.16,51.66,43.67,46.62,25.96,26.59,55.14,28.83,31.7,41.18,38.1,44.61,47.37,40.71,51.89,28.67,62.17,41.58,47.8,29.0,47.21,49.57,48.78]};
+function dot(g,x,y,r,style){ return G.el('circle',{cx:x,cy:y,r:r,style:style},g); }
+
+/* ---------- 1-D gradient descent ---------- */
+(function(){
+  var fS=document.getElementById('gd-f'), lrS=document.getElementById('gd-lr'), wS=document.getElementById('gd-w0'), svg=document.getElementById('gd-svg'), out=document.getElementById('gd-out');
+  var F={ bowl:{f:function(w){return 0.5*w*w+0.5;}, g:function(w){return w;}},
+          two:{f:function(w){return 0.08*Math.pow(w,4)-0.9*w*w+0.35*w+3;}, g:function(w){return 0.32*Math.pow(w,3)-1.8*w+0.35;}} };
+  var path=[];
+  function reset(){ path=[+wS.value]; draw(); }
+  function step(n){ var c=F[fS.value], lr=+lrS.value; for (var i=0;i<n;i++){ var w=path[path.length-1], nw=w-lr*c.g(w); if (!isFinite(nw)||Math.abs(nw)>50) break; path.push(nw); } draw(); }
+  function draw(){ var c=F[fS.value]; document.getElementById('gd-lrv').textContent=S.fmt(+lrS.value,2); document.getElementById('gd-w0v').textContent=S.fmt(+wS.value,1);
+    var ymax=fS.value==='bowl'?9:6, f=G.frame(svg,{W:640,H:280,x0:-4.2,x1:4.2,y0:0,y1:ymax,ny:3,xlab:'weight w',ylab:'cost',m:{l:40,r:16,t:12,b:38}});
+    var pts=[]; for (var w=-4.2;w<=4.2;w+=0.02) pts.push([f.x(w),f.y(Math.min(ymax,c.f(w)))]);
+    G.el('path',{d:G.path(pts),'class':'curve'},f.g);
+    var vis=path.filter(function(w){ return w>=-4.2&&w<=4.2; });
+    for (var i=1;i<path.length;i++){ var a=path[i-1], b=path[i]; if (Math.abs(a)>4.2||Math.abs(b)>4.2) continue;
+      G.el('line',{x1:f.x(a),y1:f.y(Math.min(ymax,c.f(a))),x2:f.x(b),y2:f.y(Math.min(ymax,c.f(b))),style:'stroke:var(--c2);stroke-width:1.5'},f.g); }
+    vis.forEach(function(w,i){ dot(f.g,f.x(w),f.y(Math.min(ymax,c.f(w))),i===vis.length-1?7:4,'fill:'+(i===vis.length-1?'var(--c2)':'var(--c4)')+';opacity:'+(i===vis.length-1?1:0.6)); });
+    var w=path[path.length-1];
+    out.innerHTML='step '+(path.length-1)+':  w = '+(isFinite(w)?S.fmt(w,4):'∞')+'   cost = '+(Math.abs(w)<50?S.fmt(c.f(w),4):'diverged')+'   slope = '+(Math.abs(w)<50?S.fmt(c.g(w),4):'–')+
+      '\n<span class="p"># update rule: w_new = w − '+S.fmt(+lrS.value,2)+' × slope</span>'+(Math.abs(w)>4.2?'\n<span class="p"># the weight has left the chart: the learning rate is too large</span>':'');
+  }
+  document.getElementById('gd-step').addEventListener('click',function(){ step(1); });
+  document.getElementById('gd-run').addEventListener('click',function(){ step(20); });
+  document.getElementById('gd-reset').addEventListener('click',reset);
+  [fS,wS].forEach(function(e){ e.addEventListener('input',reset); e.addEventListener('change',reset); });
+  lrS.addEventListener('input',function(){ document.getElementById('gd-lrv').textContent=S.fmt(+lrS.value,2); });
+  reset();
+})();
+
+/* ---------- GD for linear regression ---------- */
+(function(){
+  var x=RUN.FirstRun, y=RUN.SecondRun, mx=S.mean(x), sx=S.sd(x), my=S.mean(y), sy=S.sd(y);
+  var zx=x.map(function(v){return (v-mx)/sx;}), zy=y.map(function(v){return (v-my)/sy;});
+  var lrS=document.getElementById('gl-lr'), fit=document.getElementById('gl-fit'), cost=document.getElementById('gl-cost'), out=document.getElementById('gl-out');
+  var m, b, hist;
+  function mse(){ var s=0; for (var i=0;i<zx.length;i++){ var e=m*zx[i]+b-zy[i]; s+=e*e; } return s/zx.length; }
+  function reset(){ m=S.rnorm(0,1.2)-1; b=S.rnorm(0,1); hist=[mse()]; draw(); }
+  function steps(n){ var lr=+lrS.value; for (var k=0;k<n;k++){ var gm=0, gb=0; for (var i=0;i<zx.length;i++){ var e=m*zx[i]+b-zy[i]; gm+=2*e*zx[i]; gb+=2*e; } m-=lr*gm/zx.length; b-=lr*gb/zx.length; hist.push(mse()); } draw(); }
+  function draw(){ document.getElementById('gl-lrv').textContent=S.fmt(+lrS.value,3);
+    var f=G.frame(fit,{W:320,H:250,x0:-3,x1:3,y0:-3,y1:3,nx:4,ny:4,xlab:'FirstRun (z)',ylab:'SecondRun (z)',m:{l:36,r:10,t:10,b:36}});
+    zx.forEach(function(v,i){ dot(f.g,f.x(v),f.y(zy[i]),2.6,'fill:var(--c1);opacity:.5'); });
+    G.el('line',{x1:f.x(-3),y1:f.y(Math.max(-6,Math.min(6,b-3*m))),x2:f.x(3),y2:f.y(Math.max(-6,Math.min(6,b+3*m))),style:'stroke:var(--c2);stroke-width:2.5'},f.g);
+    var hmax=Math.max.apply(null,hist.slice(0,1).concat([1]));
+    var g=G.frame(cost,{W:320,H:250,x0:0,x1:Math.max(10,hist.length-1),y0:0,y1:hmax*1.05,nx:4,ny:4,xlab:'iteration',ylab:'MSE',m:{l:40,r:10,t:10,b:36}});
+    G.el('path',{d:G.path(hist.map(function(v,i){return [g.x(i),g.y(Math.min(v,hmax*1.05))];})),'class':'curve2'},g.g);
+    out.innerHTML='iteration '+(hist.length-1)+':  slope m = '+S.fmt(m,4)+'   intercept b = '+S.fmt(b,4)+'   MSE = '+S.fmt(hist[hist.length-1],4)+
+      '\n<span class="p"># OLS answer: m = r = 0.9762, b = 0, MSE = 1 − r² = 0.0469 (on standardised data)</span>';
+  }
+  document.getElementById('gl-step').addEventListener('click',function(){ steps(10); });
+  document.getElementById('gl-reset').addEventListener('click',reset);
+  lrS.addEventListener('input',function(){ document.getElementById('gl-lrv').textContent=S.fmt(+lrS.value,3); });
+  reset();
+})();
+
+/* ---------- grid search heatmap ---------- */
+(function(){
+  var R=W7.c50, sel=document.getElementById('gr-m'), svg=document.getElementById('gr-svg'), best={}; Object.keys(W7.best).forEach(function(k){ var v=W7.best[k]; best[k]=Array.isArray(v)?v[0]:v; });
+  var rows=[['tree',false],['tree',true],['rules',false],['rules',true]], trials=[1,10,20];
+  function draw(){ var k=sel.value; var vals=R[k], mn=Math.min.apply(null,vals), mxv=Math.max.apply(null,vals);
+    var W=640, H=230, x0=150, y0=34, cw=(W-x0-20)/3, ch=42; svg.setAttribute('viewBox','0 0 '+W+' '+H); while (svg.firstChild) svg.removeChild(svg.firstChild);
+    trials.forEach(function(t,j){ G.txt(svg,x0+j*cw+cw/2,22,'trials = '+t,'lab'); });
+    rows.forEach(function(r,i){ G.txt(svg,x0-10,y0+i*ch+ch/2+4,'model = '+r[0]+', winnow = '+(r[1]?'TRUE':'FALSE'),'labm','end');
+      trials.forEach(function(t,j){ var idx=-1; for (var q=0;q<R.model.length;q++) if (R.model[q]===r[0]&&R.winnow[q]===r[1]&&R.trials[q]===t) idx=q;
+        var v=vals[idx], a=0.12+0.8*(v-mn)/(mxv-mn||1), isBest=best.model===r[0]&&best.winnow===r[1]&&best.trials===t;
+        G.el('rect',{x:x0+j*cw+2,y:y0+i*ch+2,width:cw-4,height:ch-4,rx:4,style:'fill:var(--c1);opacity:'+a.toFixed(2)},svg);
+        if (isBest) G.el('rect',{x:x0+j*cw+2,y:y0+i*ch+2,width:cw-4,height:ch-4,rx:4,style:'fill:none;stroke:var(--c2);stroke-width:3'},svg);
+        G.txt(svg,x0+j*cw+cw/2,y0+i*ch+ch/2+5,k==='Accuracy'?S.fmt(v*100,2)+'%':S.fmt(v,3),'lab mono').setAttribute('style','font-weight:700;fill:'+(a>0.55?'var(--paper)':'var(--ink)')); }); });
+  }
+  sel.addEventListener('change',draw); draw();
+  var Gd=W7.grid, s2=document.getElementById('cg-svg');
+  var f=G.frame(s2,{W:640,H:230,x0:18,x1:42,y0:0.954,y1:0.961,ny:4,xticks:[20,25,30,35,40],yfmt:function(v){return S.fmt(v*100,1)+'%';},xlab:'boosting trials',ylab:'resampled accuracy',m:{l:56,r:16,t:12,b:38}});
+  ['rules','tree'].forEach(function(mm,j){ var pts=[]; Gd.model.forEach(function(md,i){ if (md===mm) pts.push([Gd.trials[i],Gd.Accuracy[i]]); }); pts.sort(function(a,b){return a[0]-b[0];});
+    G.el('path',{d:G.path(pts.map(function(p){return [f.x(p[0]),f.y(p[1])];})),'class':j?'curve2':'curve'},f.g);
+    pts.forEach(function(p){ dot(f.g,f.x(p[0]),f.y(p[1]),4,'fill:'+(j?'var(--c2)':'var(--c1)')); });
+    G.txt(f.g,f.x(pts[0][0])+4,f.y(pts[0][1])+(j?-8:16),mm,'labm','start').setAttribute('style','fill:'+(j?'var(--c2)':'var(--c1)')+';font-weight:700'); });
+})();
+
+/* ---------- text pipeline ---------- */
+var STOP="a about above after again against all am an and any are as at be because been before being below between both but by can did do does doing down during each few for from further had has have having he her here hers herself him himself his how i if in into is it its itself just me more most my myself no nor not now of off on once only or other our ours ourselves out over own same she should so some such than that the their theirs them themselves then there these they this those through to too under until up very was we were what when where which while who whom why will with you your yours yourself yourselves".split(' ');
+function isV(w,i){ var c=w[i]; if ('aeiou'.indexOf(c)>=0) return true; if (c==='y') return i>0 && !isV(w,i-1); return false; }
+function measure(s){ var m=0, prevV=false; for (var i=0;i<s.length;i++){ var v=isV(s,i); if (!v && prevV) m++; prevV=v; } return m; }
+function hasV(s){ for (var i=0;i<s.length;i++) if (isV(s,i)) return true; return false; }
+function cvc(s){ var n=s.length; if (n<3) return false; return !isV(s,n-1)&&isV(s,n-2)&&!isV(s,n-3)&&'wxy'.indexOf(s[n-1])<0; }
+function stem(w){ if (w.length<3) return w;
+  if (/sses$/.test(w)) w=w.slice(0,-2); else if (/ies$/.test(w)) w=w.slice(0,-2); else if (/ss$/.test(w)) {} else if (/s$/.test(w)) w=w.slice(0,-1);
+  var did=false;
+  if (/eed$/.test(w)){ if (measure(w.slice(0,-3))>0) w=w.slice(0,-1); }
+  else if (/ed$/.test(w) && hasV(w.slice(0,-2))){ w=w.slice(0,-2); did=true; }
+  else if (/ing$/.test(w) && hasV(w.slice(0,-3))){ w=w.slice(0,-3); did=true; }
+  if (did){ if (/(at|bl|iz)$/.test(w)) w+='e'; else if (w.length>1 && w[w.length-1]===w[w.length-2] && 'lsz'.indexOf(w[w.length-1])<0 && !isV(w,w.length-1)) w=w.slice(0,-1); else if (measure(w)===1 && cvc(w)) w+='e'; }
+  if (/y$/.test(w) && hasV(w.slice(0,-1))) w=w.slice(0,-1)+'i';
+  if (/e$/.test(w)){ var st=w.slice(0,-1), m=measure(st); if (m>1 || (m===1 && !cvc(st))) w=st; }
+  if (measure(w)>1 && /ll$/.test(w)) w=w.slice(0,-1);
+  return w; }
+var DOCS=[];
+(function(){
+  var ins=[1,2,3].map(function(i){return document.getElementById('tx-'+i);}), lc=document.getElementById('tx-lc'), sw=document.getElementById('tx-sw'), st=document.getElementById('tx-st'), mn=document.getElementById('tx-min');
+  var tok=document.getElementById('tx-tok'), dtmBox=document.getElementById('tx-dtm'), bar=document.getElementById('tx-bar');
+  function process(t){ var w=t.split(/\s+/).map(function(x){ return x.replace(/[^A-Za-z0-9']/g,'').replace(/^'+|'+$/g,''); }).filter(Boolean);
+    if (lc.value==='1') w=w.map(function(x){return x.toLowerCase();});
+    if (sw.value==='1') w=w.filter(function(x){ return STOP.indexOf(x.toLowerCase())<0; });
+    w=w.filter(function(x){ return x.length>=+mn.value; });
+    if (st.value==='1') w=w.map(function(x){ return stem(x.toLowerCase()); });
+    return w; }
+  function run(){ DOCS=ins.map(function(i){ return process(i.value); });
+    tok.innerHTML=DOCS.map(function(d,i){ return '<span class="p">doc '+(i+1)+':</span> '+d.map(function(x){return '"'+x+'"';}).join(' '); }).join('\n');
+    var terms=[]; DOCS.forEach(function(d){ d.forEach(function(w){ if (terms.indexOf(w)<0) terms.push(w); }); }); terms.sort(function(a,b){ return a.toLowerCase()<b.toLowerCase()?-1:a.toLowerCase()>b.toLowerCase()?1:0; });
+    var M=DOCS.map(function(d){ return terms.map(function(t){ return d.filter(function(x){return x===t;}).length; }); });
+    dtmBox.innerHTML='<table><thead><tr><th>Docs</th>'+terms.map(function(t){return '<th class="m" style="text-transform:none">'+t+'</th>';}).join('')+'</tr></thead><tbody>'+
+      M.map(function(r,i){ return '<tr><td class="m">'+(i+1)+'</td>'+r.map(function(v){return '<td class="n"'+(v?'':' style="color:var(--muted)"')+'>'+v+'</td>';}).join('')+'</tr>'; }).join('')+'</tbody></table>';
+    var tot=terms.map(function(t,j){ return [t, M[0][j]+M[1][j]+M[2][j]]; }).sort(function(a,b){return b[1]-a[1];}).slice(0,16);
+    var f=G.frame(bar,{W:640,H:230,x0:0,x1:tot.length,y0:0,y1:Math.max(4,tot[0]?tot[0][1]+0.5:4),xticks:[],ny:4,ylab:'count in corpus',m:{l:40,r:10,t:10,b:62}});
+    tot.forEach(function(t,i){ var x=f.x(i+0.5), w=(f.x(1)-f.x(0))*0.7; G.el('rect',{x:x-w/2,y:f.y(t[1]),width:w,height:f.y(0)-f.y(t[1]),rx:2,'class':t[1]>=3?'bar2':'bar'},f.g);
+      var lab=G.txt(f.g,x,f.H-f.m.b+12,t[0],'labm','end'); lab.setAttribute('transform','rotate(-40 '+x+' '+(f.H-f.m.b+12)+')'); });
+    tfidf(terms,M);
+  }
+  function tfidf(terms,M){ var N=3, box=document.getElementById('tf-tbl'), out=document.getElementById('tf-out');
+    var df=terms.map(function(t,j){ return M.filter(function(r){return r[j]>0;}).length; });
+    box.innerHTML='<table><thead><tr><th>Docs</th>'+terms.map(function(t){return '<th class="m" style="text-transform:none">'+t+'</th>';}).join('')+'</tr></thead><tbody>'+
+      '<tr><td class="m">idf</td>'+df.map(function(d){ return '<td class="n" style="color:var(--muted)">'+S.fmt(Math.log2(N/d),3)+'</td>'; }).join('')+'</tr>'+
+      M.map(function(r,i){ return '<tr><td class="m">'+(i+1)+'</td>'+r.map(function(v,j){ var w=v*Math.log2(N/df[j]); return '<td class="n" style="'+(w>0?'background:var(--accent-soft);font-weight:600':'color:var(--muted)')+'">'+S.fmt(w,3)+'</td>'; }).join('')+'</tr>'; }).join('')+'</tbody></table>';
+    var best=M.map(function(r){ var bi=-1, bv=0; r.forEach(function(v,j){ var w=v*Math.log2(N/df[j]); if (w>bv){ bv=w; bi=j; } }); return bi>=0? terms[bi]+' ('+S.fmt(bv,3)+')' : '–'; });
+    out.innerHTML='<span class="p">&gt;</span> inspect(weightTfIdf(docTermMat, normalize = FALSE))\n<span class="p"># tf-idf = count × log2(3 / documents containing the word)</span>\nmost characteristic word:  doc 1 → '+best[0]+'   doc 2 → '+best[1]+'   doc 3 → '+best[2];
+  }
+  ins.concat([lc,sw,st,mn]).forEach(function(e){ e.addEventListener('input',run); e.addEventListener('change',run); });
+  run();
+})();
+
+/* ---------- sentiment ---------- */
+(function(){
+  var LEX={happy:1,great:1,good:0.75,love:1,loved:1,useful:0.75,excellent:1,liked:0.75,like:0.5,enjoy:0.75,enjoyed:0.75,helpful:0.75,clear:0.5,nice:0.75,brilliant:1,fun:0.75,
+    sad:-1,bad:-0.75,terrible:-1,awful:-1,hate:-1,hated:-1,boring:-0.75,cold:-0.5,confusing:-0.75,difficult:-0.5,poor:-0.75,angry:-1,worst:-1,slow:-0.5,hard:-0.4,late:-0.4};
+  var NEG=['not','never','no',"isn't","wasn't","don't","didn't","aren't","weren't"], AMP={very:0.8,really:0.8,extremely:1,so:0.6,quite:0.3};
+  var ta=document.getElementById('se-in'), svg=document.getElementById('se-svg');
+  function score(s){ var w=s.toLowerCase().replace(/[^a-z' ]/g,' ').split(/\s+/).filter(Boolean), tot=0, but=w.indexOf('but');
+    w.forEach(function(x,i){ if (LEX[x]===undefined) return; var v=LEX[x], neg=0;
+      for (var k=Math.max(0,i-4);k<i;k++){ if (NEG.indexOf(w[k])>=0) neg++; if (AMP[w[k]]!==undefined && NEG.indexOf(w[k-1])<0) v*=1+AMP[w[k]]; }
+      if (neg%2===1) v=-v*(i>0&&AMP[w[i-1]]!==undefined?0.4:1);
+      if (but>=0) v*= i<but?0.5:1.5;
+      tot+=v; });
+    return w.length? tot/Math.sqrt(w.length) : 0; }
+  function draw(){ var lines=ta.value.split('\n').map(function(s){return s.trim();}).filter(Boolean).slice(0,10), sc=lines.map(score);
+    var H=40+lines.length*34; var mx=Math.max(1,Math.max.apply(null,sc.map(Math.abs)));
+    var f=G.frame(svg,{W:640,H:H,x0:-mx,x1:mx,y0:0,y1:lines.length,ygrid:false,nx:4,xlab:'sentiment score',m:{l:16,r:16,t:8,b:36}});
+    G.el('line',{x1:f.x(0),x2:f.x(0),y1:f.y(0),y2:f.y(lines.length),style:'stroke:var(--ink);stroke-width:1'},f.g);
+    lines.forEach(function(l,i){ var y=f.y(lines.length-i-0.5), v=sc[i];
+      G.el('rect',{x:Math.min(f.x(0),f.x(v)),y:y-11,width:Math.abs(f.x(v)-f.x(0)),height:22,rx:3,style:'fill:'+(v>0.05?'var(--c3)':v<-0.05?'var(--c2)':'var(--line-strong)')+';opacity:.8'},f.g);
+      G.txt(f.g,v>=0?f.x(0)-8:f.x(0)+8,y+4,(l.length>42?l.slice(0,40)+'…':l)+'  ('+S.fmt(v,2)+')','labm',v>=0?'end':'start'); });
+  }
+  ta.addEventListener('input',draw); draw();
+})();
+
+/* ---------- Naive Bayes ---------- */
+(function(){
+  var SP={congratulations:12,won:15,win:14,prize:18,free:20,claim:16,call:18,now:22,reply:14,holiday:9,cash:12,urgent:10,you:30,have:12,txt:9,offer:11,see:2,hope:1,well:1,later:1,hi:2,there:3};
+  var HA={congratulations:2,won:1,win:2,prize:1,free:4,claim:1,call:10,now:9,reply:4,holiday:5,cash:2,urgent:1,you:45,have:20,txt:3,offer:2,see:22,hope:18,well:16,later:20,hi:24,there:14};
+  var V=Object.keys(SP).length, totS=0, totH=0; Object.keys(SP).forEach(function(k){ totS+=SP[k]; totH+=HA[k]; });
+  var pS=0.4, inp=document.getElementById('nb-in'), tbl=document.getElementById('nb-tbl');
+  function run(){ var w=inp.value.toLowerCase().replace(/[^a-z ]/g,' ').split(/\s+/).filter(function(x){ return SP[x]!==undefined; });
+    var ls=Math.log(pS), lh=Math.log(1-pS), rows=[];
+    w.forEach(function(x){ var a=(SP[x]+1)/(totS+V), b=(HA[x]+1)/(totH+V); ls+=Math.log(a); lh+=Math.log(b); rows.push([x,a,b]); });
+    var p=1/(1+Math.exp(lh-ls));
+    tbl.innerHTML='<table><thead><tr><th>Word in vocabulary</th><th>P(word | spam)</th><th>P(word | ham)</th><th>Evidence points to</th></tr></thead><tbody>'+
+      (rows.length? rows.map(function(r){ return '<tr><td class="m">'+r[0]+'</td><td class="n">'+S.fmt(r[1],4)+'</td><td class="n">'+S.fmt(r[2],4)+'</td><td>'+(r[1]>r[2]?'<b style="color:var(--c2)">spam</b> ×'+S.fmt(r[1]/r[2],1):'<b style="color:var(--c3)">ham</b> ×'+S.fmt(r[2]/r[1],1))+'</td></tr>'; }).join('') : '<tr><td colspan="4">No known words: the prior P(spam) = 0.4 decides.</td></tr>')+'</tbody></table>';
+    document.getElementById('nb-p').textContent=S.fmt(p,3);
+    var c=document.getElementById('nb-c'); c.textContent=p>0.5?'SPAM':'HAM'; c.style.color=p>0.5?'var(--c2)':'var(--c3)';
+  }
+  inp.addEventListener('input',run);
+  document.querySelectorAll('[data-nb]').forEach(function(b){ b.addEventListener('click',function(){ inp.value=b.dataset.nb; run(); }); });
+  run();
+})();
+
+/* ---------- LDA and word2vec ---------- */
+(function(){
+  var box=document.getElementById('lda-cards'), names=['Crime and local news','International politics','Economy and business','Courts and law'];
+  box.innerHTML=W7.lda.map(function(t,i){ return '<div class="card"><span class="k">Topic '+(i+1)+' · '+names[i]+'</span><p class="mono" style="font-size:14px">'+t.join(', ')+'</p></div>'; }).join('');
+  var E=W7.emb, svg=document.getElementById('w2v-svg'), out=document.getElementById('w2v-out');
+  var xs=E.x, ys=E.y, pad=0.25;
+  var f=G.frame(svg,{W:640,H:300,x0:Math.min.apply(null,xs)-pad,x1:Math.max.apply(null,xs)+pad,y0:Math.min.apply(null,ys)-pad,y1:Math.max.apply(null,ys)+pad,ny:4,xlab:'dimension 1',ylab:'dimension 2',m:{l:40,r:16,t:12,b:38}});
+  var placed=[];
+  var order=E.words.map(function(w,i){return i;}).sort(function(a,b){ return ys[b]-ys[a]; });
+  var ly={}; order.forEach(function(i){ var px=f.x(xs[i]), py=f.y(ys[i])+4;
+    for (var tries=0; tries<12; tries++){ var clash=placed.some(function(p){ return Math.abs(p[0]-px)<70 && Math.abs(p[1]-py)<13; }); if (!clash) break; py+=13; }
+    placed.push([px,py]); ly[i]=py; });
+  E.words.forEach(function(w,i){ var has=W7.nn[w]!==undefined, g=G.el('g',{style:has?'cursor:pointer':''},f.g);
+    dot(g,f.x(xs[i]),f.y(ys[i]),has?7:5,'fill:'+(has?'var(--c2)':'var(--c1)'));
+    if (Math.abs(ly[i]-f.y(ys[i])-4)>1) G.el('line',{x1:f.x(xs[i]),y1:f.y(ys[i]),x2:f.x(xs[i])+8,y2:ly[i]-4,style:'stroke:var(--line-strong)'},g);
+    var t=G.txt(g,f.x(xs[i])+9,ly[i],w,'lab','start'); if (has) t.setAttribute('style','font-weight:700;fill:var(--c2)');
+    if (has) g.addEventListener('click',function(){ var n=W7.nn[w]; out.innerHTML='<span class="p">&gt;</span> predict(model15, "'+w+'", type = "nearest", top_n = 8)\n'+n.term.map(function(t,k){ return (k+1)+'. '+t+'  (cosine '+S.fmt(n.sim[k],3)+')'; }).join('\n'); }); });
+})();
+})();
+
+</script>
+</body>
+</html>

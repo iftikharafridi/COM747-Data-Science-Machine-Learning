@@ -1,0 +1,725 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>COM747 Week 12 Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: single-column lab notebook, ~800px measure. Concept sections, then interactive "explorers", then tiered R tasks. */
+:root{
+  --bg:#f5f6f8; --paper:#ffffff; --ink:#1b2330; --muted:#5a6474; --line:#dce1e9; --line-strong:#c3cad6;
+  --accent:#2b5fa6; --accent-soft:#e5edf8;
+  --core:#2f7d5b; --core-soft:#e2f1e9;
+  --chal:#b26a00; --chal-soft:#fbefd9;
+  --str:#7a3fa0; --str-soft:#f1e7f8;
+  --bad:#b3372f; --bad-soft:#f9e3e1;
+  --code-bg:#eef2f7; --code-ink:#1c2a44;
+  --c1:#2b5fa6; --c2:#d0791a; --c3:#2f8a62; --c4:#8a4bb3; --shade:rgba(43,95,166,.28); --grid:#e6e9ef;
+  --f-display:"Source Serif 4", Georgia, "Times New Roman", serif;
+  --f-body:"Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, Consolas, monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#11151c; --paper:#1a2029; --ink:#e4e8ef; --muted:#9aa4b4; --line:#2b3340; --line-strong:#3c4656;
+  --accent:#7fa8e6; --accent-soft:#1e2b3f;
+  --core:#6cc79d; --core-soft:#173025; --chal:#e5a64a; --chal-soft:#33281a; --str:#c39be0; --str-soft:#2a2135;
+  --bad:#ef8a80; --bad-soft:#3a1f1d;
+  --code-bg:#0e131a; --code-ink:#d6e2f5;
+  --c1:#7fa8e6; --c2:#eb9c4c; --c3:#5fc394; --c4:#c39be0; --shade:rgba(127,168,230,.30); --grid:#262e3a;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#11151c; --paper:#1a2029; --ink:#e4e8ef; --muted:#9aa4b4; --line:#2b3340; --line-strong:#3c4656;
+  --accent:#7fa8e6; --accent-soft:#1e2b3f;
+  --core:#6cc79d; --core-soft:#173025; --chal:#e5a64a; --chal-soft:#33281a; --str:#c39be0; --str-soft:#2a2135;
+  --bad:#ef8a80; --bad-soft:#3a1f1d;
+  --code-bg:#0e131a; --code-ink:#d6e2f5;
+  --c1:#7fa8e6; --c2:#eb9c4c; --c3:#5fc394; --c4:#c39be0; --shade:rgba(127,168,230,.30); --grid:#262e3a;
+  color-scheme:dark}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.6;margin:0;padding-inline:16px;padding-block:0 72px}
+a{color:var(--accent)}
+.topnav{max-width:820px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;padding-block:14px;border-bottom:1px solid var(--line);font-size:15px}
+.topnav .brand{font-weight:700;margin-right:auto;color:var(--ink);text-decoration:none}
+.topnav a.wk{color:var(--muted);text-decoration:none;padding:2px 8px;border-radius:6px}
+.topnav a.wk:hover{color:var(--accent)}
+.topnav a.wk[aria-current="page"]{background:var(--accent-soft);color:var(--accent);font-weight:600}
+.wrap{max-width:820px;margin:0 auto;display:flex;flex-direction:column;gap:40px}
+header.hero{padding-block:32px 4px;display:flex;flex-direction:column;gap:10px}
+.eyebrow{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;line-height:1.2;margin:0}
+h1{font-size:clamp(30px,6vw,44px)}
+h2{font-size:27px}
+h3{font-size:20px}
+p{margin:0}
+.lead{color:var(--muted);font-size:18.5px;max-width:65ch}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font-size:13px;font-weight:600;border:1px solid var(--line-strong);border-radius:999px;padding:3px 10px;color:var(--muted)}
+.toc{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:15px;padding:12px 16px;background:var(--paper);border:1px solid var(--line);border-radius:10px}
+.toc a{text-decoration:none}
+section{display:flex;flex-direction:column;gap:16px;scroll-margin-top:16px}
+.sec-head{display:flex;flex-direction:column;gap:4px}
+.sec-num{font-family:var(--f-mono);font-size:13px;color:var(--accent);font-weight:600}
+.prose{display:flex;flex-direction:column;gap:12px;max-width:68ch}
+ul.list,ol.list{margin:0;padding-left:1.3em;display:flex;flex-direction:column;gap:4px}
+.lo-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.lo-list li{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:baseline}
+.lo{font-family:var(--f-mono);font-size:12px;font-weight:600;background:var(--accent-soft);color:var(--accent);padding:2px 8px;border-radius:4px;white-space:nowrap}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.grid2.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media (max-width:600px){.grid2.two{grid-template-columns:1fr}}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.card h3{font-size:18px}
+.card .k{font-size:13px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:700}
+.code{position:relative;background:var(--code-bg);border:1px solid var(--line);border-radius:8px;min-width:0}
+.code pre{margin:0;padding:14px 16px;overflow-x:auto;font-family:var(--f-mono);font-size:14px;color:var(--code-ink);line-height:1.55}
+.code .copy{position:absolute;top:8px;right:8px}
+.copy,.btn{font:600 13px var(--f-body);background:var(--paper);color:var(--muted);border:1px solid var(--line-strong);border-radius:6px;padding:5px 11px;cursor:pointer}
+.copy:hover,.btn:hover{color:var(--accent);border-color:var(--accent)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--paper)}
+.btn.primary:hover{opacity:.9;color:var(--paper)}
+code{font-family:var(--f-mono);font-size:.88em;background:var(--code-bg);padding:1px 5px;border-radius:4px}
+.callout{border-left:3px solid var(--accent);background:var(--accent-soft);padding:12px 16px;border-radius:0 8px 8px 0}
+.callout.warn{border-color:var(--chal);background:var(--chal-soft)}
+.callout.good{border-color:var(--core);background:var(--core-soft)}
+/* figures and explorers */
+figure{margin:0}
+.figure{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.figure figcaption,.caption{font-size:14.5px;color:var(--muted)}
+.figure svg{width:100%;height:auto;display:block;overflow:visible}
+.explorer{border-color:var(--line-strong)}
+.explorer .title{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.explorer .title h3{font-size:19px}
+.tagx{font:700 11px var(--f-body);letter-spacing:.09em;text-transform:uppercase;padding:3px 8px;border-radius:999px;background:var(--accent-soft);color:var(--accent)}
+.controls{display:flex;flex-wrap:wrap;gap:12px 18px;align-items:flex-end}
+.ctl{display:flex;flex-direction:column;gap:4px;font-size:14px;color:var(--muted);min-width:0}
+.ctl b{color:var(--ink);font-family:var(--f-mono);font-weight:600}
+.ctl input[type=range]{width:min(220px,70vw);accent-color:var(--accent)}
+.ctl input[type=number],.ctl input[type=text],.ctl select{font:15px var(--f-mono);padding:5px 8px;border:1px solid var(--line-strong);border-radius:6px;background:var(--bg);color:var(--ink);width:7.5em}
+.ctl input[type=text]{width:12em}
+.ctl select{width:auto;font-family:var(--f-body)}
+.console{background:var(--code-bg);border:1px solid var(--line);border-radius:8px;padding:10px 14px;font-family:var(--f-mono);font-size:14px;color:var(--code-ink);overflow-x:auto;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.55}
+.console .p{color:var(--muted)}
+.kpis{display:flex;flex-wrap:wrap;gap:10px}
+.kpi{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 12px;display:flex;flex-direction:column;min-width:110px}
+.kpi span{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+.kpi b{font-family:var(--f-mono);font-size:19px;font-variant-numeric:tabular-nums}
+/* svg classes */
+.ax{stroke:var(--line-strong);stroke-width:1}
+.gridl{stroke:var(--grid);stroke-width:1}
+.tick{fill:var(--muted);font:12px var(--f-body)}
+.lab{fill:var(--ink);font:13px var(--f-body)}
+.labm{fill:var(--muted);font:12px var(--f-body)}
+.mono{font-family:var(--f-mono)}
+.curve{fill:none;stroke:var(--c1);stroke-width:2.2}
+.curve2{fill:none;stroke:var(--c2);stroke-width:2.2}
+.area{fill:var(--shade);stroke:none}
+.bar{fill:var(--c1)}
+.bar2{fill:var(--c2)}
+.bar3{fill:var(--c3)}
+.barmuted{fill:var(--line-strong)}
+.vline{stroke:var(--c2);stroke-width:2}
+.vline2{stroke:var(--c3);stroke-width:2;stroke-dasharray:5 4}
+.dot{fill:var(--c1)}
+/* vector cells */
+.vec{display:flex;flex-wrap:wrap;gap:4px}
+.cell{display:flex;flex-direction:column;align-items:center;min-width:46px;border:1px solid var(--line-strong);border-radius:6px;background:var(--paper);overflow:hidden;transition:background .15s,border-color .15s}
+.cell .v{font-family:var(--f-mono);font-size:15px;font-weight:600;padding:6px 6px 2px}
+.cell .i{font-family:var(--f-mono);font-size:11px;color:var(--muted);padding:0 6px 4px}
+.cell .t{font-family:var(--f-mono);font-size:10.5px;padding:2px 4px;width:100%;text-align:center;border-top:1px solid var(--line)}
+.cell.on{background:var(--core-soft);border-color:var(--core)}
+.cell.on .t{color:var(--core);font-weight:700}
+.cell.off{opacity:.55}
+.cell.off .t{color:var(--bad)}
+.cell.rec{border-style:dashed;opacity:.75}
+/* tiers and tasks */
+.tier{display:flex;flex-direction:column;gap:12px}
+.tier-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.tag{font:700 12px var(--f-body);letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:999px}
+.t-core .tag{background:var(--core-soft);color:var(--core)}
+.t-chal .tag{background:var(--chal-soft);color:var(--chal)}
+.t-str .tag{background:var(--str-soft);color:var(--str)}
+.note{color:var(--muted);font-size:15px}
+ol.tasks{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px}
+.task{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:14px 16px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.task-q{display:grid;grid-template-columns:2.4em 1fr;gap:4px}
+.task-q > span:last-child{min-width:0}
+.num{font-family:var(--f-mono);font-weight:600;color:var(--muted)}
+details{font-size:15px}
+summary{cursor:pointer;color:var(--accent);font-weight:600;width:max-content;max-width:100%}
+details > *:not(summary){margin-top:8px}
+summary:focus-visible,.copy:focus-visible,.btn:focus-visible,button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+/* tables */
+.tbl{overflow-x:auto;background:var(--paper);border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th,td{text-align:left;padding:8px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:none}
+th{font-weight:700;color:var(--muted);font-size:12.5px;text-transform:uppercase;letter-spacing:.06em;background:var(--bg)}
+td.m,th.m{font-family:var(--f-mono);font-size:14px;white-space:nowrap}
+td.n{text-align:right;font-variant-numeric:tabular-nums;font-family:var(--f-mono);font-size:14px}
+/* quiz */
+.quiz{display:flex;flex-direction:column;gap:14px}
+.q{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.q .opts{display:flex;flex-direction:column;gap:6px}
+.q button.opt{text-align:left;font:15px var(--f-body);background:var(--bg);color:var(--ink);border:1px solid var(--line-strong);border-radius:8px;padding:8px 12px;cursor:pointer}
+.q button.opt:hover{border-color:var(--accent)}
+.q button.opt.right{background:var(--core-soft);border-color:var(--core)}
+.q button.opt.wrong{background:var(--bad-soft);border-color:var(--bad)}
+.q .fb{font-size:15px;color:var(--muted)}
+.q .fb b.ok{color:var(--core)} .q .fb b.no{color:var(--bad)}
+/* rating */
+.rate{display:flex;flex-direction:column;gap:10px}
+.rate-row{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:10px 14px}
+.rate-row > span{min-width:0;flex:1 1 240px}
+.btns{display:flex;gap:6px}
+.btns button{font:600 14px var(--f-body);border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:6px;padding:6px 12px;cursor:pointer;min-width:44px}
+.btns button[aria-pressed="true"][data-v="1"]{background:var(--chal-soft);border-color:var(--chal);color:var(--chal)}
+.btns button[aria-pressed="true"][data-v="2"]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.btns button[aria-pressed="true"][data-v="3"]{background:var(--core-soft);border-color:var(--core);color:var(--core)}
+footer{max-width:820px;margin:48px auto 0;padding-bottom:8px;border-top:1px solid var(--line);padding-top:16px;color:var(--muted);font-size:14px;display:flex;flex-wrap:wrap;gap:8px 20px;justify-content:space-between}
+@media (max-width:520px){ body{font-size:16px} .card,.figure{padding:14px} .cell{min-width:40px} }
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+.wrap > *, section > *, .figure > *, .card > *{min-width:0;max-width:100%}
+p code, span code, li code, td code{overflow-wrap:anywhere}
+a.wkcard{text-decoration:none;color:var(--ink);transition:border-color .15s}
+a.wkcard:hover{border-color:var(--accent)}
+a.wkcard .go{color:var(--accent);font-weight:600;font-size:15px;margin-top:auto}
+@media (max-width:560px){
+  .figure svg .tick, .figure svg .labm{font-size:22px}
+  .figure svg .lab{font-size:23px}
+}
+/* ---------- module layout: left menu + main column ---------- */
+.layout{display:grid;grid-template-columns:270px minmax(0,1fr);gap:36px;max-width:1220px;margin:0 auto}
+.side{position:sticky;top:0;align-self:start;height:100vh;overflow-y:auto;padding:22px 6px 40px 0;border-right:1px solid var(--line);font-size:14.5px}
+.main{min-width:0}
+.side-brand{display:block;font-weight:700;font-size:16px;color:var(--ink);text-decoration:none;margin-bottom:14px}
+.side-group{font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:18px 0 6px}
+.side-list,.side-secs{list-style:none;margin:0;padding:0}
+.side-wk{display:grid;grid-template-columns:2.2em 1fr;gap:4px;align-items:baseline;padding:5px 8px;border-radius:6px;color:var(--ink);text-decoration:none;line-height:1.35}
+.side-wk:hover{background:var(--accent-soft)}
+.side-wk .wn{font-family:var(--f-mono);font-size:12.5px;color:var(--muted);font-weight:600}
+.side-wk[aria-current="page"]{background:var(--accent-soft);color:var(--accent);font-weight:600}
+.side-wk[aria-current="page"] .wn{color:var(--accent)}
+.side-secs{margin:4px 0 8px 2.6em;border-left:2px solid var(--line);padding-left:10px;display:flex;flex-direction:column;gap:2px}
+.side-secs a{color:var(--muted);text-decoration:none;font-size:13.5px;display:block;padding:2px 0;line-height:1.35}
+.side-secs a:hover{color:var(--accent)}
+.mobilebar{display:none}
+.pager{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px}
+.pager a{display:flex;flex-direction:column;gap:2px;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:var(--paper);text-decoration:none;color:var(--ink);font-weight:600;font-size:15px}
+.pager a:hover{border-color:var(--accent)}
+.pager a .k{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.pager a.nx{text-align:right}
+@media (max-width:1000px){
+  .layout{display:block}
+  .side{display:none}
+  .mobilebar{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding-block:12px;border-bottom:1px solid var(--line);position:relative}
+  .mobilebar .side-brand{margin:6px 0 0}
+  .mnav summary{list-style:none;cursor:pointer;font-weight:600;font-size:14px;color:var(--accent);border:1px solid var(--line-strong);border-radius:6px;padding:6px 12px;width:auto;background:var(--paper)}
+  .mnav summary::-webkit-details-marker{display:none}
+  .mnav[open] summary{background:var(--accent-soft)}
+  .mnav-panel{position:absolute;left:0;right:0;top:100%;z-index:20;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:14px 14px 18px;box-shadow:0 12px 30px rgba(0,0,0,.18);max-height:75vh;overflow-y:auto}
+  .mnav-panel .side-brand{display:none}
+}
+@media (max-width:520px){ .pager{grid-template-columns:1fr} .pager a.nx{text-align:left} }
+@media (min-width:1001px){ .toc{display:none} }
+.side-secs a.on{color:var(--accent);font-weight:600}
+
+</style>
+</head>
+<body data-page="week12">
+<div class="layout">
+<aside class="side" aria-label="Module weeks"><a class="side-brand" href="index.html">COM747 R Labs</a><p class="side-group">Foundations</p><ul class="side-list"><li><a class="side-wk" href="week01.html"><span class="wn">1</span><span>Data, Questions and R</span></a></li><li><a class="side-wk" href="week02a.html"><span class="wn">2A</span><span>Statistical Computing with R</span></a></li><li><a class="side-wk" href="week02b.html"><span class="wn">2B</span><span>Probability Distributions and EDA</span></a></li><li><a class="side-wk" href="week03.html"><span class="wn">3</span><span>Inferential Statistics</span></a></li></ul><p class="side-group">Modelling</p><ul class="side-list"><li><a class="side-wk" href="week04.html"><span class="wn">4</span><span>Regression and Time Series</span></a></li><li><a class="side-wk" href="week05.html"><span class="wn">5</span><span>Supervised ML and Feature Engineering</span></a></li><li><a class="side-wk" href="week06.html"><span class="wn">6</span><span>Ethics, Evaluation and Logistic Regression</span></a></li><li><a class="side-wk" href="week07.html"><span class="wn">7</span><span>ML Optimisation and Text Mining</span></a></li></ul><p class="side-group">Unsupervised learning</p><ul class="side-list"><li><a class="side-wk" href="week08.html"><span class="wn">8</span><span>Clustering and PCA</span></a></li><li><a class="side-wk" href="week09.html"><span class="wn">9</span><span>Association Rule Mining</span></a></li></ul><p class="side-group">Wider practice</p><ul class="side-list"><li><a class="side-wk" href="week10.html"><span class="wn">10</span><span>Data Analytics and Engineering</span></a></li><li><a class="side-wk" href="week11.html"><span class="wn">11</span><span>Maths and the R Toolkit</span></a></li><li><a class="side-wk" href="week12.html" aria-current="page"><span class="wn">12</span><span>Teamwork and Process Mining</span></a><ul class="side-secs"><li><a href="#question">&quot;Tell me about a time you worked in a team&quot;</a></li><li><a href="#teams">Benefits and challenges of team projects</a></li><li><a href="#star">Answering the interview questions</a></li><li><a href="#challenges">Challenge, solution, role, reflection</a></li><li><a href="#logs">Process mining: event logs</a></li><li><a href="#map">Process maps</a></li><li><a href="#traces">Traces and trace length</a></li><li><a href="#apps">Guest talk: what makes a good health app?</a></li><li><a href="#tasks">Your R tasks</a></li><li><a href="#quiz">Check yourself</a></li><li><a href="#glossary">Key terms</a></li><li><a href="#exit">Exit self-check</a></li></ul></li></ul></aside>
+<div class="main">
+<div class="mobilebar"><a class="side-brand" href="index.html">COM747 R Labs</a><details class="mnav"><summary>Menu</summary><nav class="mnav-panel" aria-label="Module weeks"><a class="side-brand" href="index.html">COM747 R Labs</a><p class="side-group">Foundations</p><ul class="side-list"><li><a class="side-wk" href="week01.html"><span class="wn">1</span><span>Data, Questions and R</span></a></li><li><a class="side-wk" href="week02a.html"><span class="wn">2A</span><span>Statistical Computing with R</span></a></li><li><a class="side-wk" href="week02b.html"><span class="wn">2B</span><span>Probability Distributions and EDA</span></a></li><li><a class="side-wk" href="week03.html"><span class="wn">3</span><span>Inferential Statistics</span></a></li></ul><p class="side-group">Modelling</p><ul class="side-list"><li><a class="side-wk" href="week04.html"><span class="wn">4</span><span>Regression and Time Series</span></a></li><li><a class="side-wk" href="week05.html"><span class="wn">5</span><span>Supervised ML and Feature Engineering</span></a></li><li><a class="side-wk" href="week06.html"><span class="wn">6</span><span>Ethics, Evaluation and Logistic Regression</span></a></li><li><a class="side-wk" href="week07.html"><span class="wn">7</span><span>ML Optimisation and Text Mining</span></a></li></ul><p class="side-group">Unsupervised learning</p><ul class="side-list"><li><a class="side-wk" href="week08.html"><span class="wn">8</span><span>Clustering and PCA</span></a></li><li><a class="side-wk" href="week09.html"><span class="wn">9</span><span>Association Rule Mining</span></a></li></ul><p class="side-group">Wider practice</p><ul class="side-list"><li><a class="side-wk" href="week10.html"><span class="wn">10</span><span>Data Analytics and Engineering</span></a></li><li><a class="side-wk" href="week11.html"><span class="wn">11</span><span>Maths and the R Toolkit</span></a></li><li><a class="side-wk" href="week12.html" aria-current="page"><span class="wn">12</span><span>Teamwork and Process Mining</span></a><ul class="side-secs"><li><a href="#question">&quot;Tell me about a time you worked in a team&quot;</a></li><li><a href="#teams">Benefits and challenges of team projects</a></li><li><a href="#star">Answering the interview questions</a></li><li><a href="#challenges">Challenge, solution, role, reflection</a></li><li><a href="#logs">Process mining: event logs</a></li><li><a href="#map">Process maps</a></li><li><a href="#traces">Traces and trace length</a></li><li><a href="#apps">Guest talk: what makes a good health app?</a></li><li><a href="#tasks">Your R tasks</a></li><li><a href="#quiz">Check yourself</a></li><li><a href="#glossary">Key terms</a></li><li><a href="#exit">Exit self-check</a></li></ul></li></ul></nav></details></div>
+<div class="wrap">
+<header class="hero">
+  <div class="eyebrow">COM747 Data Science &amp; Machine Learning · Week 12</div>
+  <h1>Teamwork Reflection and Process Mining</h1>
+  <p class="lead">Two things to take away from the module. First, how to turn your group project into strong answers at a job interview. Second, process mining: discovering the real journeys people take through a service from its event logs, with the bupaR packages in R. Plus a guest talk applying regression and clustering to the quality of health apps.</p>
+  <div class="chips"><span class="chip">Seminar + guest talk</span><span class="chip">RStudio</span><span class="chip">Packages: bupaR, processmapR, edeaR, eventdataR</span><span class="chip">Dataset: patients (eventdataR)</span></div>
+</header>
+
+<nav class="toc" aria-label="On this page">
+  <a href="#question">The question</a><a href="#teams">Teamwork</a><a href="#star">Interview answers</a><a href="#challenges">Challenges</a><a href="#logs">Event logs</a><a href="#map">Process maps</a><a href="#traces">Traces</a><a href="#apps">Health apps study</a><a href="#tasks">R tasks</a><a href="#quiz">Quiz</a>
+</nav>
+
+<section id="question">
+  <div class="sec-head"><span class="sec-num">01</span><h2>"Tell me about a time you worked in a team"</h2></div>
+  <div class="prose"><p>Almost every graduate interview asks it, and most candidates answer vaguely. You have just done a group data science project, so you have real material: a goal, decisions, disagreements, a result. This week you turn that into evidence. Then we look at a technique that is all about journeys and sequences, <b>process mining</b>, which analyses the timestamps a system already records to show how people really move through a service.</p></div>
+  <ul class="lo-list">
+    <li><span class="lo">LO1</span><span>Reflect on the benefits and challenges of team-based projects.</span></li>
+    <li><span class="lo">LO2</span><span>Structure an interview answer with evidence of your own contribution (STAR).</span></li>
+    <li><span class="lo">LO3</span><span>Describe an event log: case, activity, timestamp, resource.</span></li>
+    <li><span class="lo">LO4</span><span>Read a process map (absolute and relative frequencies) and a trace explorer; relate them to a first-order Markov model.</span></li>
+    <li><span class="lo">LO5</span><span>Use bupaR to compute activity frequencies, trace lengths, process maps and traces.</span></li>
+  </ul>
+</section>
+
+<section id="teams">
+  <div class="sec-head"><span class="sec-num">02</span><h2>Benefits and challenges of team projects</h2></div>
+  <div class="prose"><p>The seminar's first table, filled in with common answers. Use it as a prompt, then replace each line with an example from <i>your</i> project.</p></div>
+  <div class="tbl"><table><thead><tr><th>#</th><th>Benefits of team-based projects</th><th>Challenges of team-based projects</th></tr></thead><tbody>
+    <tr><td>1</td><td>A bigger, more ambitious project than one person could finish (e.g. comparing four models instead of one).</td><td>Coordinating timetables, deadlines and who does what.</td></tr>
+    <tr><td>2</td><td>Different skills: one person strong in R, one in statistics, one in writing and presenting.</td><td>Uneven contribution, or one person doing everything.</td></tr>
+    <tr><td>3</td><td>Ideas are challenged, so mistakes (data leakage, wrong test) are caught earlier.</td><td>Competing ideas about the dataset, method or story.</td></tr>
+    <tr><td>4</td><td>Practice in the way industry works: shared code, version control, reviews.</td><td>Merging code and documents; conflicting versions of the notebook.</td></tr>
+    <tr><td>5</td><td>Learning from each other: explaining a concept is the best test that you understand it.</td><td>Communication across languages, cultures and online/in-person members.</td></tr>
+  </tbody></table></div>
+</section>
+
+<section id="star">
+  <div class="sec-head"><span class="sec-num">03</span><h2>Answering the interview questions</h2></div>
+  <div class="prose"><p>The two questions from the sheet: <b>"Give an example of how you positively contributed to a group-based project"</b> and <b>"What are the benefits and challenges of working as part of a team, and how might you resolve competing ideas between members?"</b> Interviewers want a specific example, <i>your</i> actions ("I", not "we"), and a measurable result. The STAR structure gives you that: <b>S</b>ituation, <b>T</b>ask, <b>A</b>ction, <b>R</b>esult, plus a line of <b>reflection</b>.</p></div>
+  <div class="figure explorer">
+    <div class="title"><span class="tagx">Explorer</span><h3>Build your STAR answer</h3></div>
+    <div class="controls">
+      <label class="ctl" for="st-q">question<select id="st-q"><option value="0">How did you positively contribute to a group project?</option><option value="1">How would you resolve competing ideas in a team?</option></select></label>
+      <button class="btn" type="button" id="st-ex">Show an example answer</button>
+      <button class="btn" type="button" id="st-clear">Clear my answer</button>
+    </div>
+    <div class="grid2 two">
+      <label class="ctl" for="st-s" style="width:100%">Situation: the project and the team<textarea id="st-s" rows="3" style="width:100%"></textarea></label>
+      <label class="ctl" for="st-t" style="width:100%">Task: your responsibility or the problem<textarea id="st-t" rows="3" style="width:100%"></textarea></label>
+      <label class="ctl" for="st-a" style="width:100%">Action: what <i>you</i> did (the longest part)<textarea id="st-a" rows="4" style="width:100%"></textarea></label>
+      <label class="ctl" for="st-r" style="width:100%">Result: the outcome, with numbers if you can<textarea id="st-r" rows="3" style="width:100%"></textarea></label>
+    </div>
+    <label class="ctl" for="st-x" style="width:100%">Reflection: what you learned or would do differently<textarea id="st-x" rows="2" style="width:100%"></textarea></label>
+    <div class="console" id="st-out"></div>
+    <p class="caption">Your text stays in this browser only (nothing is uploaded). The checks are simple prompts, not a mark: aim for 150–250 words (about 1–2 minutes spoken), more "I" than "we", and a number in the result.</p>
+  </div>
+</section>
+
+<section id="challenges">
+  <div class="sec-head"><span class="sec-num">04</span><h2>Challenge, solution, role, reflection</h2></div>
+  <div class="prose"><p>The sheet's second table, with worked examples. The last column matters most: it shows you learn from experience.</p></div>
+  <div class="tbl"><table><thead><tr><th>#</th><th>Challenge</th><th>Solution</th><th>Your role in the solution</th><th>What you'd do differently</th></tr></thead><tbody>
+    <tr><td>1</td><td>Two members wanted different datasets.</td><td>Listed criteria (size, labels, ethics, fit to the brief), scored both, chose the better one.</td><td>Proposed the criteria and ran the comparison in a shared sheet.</td><td>Agree decision criteria in week 1, before anyone gets attached to an idea.</td></tr>
+    <tr><td>2</td><td>Notebook versions overwritten each other.</td><td>Moved to Git with one branch per person and a weekly merge.</td><td>Set up the repository and showed others how to commit and pull.</td><td>Start with version control from day one.</td></tr>
+    <tr><td>3</td><td>One member stopped contributing.</td><td>Private, friendly check-in; their work was re-scoped to a smaller, clear task.</td><td>Had the conversation and re-planned the timeline.</td><td>Hold short weekly stand-ups so problems surface earlier.</td></tr>
+    <tr><td>4</td><td>Model accuracy looked too good (96%).</td><td>Found an ID column leaking the label; removed it, accuracy fell to a realistic level.</td><td>Spotted the leak while checking variable importance.</td><td>Review features for leakage before training, not after.</td></tr>
+  </tbody></table></div>
+</section>
+
+<section id="logs">
+  <div class="sec-head"><span class="sec-num">05</span><h2>Process mining: event logs</h2></div>
+  <div class="prose"><p>Every time a hospital registers a patient, books an X-ray or discharges someone, a system writes a timestamped record. Process mining reads these <b>event logs</b> and automatically discovers the pathways people actually take. It can <b>discover</b> the real process, check <b>conformance</b> to a standard pathway, and find deviations and bottlenecks. An event log needs at least:</p></div>
+  <div class="grid3">
+    <div class="card"><span class="k">Case ID</span><p>Whose journey this is: a patient, an order, a helpline caller.</p></div>
+    <div class="card"><span class="k">Activity</span><p>What happened: Registration, Triage, X-Ray, Check-out.</p></div>
+    <div class="card"><span class="k">Timestamp</span><p>When it happened, so events can be ordered. Often a <i>start</i> and a <i>complete</i> time.</p></div>
+  </div>
+  <div class="tbl" id="log-tbl"></div>
+  <p class="note">The first events of the first two cases in the <code>patients</code> event log from the eventdataR package (500 patients, 2,721 activity instances, 7 activities). A <b>trace</b> is the sequence of activities for one case.</p>
+</section>
+
+<section id="map">
+  <div class="sec-head"><span class="sec-num">06</span><h2>Process maps</h2></div>
+  <div class="prose"><p>A process map is a directed graph (Week 11): activities are nodes, and an arc from A to B counts how often B directly followed A. Showing the <b>relative</b> frequency on each arc gives the probability of the next activity given the current one: a <b>first-order Markov model</b>.</p></div>
+  <div class="figure explorer">
+    <div class="title"><span class="tagx">Explorer</span><h3>process_map()</h3></div>
+    <div class="controls">
+      <label class="ctl" for="pm-d">event log<select id="pm-d"><option value="patients">patients (bupaR)</option><option value="therapy">therapy service (made-up)</option></select></label>
+      <label class="ctl" for="pm-f">frequency<select id="pm-f"><option value="absolute">frequency("absolute")</option><option value="relative">frequency("relative")</option></select></label>
+      <label class="ctl" for="pm-m"><span>hide arcs below: <b id="pm-mv"></b></span><input type="range" id="pm-m" min="0" max="40" value="0"></label>
+    </div>
+    <svg id="pm-svg" role="img" aria-label="Process map with activities as nodes and transitions as arcs"></svg>
+    <div class="console" id="pm-out"></div>
+    <p class="caption">Click an activity to see its outgoing probabilities. Arc thickness shows frequency. Node shading shows how many cases reach it. The therapy log is invented, in the style of the study of a psychological therapies service by Potts et al. (2023): baseline severity, number of sessions, outcome.</p>
+  </div>
+  <div class="callout"><b>The sheet's question: what does 18.38% on Registration mean?</b> With <code>frequency("relative")</code>, a node shows its share of <i>all</i> activity instances: Registration happened 500 times out of 2,721 activity instances in the log, and 500 / 2721 = 0.1838. The arcs show the share of the <i>from</i> activity's departures that go each way.</div>
+</section>
+
+<section id="traces">
+  <div class="sec-head"><span class="sec-num">07</span><h2>Traces and trace length</h2></div>
+  <div class="grid2 two">
+    <figure class="figure"><svg id="tr-svg" role="img" aria-label="Most common traces with their frequency"></svg><figcaption>Like <code>trace_explorer(n_traces = 10)</code>: each row is a distinct trace, coloured by activity. Two traces cover 98.4% of patients.</figcaption></figure>
+    <figure class="figure"><svg id="tl-svg" role="img" aria-label="Histogram of trace lengths"></svg><figcaption>Like <code>trace_length("log")</code>: the number of activities per case. The median patient has 5; a few journeys stop early (cases still in progress, or data problems worth checking).</figcaption></figure>
+  </div>
+  <div class="callout">The most common trace: <b>Registration → Triage and Assessment → X-Ray → Discuss Results → Check-out</b> (258 patients, 51.6%). The second: Registration → Triage and Assessment → Blood test → MRI SCAN → Discuss Results → Check-out (234, 46.8%). You can confirm both on the process map.</div>
+</section>
+
+<section id="apps">
+  <div class="sec-head"><span class="sec-num">08</span><h2>Guest talk: what makes a good health app?</h2></div>
+  <div class="prose"><p>A PhD study with ORCHA (an organisation that reviews health apps) analysed assessments of over 2,000 apps. Each app gets a score from 0 to 100 on <b>professional/clinical assurance (PCA)</b>, <b>user experience (UX)</b> and <b>data privacy (DP)</b>. Methods you know: Spearman correlation, multiple regression with a <b>Bonferroni-corrected</b> alpha (Week 3's multiple testing), the elbow method and <b>k-medoids</b> clustering (like k-means, but each centre is a real app).</p></div>
+  <div class="grid2 two">
+    <div class="card"><span class="k">Study 1: quality vs ratings and downloads</span><p>Spearman correlations between the ORCHA score and user ratings (−0.024, p = .47) and download level (−0.011, p = .75) were tiny and not significant (Bonferroni α = .05 / 9 ≈ .006). Regressions explained about 1% of the variance at most. <b>No link between quality and what users rate or download.</b></p></div>
+    <div class="card"><span class="k">Study 2: four types of app</span><p>k-medoids on 1,402 apps (k = 4 from the elbow plot) found: apps with poor user ratings; apps with poor PCA and DP; apps with poor PCA; and higher-quality apps with higher ratings. Again, ratings didn't track the quality scores.</p></div>
+  </div>
+  <figure class="figure"><svg id="ap-svg" role="img" aria-label="Cluster medoid scores for four clusters of health apps"></svg>
+  <figcaption>Cluster medoids from the talk (Table 3). User rating (out of 5) is rescaled ×20 to share the axis. Cluster sizes: 220 (15.7%), 252 (18.0%), 415 (29.6%), 515 (36.7%).</figcaption></figure>
+</section>
+
+<section id="tasks">
+  <div class="sec-head"><span class="sec-num">09</span><h2>Your R tasks</h2></div>
+  <div class="tier t-core">
+    <div class="tier-head"><span class="tag">Core</span><span class="note">Reflection and event logs (LO1–LO3)</span></div>
+    <ol class="tasks">
+      <li class="task"><div class="task-q"><span class="num">1</span><span>Write STAR answers to both interview questions using your group project. Ask a peer to time you saying them.</span></div></li>
+      <li class="task"><div class="task-q"><span class="num">2</span><span>Install bupaverse, load <code>patients</code> and find the number of cases, activities and events.</span></div>
+        <details><summary>Check your answer</summary><div class="code"><pre>install.packages("bupaverse")
+library(bupaverse)
+patients            # 500 cases, 2721 instances of 7 activities
+n_cases(patients); n_activities(patients); n_activity_instances(patients)
+?patients</pre></div></details></li>
+    </ol>
+  </div>
+  <div class="tier t-chal">
+    <div class="tier-head"><span class="tag">Challenge</span><span class="note">Control flow (LO4, LO5)</span></div>
+    <ol class="tasks">
+      <li class="task"><div class="task-q"><span class="num">3</span><span>Run the sheet's control-flow analysis: activity frequency, activity presence, trace length, process maps and the trace explorer.</span></div>
+        <details><summary>Check your answer</summary><div class="code"><pre>patients %&gt;% activity_frequency("activity")
+patients %&gt;% activity_presence() %&gt;% plot()
+patients %&gt;% trace_length("log") %&gt;% plot()     # median 5
+patients %&gt;% process_map(frequency("absolute"))
+patients %&gt;% process_map(frequency("relative"))  # Registration 18.38% = 500 / 2721
+patients %&gt;% trace_explorer(n_traces = 10)</pre></div></details></li>
+      <li class="task"><div class="task-q"><span class="num">4</span><span>Show the median time between activities on the process map, and find the slowest step.</span></div>
+        <details><summary>Check your answer</summary><div class="code"><pre>patients %&gt;% process_map(performance(median, "hours"))
+patients %&gt;% throughput_time("log", units = "days")</pre></div></details></li>
+    </ol>
+  </div>
+  <div class="tier t-str">
+    <div class="tier-head"><span class="tag">Stretch</span><span class="note">Build your own log (LO3–LO5)</span></div>
+    <ol class="tasks">
+      <li class="task"><div class="task-q"><span class="num">5</span><span>Create an event log from a data frame of your own (e.g. the steps in your group project) with <code>simple_eventlog()</code> and draw its process map.</span></div>
+        <details><summary>Check your answer</summary><div class="code"><pre>df &lt;- data.frame(case = c(1,1,1,2,2,2,2),
+                 activity = c("Plan","Code","Report","Plan","Code","Fix bug","Report"),
+                 time = as.POSIXct("2025-03-01") + c(0, 2, 5, 0, 1, 3, 6) * 86400)
+log &lt;- simple_eventlog(df, case_id = "case", activity_id = "activity", timestamp = "time")
+log %&gt;% process_map()
+log %&gt;% traces()</pre></div></details></li>
+      <li class="task"><div class="task-q"><span class="num">6</span><span>Read Potts et al. (2023). Which pathways led to better outcomes, and how would you check a service's conformance to its standard pathway?</span></div></li>
+    </ol>
+  </div>
+</section>
+
+<section id="quiz">
+  <div class="sec-head"><span class="sec-num">10</span><h2>Check yourself</h2></div>
+  <div class="quiz">
+    <div class="q" data-answer="2" data-why="Interviewers assess your own actions; 'we' hides what you did.">
+      <p><b>1.</b> In a STAR answer, the Action part should mostly describe…</p>
+      <div class="opts"><button class="opt">What the team decided</button><button class="opt">The module's assessment rules</button><button class="opt">What you personally did</button></div><p class="fb"></p></div>
+    <div class="q" data-answer="0" data-why="Case ID, activity and timestamp are the minimum; resource is optional.">
+      <p><b>2.</b> Which three fields does an event log need at minimum?</p>
+      <div class="opts"><button class="opt">Case ID, activity, timestamp</button><button class="opt">Name, age, diagnosis</button><button class="opt">Activity, cost, resource</button></div><p class="fb"></p></div>
+    <div class="q" data-answer="1" data-why="A trace is the ordered sequence of activities of one case.">
+      <p><b>3.</b> A trace is…</p>
+      <div class="opts"><button class="opt">A single event</button><button class="opt">The ordered sequence of activities for one case</button><button class="opt">The time between two events</button></div><p class="fb"></p></div>
+    <div class="q" data-answer="2" data-why="Relative arc frequencies are P(next activity | current activity): a first-order Markov model.">
+      <p><b>4.</b> 237 of the 500 patients leaving Triage go to Blood test. The relative arc shows…</p>
+      <div class="opts"><button class="opt">23.7%</button><button class="opt">8.7% of all events</button><button class="opt">47.4%: P(Blood test next | Triage)</button></div><p class="fb"></p></div>
+    <div class="q" data-answer="0" data-why="With 9 tests at α = .05, the corrected threshold is .05 / 9 ≈ .006.">
+      <p><b>5.</b> The app study ran 9 correlation tests. Its Bonferroni-corrected alpha is…</p>
+      <div class="opts"><button class="opt">.05 / 9 ≈ .006</button><button class="opt">.05 × 9 = .45</button><button class="opt">.05, unchanged</button></div><p class="fb"></p></div>
+  </div>
+</section>
+
+<section id="glossary">
+  <div class="sec-head"><span class="sec-num">11</span><h2>Key terms</h2></div>
+  <div class="tbl"><table><thead><tr><th>Term</th><th>Meaning</th></tr></thead><tbody>
+    <tr><td>STAR</td><td>Situation, Task, Action, Result: a structure for evidence-based answers.</td></tr>
+    <tr><td>Event log</td><td>Timestamped records of activities for each case.</td></tr>
+    <tr><td>Case</td><td>One journey through the process (a patient, an order).</td></tr>
+    <tr><td>Trace</td><td>The ordered sequence of activities for a case.</td></tr>
+    <tr><td>Process map</td><td>Directed graph of activities and the transitions between them.</td></tr>
+    <tr><td>Conformance checking</td><td>Comparing real traces with a standard or ideal pathway.</td></tr>
+    <tr><td>First-order Markov model</td><td>The next state depends only on the current state.</td></tr>
+    <tr><td>Throughput time</td><td>Time from a case's first to last event.</td></tr>
+    <tr><td>k-medoids</td><td>Like k-means, but each cluster centre is an actual case.</td></tr>
+  </tbody></table></div>
+</section>
+
+<section id="exit">
+  <div class="sec-head"><span class="sec-num">12</span><h2>Exit self-check</h2></div>
+  <p class="note">1 = I need help · 2 = nearly there · 3 = confident. Your choices stay on this device.</p>
+  <div class="rate">
+    <div class="rate-row"><span><span class="lo">LO2</span> Structuring a STAR answer.</span><div class="btns" data-k="w12lo2"><button data-v="1">1</button><button data-v="2">2</button><button data-v="3">3</button></div></div>
+    <div class="rate-row"><span><span class="lo">LO3</span> Event logs, cases and traces.</span><div class="btns" data-k="w12lo3"><button data-v="1">1</button><button data-v="2">2</button><button data-v="3">3</button></div></div>
+    <div class="rate-row"><span><span class="lo">LO4</span> Reading a process map.</span><div class="btns" data-k="w12lo4"><button data-v="1">1</button><button data-v="2">2</button><button data-v="3">3</button></div></div>
+    <div class="rate-row"><span><span class="lo">LO5</span> bupaR in R.</span><div class="btns" data-k="w12lo5"><button data-v="1">1</button><button data-v="2">2</button><button data-v="3">3</button></div></div>
+  </div>
+</section>
+
+<nav class="pager" aria-label="Previous and next week"><a href="week11.html"><span class="k">← Week 11</span>Maths and the R Toolkit</a><span></span></nav>
+</div>
+<footer><span>COM747 Data Science &amp; Machine Learning · QA Higher Education / Ulster University</span><span>Keep RStudio open beside this page.</span></footer>
+</div>
+</div>
+<script>
+/* Shared helpers for COM747 student pages: copy buttons, quizzes, self-ratings, stats maths, SVG charts */
+(function(){
+"use strict";
+/* ---------- copy buttons ---------- */
+document.querySelectorAll('.code').forEach(function(box){
+  if (box.dataset.nocopy !== undefined) return;
+  var pre = box.querySelector('pre'); if (!pre) return;
+  var btn = document.createElement('button'); btn.type='button'; btn.className='copy'; btn.textContent='Copy';
+  box.appendChild(btn);
+  btn.addEventListener('click', function(){
+    var text = pre.innerText;
+    var done = function(){ btn.textContent='Copied'; setTimeout(function(){btn.textContent='Copy';},1500); };
+    var fallback = function(){ var r=document.createRange(); r.selectNodeContents(pre); var s=window.getSelection(); s.removeAllRanges(); s.addRange(r); btn.textContent='Press Ctrl+C'; };
+    try { navigator.clipboard.writeText(text).then(done, fallback); } catch(e){ fallback(); }
+  });
+});
+/* ---------- quizzes: <div class="q" data-answer="1" data-why="..."> ---------- */
+document.querySelectorAll('.q').forEach(function(q){
+  var ans = +q.dataset.answer; var fb = q.querySelector('.fb');
+  var opts = q.querySelectorAll('button.opt');
+  opts.forEach(function(b, i){
+    b.type='button';
+    b.addEventListener('click', function(){
+      opts.forEach(function(o){ o.classList.remove('right','wrong'); });
+      if (i === ans){ b.classList.add('right'); fb.innerHTML = '<b class="ok">Correct.</b> ' + (q.dataset.why||''); }
+      else { b.classList.add('wrong'); fb.innerHTML = '<b class="no">Not quite.</b> Try another option.'; }
+    });
+  });
+});
+/* ---------- self-rating ---------- */
+var key = 'com747-' + (document.body.dataset.page || 'page');
+var saved = {};
+try { saved = JSON.parse(localStorage.getItem(key) || '{}'); } catch(e){}
+document.querySelectorAll('.btns').forEach(function(group){
+  var k = group.dataset.k;
+  var set = function(v){ group.querySelectorAll('button').forEach(function(b){ b.setAttribute('aria-pressed', String(b.dataset.v === v)); }); };
+  group.querySelectorAll('button').forEach(function(b){ b.type='button'; b.setAttribute('aria-pressed','false'); });
+  if (saved[k]) set(saved[k]);
+  group.addEventListener('click', function(e){
+    var b = e.target.closest('button'); if(!b) return;
+    set(b.dataset.v); saved[k]=b.dataset.v;
+    try { localStorage.setItem(key, JSON.stringify(saved)); } catch(e){}
+  });
+});
+
+/* ---------- stats maths ---------- */
+var S = {};
+S.mean = function(a){ var s=0; for (var i=0;i<a.length;i++) s+=a[i]; return s/a.length; };
+S.variance = function(a){ var m=S.mean(a), s=0; for (var i=0;i<a.length;i++) s+=(a[i]-m)*(a[i]-m); return s/(a.length-1); };
+S.sd = function(a){ return Math.sqrt(S.variance(a)); };
+S.median = function(a){ var b=a.slice().sort(function(x,y){return x-y;}); var n=b.length; return n%2? b[(n-1)/2] : (b[n/2-1]+b[n/2])/2; };
+S.erf = function(x){ /* Abramowitz-Stegun 7.1.26, |err|<1.5e-7 */
+  var s = x<0?-1:1; x=Math.abs(x);
+  var t=1/(1+0.3275911*x);
+  var y=1-(((((1.061405429*t-1.453152027)*t)+1.421413741)*t-0.284496736)*t+0.254829592)*t*Math.exp(-x*x);
+  return s*y; };
+S.dnorm = function(x,m,s){ m=m||0; s=s||1; var z=(x-m)/s; return Math.exp(-0.5*z*z)/(s*Math.sqrt(2*Math.PI)); };
+S.pnorm = function(x,m,s){ m=m||0; s=s||1; return 0.5*(1+S.erf((x-m)/(s*Math.SQRT2))); };
+S.qnorm = function(p){ /* Acklam */
+  var a=[-3.969683028665376e+01,2.209460984245205e+02,-2.759285104469687e+02,1.383577518672690e+02,-3.066479806614716e+01,2.506628277459239e+00],
+      b=[-5.447609879822406e+01,1.615858368580409e+02,-1.556989798598866e+02,6.680131188771972e+01,-1.328068155288572e+01],
+      c=[-7.784894002430293e-03,-3.223964580411365e-01,-2.400758277161838e+00,-2.549732539343734e+00,4.374664141464968e+00,2.938163982698783e+00],
+      d=[7.784695709041462e-03,3.224671290700398e-01,2.445134137142996e+00,3.754408661907416e+00];
+  var q,r; if (p<=0) return -Infinity; if (p>=1) return Infinity;
+  if (p<0.02425){ q=Math.sqrt(-2*Math.log(p)); return (((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5])/((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1); }
+  if (p>1-0.02425){ q=Math.sqrt(-2*Math.log(1-p)); return -(((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5])/((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1); }
+  q=p-0.5; r=q*q; return (((((a[0]*r+a[1])*r+a[2])*r+a[3])*r+a[4])*r+a[5])*q/(((((b[0]*r+b[1])*r+b[2])*r+b[3])*r+b[4])*r+1); };
+S.lgamma = function(x){ var c=[76.18009172947146,-86.50532032941677,24.01409824083091,-1.231739572450155,0.1208650973866179e-2,-0.5395239384953e-5];
+  var y=x, t=x+5.5; t-=(x+0.5)*Math.log(t); var s=1.000000000190015; for (var j=0;j<6;j++) s+=c[j]/++y; return -t+Math.log(2.5066282746310005*s/x); };
+function betacf(a,b,x){ var MAXIT=200,EPS=3e-14,FPMIN=1e-300; var qab=a+b,qap=a+1,qam=a-1,c=1,d=1-qab*x/qap; if(Math.abs(d)<FPMIN)d=FPMIN; d=1/d; var h=d;
+  for (var m=1;m<=MAXIT;m++){ var m2=2*m, aa=m*(b-m)*x/((qam+m2)*(a+m2)); d=1+aa*d; if(Math.abs(d)<FPMIN)d=FPMIN; c=1+aa/c; if(Math.abs(c)<FPMIN)c=FPMIN; d=1/d; h*=d*c;
+    aa=-(a+m)*(qab+m)*x/((a+m2)*(qap+m2)); d=1+aa*d; if(Math.abs(d)<FPMIN)d=FPMIN; c=1+aa/c; if(Math.abs(c)<FPMIN)c=FPMIN; d=1/d; var del=d*c; h*=del; if(Math.abs(del-1)<EPS)break; }
+  return h; }
+S.ibeta = function(x,a,b){ if (x<=0) return 0; if (x>=1) return 1;
+  var bt=Math.exp(S.lgamma(a+b)-S.lgamma(a)-S.lgamma(b)+a*Math.log(x)+b*Math.log(1-x));
+  return x<(a+1)/(a+b+2) ? bt*betacf(a,b,x)/a : 1-bt*betacf(b,a,1-x)/b; };
+S.pt = function(t,df){ var x=df/(df+t*t); var tail=0.5*S.ibeta(x,df/2,0.5); return t>0? 1-tail : tail; };
+S.dt = function(t,df){ return Math.exp(S.lgamma((df+1)/2)-S.lgamma(df/2))/Math.sqrt(df*Math.PI)*Math.pow(1+t*t/df,-(df+1)/2); };
+S.qt = function(p,df){ var lo=-60,hi=60; for (var i=0;i<100;i++){ var mid=(lo+hi)/2; if (S.pt(mid,df)<p) lo=mid; else hi=mid; } return (lo+hi)/2; };
+S.choose = function(n,k){ var r=1; for (var i=1;i<=k;i++) r=r*(n-k+i)/i; return r; };
+S.dbinom = function(k,n,p){ return S.choose(n,k)*Math.pow(p,k)*Math.pow(1-p,n-k); };
+S.rnorm = function(m,s){ var u=0,v=0; while(u===0)u=Math.random(); while(v===0)v=Math.random(); return m + s*Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v); };
+S.welch = function(x,y){ var mx=S.mean(x),my=S.mean(y),vx=S.variance(x),vy=S.variance(y),nx=x.length,ny=y.length;
+  var se=Math.sqrt(vx/nx+vy/ny), t=(mx-my)/se; var df=Math.pow(vx/nx+vy/ny,2)/(Math.pow(vx/nx,2)/(nx-1)+Math.pow(vy/ny,2)/(ny-1));
+  return {t:t, df:df, p:2*(1-S.pt(Math.abs(t),df))}; };
+S.fmt = function(x,d){ if (!isFinite(x)) return String(x); d = d===undefined?2:d; var s=x.toFixed(d); return s==='-0'+(d?'.'+'0'.repeat(d):'')? s.slice(1): s; };
+S.sig = function(x,n){ n=n||4; if (x===0) return '0'; if (Math.abs(x)<1e-4) return x.toExponential(2); return String(+x.toPrecision(n)); };
+window.S = S;
+
+/* ---------- SVG helpers ---------- */
+var NS='http://www.w3.org/2000/svg';
+function el(tag, attrs, parent){ var e=document.createElementNS(NS,tag); for (var k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; }
+function txt(parent, x, y, s, cls, anchor){ var t=el('text',{x:x,y:y,'class':cls||'tick','text-anchor':anchor||'middle'},parent); t.textContent=s; return t; }
+function niceTicks(lo, hi, n){ var span=hi-lo; if (span<=0) return [lo]; var step=Math.pow(10,Math.floor(Math.log10(span/n))); var err=n/span*step;
+  if (err<=0.15) step*=10; else if (err<=0.35) step*=5; else if (err<=0.75) step*=2;
+  var out=[]; for (var v=Math.ceil(lo/step)*step; v<=hi+1e-9; v+=step) out.push(+v.toFixed(10)); return out; }
+/* Chart frame: returns {g, x(), y(), W, H} */
+function frame(svg, opts){
+  while (svg.firstChild) svg.removeChild(svg.firstChild);
+  var W=opts.W||640, H=opts.H||260, m=opts.m||{l:48,r:16,t:14,b:38};
+  svg.setAttribute('viewBox','0 0 '+W+' '+H);
+  var x=function(v){ return m.l + (v-opts.x0)/(opts.x1-opts.x0)*(W-m.l-m.r); };
+  var y=function(v){ return H-m.b - (v-opts.y0)/(opts.y1-opts.y0)*(H-m.t-m.b); };
+  var g=el('g',{},svg);
+  if (opts.ygrid!==false){ niceTicks(opts.y0,opts.y1,opts.ny||4).forEach(function(v){ el('line',{x1:m.l,x2:W-m.r,y1:y(v),y2:y(v),'class':'gridl'},g); if (opts.ylabels!==false) txt(g,m.l-6,y(v)+4,opts.yfmt?opts.yfmt(v):S.sig(v,3),'tick','end'); }); }
+  el('line',{x1:m.l,x2:W-m.r,y1:H-m.b,y2:H-m.b,'class':'ax'},g);
+  (opts.xticks || niceTicks(opts.x0,opts.x1,opts.nx||6)).forEach(function(v){ el('line',{x1:x(v),x2:x(v),y1:H-m.b,y2:H-m.b+4,'class':'ax'},g); txt(g,x(v),H-m.b+17,opts.xfmt?opts.xfmt(v):S.sig(v,4)); });
+  if (opts.xlab) txt(g,(m.l+W-m.r)/2,H-4,opts.xlab,'labm');
+  if (opts.ylab){ var t=txt(g,12,(m.t+H-m.b)/2,opts.ylab,'labm'); t.setAttribute('transform','rotate(-90 12 '+((m.t+H-m.b)/2)+')'); }
+  return {g:g, x:x, y:y, W:W, H:H, m:m};
+}
+function pathFrom(pts){ return pts.map(function(p,i){ return (i?'L':'M')+p[0].toFixed(2)+' '+p[1].toFixed(2); }).join(''); }
+/* histogram of values into bins: returns {edges, counts} */
+function bins(vals, lo, hi, k){ var w=(hi-lo)/k, c=new Array(k).fill(0); vals.forEach(function(v){ var i=Math.floor((v-lo)/w); if (i===k) i=k-1; if (i>=0&&i<k) c[i]++; }); var e=[]; for (var i=0;i<=k;i++) e.push(lo+i*w); return {edges:e, counts:c, w:w}; }
+window.G = {el:el, txt:txt, frame:frame, path:pathFrom, ticks:niceTicks, bins:bins};
+})();
+/* scroll-spy: highlight the current section in the left menu */
+(function(){
+  var links = Array.prototype.slice.call(document.querySelectorAll('.side .side-secs a'));
+  if (!links.length || !('IntersectionObserver' in window)) return;
+  var map = {}; links.forEach(function(a){ map[a.getAttribute('href').slice(1)] = a; });
+  var obs = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){ if (e.isIntersecting){ links.forEach(function(a){ a.classList.remove('on'); }); var a = map[e.target.id]; if (a) a.classList.add('on'); } });
+  }, {rootMargin: '-20% 0px -70% 0px'});
+  Object.keys(map).forEach(function(id){ var s = document.getElementById(id); if (s) obs.observe(s); });
+})();
+
+</script>
+<script>
+(function(){
+"use strict";
+var W12={"ncases":500,"nevents":2721,"traces":{"trace":["Registration > Triage and Assessment > X-Ray > Discuss Results > Check-out","Registration > Triage and Assessment > Blood test > MRI SCAN > Discuss Results > Check-out","Registration > Triage and Assessment","Registration > Triage and Assessment > Blood test > MRI SCAN > Discuss Results","Registration > Triage and Assessment > X-Ray","Registration > Triage and Assessment > Blood test","Registration > Triage and Assessment > X-Ray > Discuss Results"],"n":[258,234,2,2,2,1,1]},"trans":{"from":["Triage and Assessment","Discuss Results","MRI SCAN","X-Ray","Blood test","Check-out","Discuss Results","Triage and Assessment","X-Ray","Blood test","Start","Registration","Triage and Assessment"],"to":["Blood test","Check-out","Discuss Results","Discuss Results","End","End","End","End","End","MRI SCAN","Registration","Triage and Assessment","X-Ray"],"n":[237,492,236,259,1,492,3,2,2,236,500,500,261]},"act":{"activity":["Blood test","Check-out","Discuss Results","MRI SCAN","Registration","Triage and Assessment","X-Ray"],"n":[237,492,495,236,500,500,261]},"len":[2,3,1,260,234],"lenk":[2,3,4,5,6],"dur_median":146.052222222222,"dur_q":[103.534166666667,206.080625],"sample":{"patient":["1","1","1","1","1","1","1","1","1","1","1","1","2","2"],"activity":["Registration","Triage and Assessment","Registration","Triage and Assessment","Blood test","Blood test","MRI SCAN","MRI SCAN","Discuss Results","Discuss Results","Check-out","Check-out","Registration","Registration"],"time":["2017-01-02 11:41","2017-01-02 12:40","2017-01-02 12:40","2017-01-02 22:32","2017-01-05 08:59","2017-01-05 14:34","2017-01-05 21:37","2017-01-06 01:54","2017-01-07 07:57","2017-01-07 10:18","2017-01-09 17:09","2017-01-09 19:45","2017-01-02 11:41","2017-01-02 15:16"],"employee":["r1","r2","r1","r2","r3","r3","r4","r4","r6","r6","r7","r7","r1","r1"],"lifecycle":["start","start","complete","complete","start","complete","start","complete","start","complete","start","complete","start","complete"]}};
+function fitW(svg,lo,hi){ var w=svg.getBoundingClientRect().width||640; return Math.round(Math.max(lo,Math.min(hi,w))); }
+function clear(svg,W,H){ svg.setAttribute('viewBox','0 0 '+W+' '+H); while (svg.firstChild) svg.removeChild(svg.firstChild); }
+function t(g,x,y,s,size,anchor,style){ var e=G.txt(g,x,y,s,'',anchor||'middle'); e.setAttribute('style','font-size:'+size+'px;fill:var(--ink);'+(style||'')); return e; }
+function onResize(fn){ var to; window.addEventListener('resize',function(){ clearTimeout(to); to=setTimeout(fn,150); }); }
+function rng(seed){ var s=seed; return function(){ s=(s*16807)%2147483647; return (s-1)/2147483646; }; }
+function store(k,v){ try { if (v===undefined) return localStorage.getItem(k); localStorage.setItem(k,v); } catch(e){ return null; } }
+
+/* ---------- STAR builder ---------- */
+(function(){
+  var F=['s','t','a','r','x'], q=document.getElementById('st-q'), out=document.getElementById('st-out');
+  var EX=[
+   {s:'In COM747 our team of four had six weeks to build and evaluate a model predicting student performance from a dataset of about 400 students.',
+    t:'I was responsible for the data preparation and for making sure our evaluation was sound.',
+    a:'I wrote the cleaning code in a shared R notebook, documented every step, and noticed our first model scored 96% because an ID column was leaking the label. I explained the problem to the team with a quick demo, removed the column, and set up 10-fold cross-validation with caret so all four models were compared on the same folds. I also ran short weekly check-ins so we could merge work early.',
+    r:'Our final accuracy was a realistic 72%, we could justify every number in the report, and we submitted two days early. The marker praised the evaluation section.',
+    x:'I learned to look for leakage before trusting a good result. Next time I would agree the evaluation plan in week one.'},
+   {s:'In our group project two members wanted different datasets: a large Kaggle dataset and a smaller NHS dataset with better labels.',
+    t:'As the person coordinating our meetings, I needed us to decide quickly without anyone feeling overruled.',
+    a:'I suggested we agree criteria first: fit to the brief, label quality, size, and ethical issues. I made a short table, and each of us scored both options before the meeting. In the meeting I asked each person to explain their scores, and we discussed only where we disagreed. I proposed using the smaller dataset for the main analysis and the larger one as an extension.',
+    r:'We decided in one 30-minute meeting instead of a week of messages, and both members contributed fully. The extension became one of the strongest parts of the report.',
+    x:'Benefits of teams are more skills and ideas; the challenge is turning disagreement into a decision. Agreeing criteria first keeps the discussion about the work, not the people.'}];
+  function words(s){ return (s.match(/\b[\w'’-]+\b/g)||[]).length; }
+  function update(){ var v={}; F.forEach(function(k){ v[k]=document.getElementById('st-'+k).value.trim(); store('w12-star-'+q.value+'-'+k,v[k]); });
+    var all=F.map(function(k){ return v[k]; }).filter(Boolean).join(' ');
+    var n=words(all), I=(all.match(/\b(I|I'm|I've|my|me)\b/g)||[]).length, we=(all.match(/\b(we|we're|we've|our|us)\b/gi)||[]).length, num=/\d/.test(v.r);
+    if (!n){ out.textContent='Write a sentence or two in each box, or press "Show an example answer".'; return; }
+    var aShare=words(v.a)/Math.max(1,n);
+    out.textContent='Your answer ('+n+' words, about '+Math.max(1,Math.round(n/140*60))+' seconds spoken):\n\n'+all+'\n\n'+
+      (n<120?'△ A bit short: add detail to the Action.':n>280?'△ Long: aim for under about 250 words.':'✓ Good length.')+'\n'+
+      (I>=we?'✓ Uses "I" ('+I+') at least as much as "we" ('+we+').':'△ More "we" ('+we+') than "I" ('+I+'): say what you did.')+'\n'+
+      (aShare>=0.35?'✓ Action is the main part ('+Math.round(aShare*100)+'%).':'△ Make the Action the longest part (now '+Math.round(aShare*100)+'%).')+'\n'+
+      (num?'✓ The result includes a number.':'△ Add a measurable result (a score, time saved, a mark).')+'\n'+
+      (v.x?'✓ Includes a reflection.':'△ End with what you learned.');
+  }
+  function load(){ F.forEach(function(k){ document.getElementById('st-'+k).value=store('w12-star-'+q.value+'-'+k)||''; }); update(); }
+  F.forEach(function(k){ document.getElementById('st-'+k).addEventListener('input',update); });
+  q.addEventListener('change',load);
+  document.getElementById('st-ex').addEventListener('click',function(){ var e=EX[+q.value]; F.forEach(function(k){ document.getElementById('st-'+k).value=e[k]; }); update(); });
+  document.getElementById('st-clear').addEventListener('click',function(){ F.forEach(function(k){ document.getElementById('st-'+k).value=''; }); update(); });
+  load();
+})();
+
+/* ---------- event log sample ---------- */
+(function(){
+  var L=W12.sample, rows=L.patient.map(function(p,i){ return '<tr><td>'+p+'</td><td>'+L.activity[i]+'</td><td class="n">'+L.time[i]+'</td><td>'+L.lifecycle[i]+'</td><td>'+L.employee[i]+'</td></tr>'; }).join('');
+  document.getElementById('log-tbl').innerHTML='<table><thead><tr><th>patient (case)</th><th>handling (activity)</th><th>time (timestamp)</th><th>registration_type</th><th>employee (resource)</th></tr></thead><tbody>'+rows+'</tbody></table>';
+})();
+
+/* ---------- process maps ---------- */
+var LOGS={};
+(function(){
+  // patients: from R
+  var T=W12.trans, n={}, acts={}; W12.act.activity.forEach(function(a,i){ acts[a]=W12.act.n[i]; });
+  LOGS.patients={edges:T.from.map(function(f,i){ return {from:f,to:T.to[i],n:T.n[i]}; }),acts:acts,cases:W12.ncases,events:W12.nevents};
+  // therapy: made-up, seeded
+  var r=rng(42), E={}, A={}, cases=600, ev=0;
+  function add(a,b){ var k=a+'|'+b; E[k]=(E[k]||0)+1; }
+  function pick(p){ var u=r(), c=0; for (var k in p){ c+=p[k]; if (u<c) return k; } return k; }
+  for (var i=0;i<cases;i++){ var sev=pick({'Mild':0.35,'Moderate':0.4,'Severe':0.25});
+    var ses=pick(sev==='Mild'?{'1-2 sessions':0.45,'3-5 sessions':0.4,'6+ sessions':0.15}:sev==='Moderate'?{'1-2 sessions':0.3,'3-5 sessions':0.4,'6+ sessions':0.3}:{'1-2 sessions':0.3,'3-5 sessions':0.3,'6+ sessions':0.4});
+    var pr=ses==='1-2 sessions'?{'Recovered':0.2,'Improved':0.2,'No change':0.2,'Dropped out':0.4}:ses==='3-5 sessions'?{'Recovered':0.4,'Improved':0.3,'No change':0.2,'Dropped out':0.1}:{'Recovered':0.5,'Improved':0.3,'No change':0.15,'Dropped out':0.05};
+    if (sev==='Severe'){ pr=JSON.parse(JSON.stringify(pr)); pr.Recovered-=0.1; pr['No change']+=0.1; }
+    var out=pick(pr), seq=['Start',sev,ses,out,'End'];
+    for (var j=1;j<seq.length;j++) add(seq[j-1],seq[j]);
+    [sev,ses,out].forEach(function(a){ A[a]=(A[a]||0)+1; ev++; }); }
+  LOGS.therapy={edges:Object.keys(E).map(function(k){ var p=k.split('|'); return {from:p[0],to:p[1],n:E[k]}; }),acts:A,cases:cases,events:ev};
+})();
+(function(){
+  var dS=document.getElementById('pm-d'), fS=document.getElementById('pm-f'), mS=document.getElementById('pm-m'), svg=document.getElementById('pm-svg'), out=document.getElementById('pm-out'), sel=null;
+  function draw(){ var L=LOGS[dS.value], rel=fS.value==='relative', minN=Math.round(+mS.value/100*L.cases);
+    document.getElementById('pm-mv').textContent=minN+' cases';
+    var nodes={}; L.edges.forEach(function(e){ nodes[e.from]=1; nodes[e.to]=1; });
+    var layer={Start:0}, changed=true; while (changed){ changed=false; L.edges.forEach(function(e){ if (layer[e.from]!==undefined && (layer[e.to]===undefined || layer[e.to]<layer[e.from]+1) && e.to!=='Start'){ layer[e.to]=layer[e.from]+1; changed=true; } }); }
+    var maxL=0; Object.keys(layer).forEach(function(k){ if (k!=='End') maxL=Math.max(maxL,layer[k]); }); layer.End=maxL+1;
+    var byL={}; Object.keys(nodes).forEach(function(k){ (byL[layer[k]]=byL[layer[k]]||[]).push(k); });
+    var outTot={}; L.edges.forEach(function(e){ outTot[e.from]=(outTot[e.from]||0)+e.n; });
+    var W=fitW(svg,330,760), rowH=dS.value==='patients'?66:96, H=30+(maxL+1)*rowH+40; clear(svg,W,H);
+    var defs=G.el('defs',{},svg), mk=G.el('marker',{id:'pmah',viewBox:'0 0 10 10',refX:9,refY:5,markerWidth:9,markerHeight:9,markerUnits:'userSpaceOnUse',orient:'auto'},defs); G.el('path',{d:'M0 0L10 5L0 10z',style:'fill:var(--muted)'},mk);
+    var pos={}, bw=Math.min(150,(W-30)/4-10), bh=32;
+    Object.keys(byL).forEach(function(l){ var ORD=['Mild','Moderate','Severe','1-2 sessions','3-5 sessions','6+ sessions','Recovered','Improved','No change','Dropped out','Blood test','X-Ray']; var arr=byL[l].sort(function(a,b){ var ia=ORD.indexOf(a), ib=ORD.indexOf(b); return ia>=0&&ib>=0? ia-ib : a<b?-1:1; }); arr.forEach(function(k,i){ pos[k]=[(i+1)*W/(arr.length+1), 24+(+l)*rowH]; }); });
+    var maxE=Math.max.apply(null,L.edges.map(function(e){return e.n;}));
+    L.edges.forEach(function(e){ if (e.n<minN) return; var a=pos[e.from], b=pos[e.to], hl=sel&&e.from===sel;
+      var x1=a[0], y1=a[1]+bh/2, x2=b[0], y2=b[1]-bh/2-2, skip=layer[e.to]-layer[e.from]>1;
+      var side=(x1+x2)/2<W/2?-1:1, off=Math.min(W*0.2,60+40*(layer[e.to]-layer[e.from])), c1, c2;
+      if (skip){ c1=[x1+side*off,y1+30]; c2=[x2+side*off,y2-30]; } else { c1=[x1,y1+rowH*0.4]; c2=[x2,y2-rowH*0.4]; }
+      var d='M'+x1+' '+y1+' C'+c1[0]+' '+c1[1]+' '+c2[0]+' '+c2[1]+' '+x2+' '+y2;
+      G.el('path',{d:d,'marker-end':'url(#pmah)',style:'fill:none;stroke:'+(hl?'var(--c2)':'var(--c1)')+';opacity:'+(sel&&!hl?0.25:0.75)+';stroke-width:'+(1+5*e.n/maxE)},svg);
+      var lab=rel? S.fmt(e.n/outTot[e.from]*100,1)+'%' : String(e.n);
+      var mx=(x1+3*c1[0]+3*c2[0]+x2)/8, my=(y1+3*c1[1]+3*c2[1]+y2)/8+4;
+      var crowded=L.edges.filter(function(q){return q.n>=minN;}).length>12;
+      if ((!sel&&!crowded)||hl) t(svg,mx+4,my,lab,11.5,'start','font-weight:600;paint-order:stroke;stroke:var(--paper);stroke-width:3px;fill:'+(hl?'var(--c2)':'var(--ink)'));
+    });
+    Object.keys(nodes).forEach(function(k){ var p=pos[k], c=k==='Start'||k==='End', cnt=c? L.cases : L.acts[k], share=cnt/L.cases;
+      var g=G.el('g',{style:'cursor:pointer'},svg);
+      G.el('rect',{x:p[0]-bw/2,y:p[1]-bh/2,width:bw,height:bh,rx:c?16:6,style:'fill:'+(c?'var(--paper)':'var(--c1)')+';fill-opacity:'+(c?1:S.fmt(0.15+0.7*share,2))+';stroke:'+(k===sel?'var(--c2)':'var(--c1)')+';stroke-width:'+(k===sel?3:1.2)},g);
+      var lab=c? k : rel? S.fmt(cnt/L.events*100,2)+'%' : String(cnt);
+      t(g,p[0],p[1]-1,k.length>18&&bw<130?k.replace('Triage and Assessment','Triage & Assess.'):k,12,'middle','font-weight:700;pointer-events:none;fill:'+(!c&&share>0.5?'#fff':'var(--ink)'));
+      if (!c) t(g,p[0],p[1]+12,lab,10.5,'middle','pointer-events:none;fill:'+(share>0.5?'#fff':'var(--ink)'));
+      g.addEventListener('click',function(){ sel= sel===k? null : k; draw(); });
+    });
+    var msg=dS.value==='patients'? 'patients: '+L.cases+' cases, '+L.events+' activity instances.' : 'Therapy service (made-up): '+L.cases+' clients, each with a baseline severity, a number of sessions and an outcome.';
+    if (sel){ var outs=L.edges.filter(function(e){ return e.from===sel; }).sort(function(a,b){ return b.n-a.n; });
+      msg+='\nAfter "'+sel+'" ('+(outTot[sel]||0)+' departures), the next activity is:\n'+outs.map(function(e){ return '  '+e.to+': '+e.n+' ('+S.fmt(e.n/outTot[sel]*100,1)+'%)'; }).join('\n')+'\nThese are the Markov transition probabilities P(next | '+sel+').'; }
+    else if (L.edges.filter(function(q){return q.n>=minN;}).length>12) msg+='\nMany arcs: click an activity to label its arcs, or raise "hide arcs below".';
+    else msg+= rel? '\nNodes: share of all activity instances (e.g. Registration '+(L.acts.Registration? S.fmt(L.acts.Registration/L.events*100,2)+'%':'')+'). Arcs: share of the from-activity\'s departures.' : '\nNodes and arcs show counts. Click an activity for its transition probabilities.';
+    out.textContent=msg;
+  }
+  [dS,fS].forEach(function(e){ e.addEventListener('change',function(){ sel=null; draw(); }); }); mS.addEventListener('input',draw);
+  draw(); onResize(draw);
+})();
+
+/* ---------- traces ---------- */
+(function(){
+  var T=W12.traces, svg=document.getElementById('tr-svg'), COLS={'Registration':'var(--c1)','Triage and Assessment':'var(--c3)','X-Ray':'var(--c2)','Blood test':'var(--c4)','MRI SCAN':'#a33b6d','Discuss Results':'#3b8a86','Check-out':'#8a6d3b'};
+  clear(svg,320,275); var cum=0, n=W12.ncases;
+  T.trace.slice(0,7).forEach(function(tr,i){ var acts=tr.split(' > '), y=14+i*30; cum+=T.n[i];
+    acts.forEach(function(a,j){ G.el('rect',{x:8+j*24,y:y,width:22,height:22,rx:3,style:'fill:'+COLS[a]},svg); t(svg,19+j*24,y+15,a[0],11,'middle','fill:#fff;font-weight:700'); });
+    t(svg,160,y+15,T.n[i]+' ('+S.fmt(T.n[i]/n*100,1)+'%)',11.5,'start'); t(svg,312,y+15,S.fmt(cum/n*100,1)+'%',11,'end','fill:var(--muted)'); });
+  t(svg,312,8,'cumulative',10,'end','fill:var(--muted)');
+  var ky=242; Object.keys(COLS).forEach(function(a,i){ var x=8+(i%4)*78, y=ky+Math.floor(i/4)*16; G.el('rect',{x:x,y:y-9,width:10,height:10,rx:2,style:'fill:'+COLS[a]},svg); t(svg,x+13,y,a.replace('Triage and Assessment','Triage').replace('Discuss Results','Discuss'),9.5,'start'); });
+  var s2=document.getElementById('tl-svg');
+  var f=G.frame(s2,{W:320,H:260,x0:1.4,x1:6.6,y0:0,y1:300,ny:3,xticks:[2,3,4,5,6],xlab:'activities per case',m:{l:40,r:8,t:12,b:36}});
+  W12.lenk.forEach(function(k,i){ var v=W12.len[i]; G.el('rect',{x:f.x(k)-18,y:f.y(v),width:36,height:f.y(0)-f.y(v),rx:3,'class':'bar'},f.g); G.txt(f.g,f.x(k),f.y(v)-5,String(v),'labm'); });
+})();
+
+/* ---------- health apps clusters ---------- */
+(function(){
+  var svg=document.getElementById('ap-svg');
+  var CL=['Poor user ratings','Poor PCA/DP','Poor PCA','Higher quality'], V={'User rating ×20':[3.23*20,4.58*20,4.47*20,4.60*20],'PCA':[57.0,35.1,31.9,73.0],'UX':[72.9,71.6,71.6,80.3],'DP':[61.3,42.4,67.5,66.4]};
+  var keys=Object.keys(V), cols=['var(--c4)','var(--c1)','var(--c3)','var(--c2)'];
+  var f=G.frame(svg,{W:640,H:270,x0:0.4,x1:4.6,y0:0,y1:100,ny:5,xticks:[1,2,3,4],xfmt:function(v){ return CL[v-1]; },m:{l:40,r:12,t:28,b:36}});
+  CL.forEach(function(c,i){ keys.forEach(function(k,j){ var v=V[k][i], x=f.x(i+1)-58+j*29; G.el('rect',{x:x,y:f.y(v),width:26,height:f.y(0)-f.y(v),rx:2,style:'fill:'+cols[j]},f.g); G.txt(f.g,x+13,f.y(v)-4,String(Math.round(v)),'tick').setAttribute('style','font-size:10px'); }); });
+  keys.forEach(function(k,j){ G.el('rect',{x:50+j*140,y:6,width:12,height:12,rx:2,style:'fill:'+cols[j]},f.g); G.txt(f.g,66+j*140,16,k,'labm','start'); });
+})();
+})();
+
+</script>
+</body>
+</html>

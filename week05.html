@@ -1,0 +1,883 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>COM747 Week 5 Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: single-column lab notebook, ~800px measure. Concept sections, then interactive "explorers", then tiered R tasks. */
+:root{
+  --bg:#f5f6f8; --paper:#ffffff; --ink:#1b2330; --muted:#5a6474; --line:#dce1e9; --line-strong:#c3cad6;
+  --accent:#2b5fa6; --accent-soft:#e5edf8;
+  --core:#2f7d5b; --core-soft:#e2f1e9;
+  --chal:#b26a00; --chal-soft:#fbefd9;
+  --str:#7a3fa0; --str-soft:#f1e7f8;
+  --bad:#b3372f; --bad-soft:#f9e3e1;
+  --code-bg:#eef2f7; --code-ink:#1c2a44;
+  --c1:#2b5fa6; --c2:#d0791a; --c3:#2f8a62; --c4:#8a4bb3; --shade:rgba(43,95,166,.28); --grid:#e6e9ef;
+  --f-display:"Source Serif 4", Georgia, "Times New Roman", serif;
+  --f-body:"Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, Consolas, monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#11151c; --paper:#1a2029; --ink:#e4e8ef; --muted:#9aa4b4; --line:#2b3340; --line-strong:#3c4656;
+  --accent:#7fa8e6; --accent-soft:#1e2b3f;
+  --core:#6cc79d; --core-soft:#173025; --chal:#e5a64a; --chal-soft:#33281a; --str:#c39be0; --str-soft:#2a2135;
+  --bad:#ef8a80; --bad-soft:#3a1f1d;
+  --code-bg:#0e131a; --code-ink:#d6e2f5;
+  --c1:#7fa8e6; --c2:#eb9c4c; --c3:#5fc394; --c4:#c39be0; --shade:rgba(127,168,230,.30); --grid:#262e3a;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#11151c; --paper:#1a2029; --ink:#e4e8ef; --muted:#9aa4b4; --line:#2b3340; --line-strong:#3c4656;
+  --accent:#7fa8e6; --accent-soft:#1e2b3f;
+  --core:#6cc79d; --core-soft:#173025; --chal:#e5a64a; --chal-soft:#33281a; --str:#c39be0; --str-soft:#2a2135;
+  --bad:#ef8a80; --bad-soft:#3a1f1d;
+  --code-bg:#0e131a; --code-ink:#d6e2f5;
+  --c1:#7fa8e6; --c2:#eb9c4c; --c3:#5fc394; --c4:#c39be0; --shade:rgba(127,168,230,.30); --grid:#262e3a;
+  color-scheme:dark}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.6;margin:0;padding-inline:16px;padding-block:0 72px}
+a{color:var(--accent)}
+.topnav{max-width:820px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;padding-block:14px;border-bottom:1px solid var(--line);font-size:15px}
+.topnav .brand{font-weight:700;margin-right:auto;color:var(--ink);text-decoration:none}
+.topnav a.wk{color:var(--muted);text-decoration:none;padding:2px 8px;border-radius:6px}
+.topnav a.wk:hover{color:var(--accent)}
+.topnav a.wk[aria-current="page"]{background:var(--accent-soft);color:var(--accent);font-weight:600}
+.wrap{max-width:820px;margin:0 auto;display:flex;flex-direction:column;gap:40px}
+header.hero{padding-block:32px 4px;display:flex;flex-direction:column;gap:10px}
+.eyebrow{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;line-height:1.2;margin:0}
+h1{font-size:clamp(30px,6vw,44px)}
+h2{font-size:27px}
+h3{font-size:20px}
+p{margin:0}
+.lead{color:var(--muted);font-size:18.5px;max-width:65ch}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font-size:13px;font-weight:600;border:1px solid var(--line-strong);border-radius:999px;padding:3px 10px;color:var(--muted)}
+.toc{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:15px;padding:12px 16px;background:var(--paper);border:1px solid var(--line);border-radius:10px}
+.toc a{text-decoration:none}
+section{display:flex;flex-direction:column;gap:16px;scroll-margin-top:16px}
+.sec-head{display:flex;flex-direction:column;gap:4px}
+.sec-num{font-family:var(--f-mono);font-size:13px;color:var(--accent);font-weight:600}
+.prose{display:flex;flex-direction:column;gap:12px;max-width:68ch}
+ul.list,ol.list{margin:0;padding-left:1.3em;display:flex;flex-direction:column;gap:4px}
+.lo-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.lo-list li{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:baseline}
+.lo{font-family:var(--f-mono);font-size:12px;font-weight:600;background:var(--accent-soft);color:var(--accent);padding:2px 8px;border-radius:4px;white-space:nowrap}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.grid2.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media (max-width:600px){.grid2.two{grid-template-columns:1fr}}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.card h3{font-size:18px}
+.card .k{font-size:13px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:700}
+.code{position:relative;background:var(--code-bg);border:1px solid var(--line);border-radius:8px;min-width:0}
+.code pre{margin:0;padding:14px 16px;overflow-x:auto;font-family:var(--f-mono);font-size:14px;color:var(--code-ink);line-height:1.55}
+.code .copy{position:absolute;top:8px;right:8px}
+.copy,.btn{font:600 13px var(--f-body);background:var(--paper);color:var(--muted);border:1px solid var(--line-strong);border-radius:6px;padding:5px 11px;cursor:pointer}
+.copy:hover,.btn:hover{color:var(--accent);border-color:var(--accent)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--paper)}
+.btn.primary:hover{opacity:.9;color:var(--paper)}
+code{font-family:var(--f-mono);font-size:.88em;background:var(--code-bg);padding:1px 5px;border-radius:4px}
+.callout{border-left:3px solid var(--accent);background:var(--accent-soft);padding:12px 16px;border-radius:0 8px 8px 0}
+.callout.warn{border-color:var(--chal);background:var(--chal-soft)}
+.callout.good{border-color:var(--core);background:var(--core-soft)}
+/* figures and explorers */
+figure{margin:0}
+.figure{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.figure figcaption,.caption{font-size:14.5px;color:var(--muted)}
+.figure svg{width:100%;height:auto;display:block;overflow:visible}
+.explorer{border-color:var(--line-strong)}
+.explorer .title{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.explorer .title h3{font-size:19px}
+.tagx{font:700 11px var(--f-body);letter-spacing:.09em;text-transform:uppercase;padding:3px 8px;border-radius:999px;background:var(--accent-soft);color:var(--accent)}
+.controls{display:flex;flex-wrap:wrap;gap:12px 18px;align-items:flex-end}
+.ctl{display:flex;flex-direction:column;gap:4px;font-size:14px;color:var(--muted);min-width:0}
+.ctl b{color:var(--ink);font-family:var(--f-mono);font-weight:600}
+.ctl input[type=range]{width:min(220px,70vw);accent-color:var(--accent)}
+.ctl input[type=number],.ctl input[type=text],.ctl select{font:15px var(--f-mono);padding:5px 8px;border:1px solid var(--line-strong);border-radius:6px;background:var(--bg);color:var(--ink);width:7.5em}
+.ctl input[type=text]{width:12em}
+.ctl select{width:auto;font-family:var(--f-body)}
+.console{background:var(--code-bg);border:1px solid var(--line);border-radius:8px;padding:10px 14px;font-family:var(--f-mono);font-size:14px;color:var(--code-ink);overflow-x:auto;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.55}
+.console .p{color:var(--muted)}
+.kpis{display:flex;flex-wrap:wrap;gap:10px}
+.kpi{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 12px;display:flex;flex-direction:column;min-width:110px}
+.kpi span{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+.kpi b{font-family:var(--f-mono);font-size:19px;font-variant-numeric:tabular-nums}
+/* svg classes */
+.ax{stroke:var(--line-strong);stroke-width:1}
+.gridl{stroke:var(--grid);stroke-width:1}
+.tick{fill:var(--muted);font:12px var(--f-body)}
+.lab{fill:var(--ink);font:13px var(--f-body)}
+.labm{fill:var(--muted);font:12px var(--f-body)}
+.mono{font-family:var(--f-mono)}
+.curve{fill:none;stroke:var(--c1);stroke-width:2.2}
+.curve2{fill:none;stroke:var(--c2);stroke-width:2.2}
+.area{fill:var(--shade);stroke:none}
+.bar{fill:var(--c1)}
+.bar2{fill:var(--c2)}
+.bar3{fill:var(--c3)}
+.barmuted{fill:var(--line-strong)}
+.vline{stroke:var(--c2);stroke-width:2}
+.vline2{stroke:var(--c3);stroke-width:2;stroke-dasharray:5 4}
+.dot{fill:var(--c1)}
+/* vector cells */
+.vec{display:flex;flex-wrap:wrap;gap:4px}
+.cell{display:flex;flex-direction:column;align-items:center;min-width:46px;border:1px solid var(--line-strong);border-radius:6px;background:var(--paper);overflow:hidden;transition:background .15s,border-color .15s}
+.cell .v{font-family:var(--f-mono);font-size:15px;font-weight:600;padding:6px 6px 2px}
+.cell .i{font-family:var(--f-mono);font-size:11px;color:var(--muted);padding:0 6px 4px}
+.cell .t{font-family:var(--f-mono);font-size:10.5px;padding:2px 4px;width:100%;text-align:center;border-top:1px solid var(--line)}
+.cell.on{background:var(--core-soft);border-color:var(--core)}
+.cell.on .t{color:var(--core);font-weight:700}
+.cell.off{opacity:.55}
+.cell.off .t{color:var(--bad)}
+.cell.rec{border-style:dashed;opacity:.75}
+/* tiers and tasks */
+.tier{display:flex;flex-direction:column;gap:12px}
+.tier-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.tag{font:700 12px var(--f-body);letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:999px}
+.t-core .tag{background:var(--core-soft);color:var(--core)}
+.t-chal .tag{background:var(--chal-soft);color:var(--chal)}
+.t-str .tag{background:var(--str-soft);color:var(--str)}
+.note{color:var(--muted);font-size:15px}
+ol.tasks{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px}
+.task{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:14px 16px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.task-q{display:grid;grid-template-columns:2.4em 1fr;gap:4px}
+.task-q > span:last-child{min-width:0}
+.num{font-family:var(--f-mono);font-weight:600;color:var(--muted)}
+details{font-size:15px}
+summary{cursor:pointer;color:var(--accent);font-weight:600;width:max-content;max-width:100%}
+details > *:not(summary){margin-top:8px}
+summary:focus-visible,.copy:focus-visible,.btn:focus-visible,button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+/* tables */
+.tbl{overflow-x:auto;background:var(--paper);border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th,td{text-align:left;padding:8px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:none}
+th{font-weight:700;color:var(--muted);font-size:12.5px;text-transform:uppercase;letter-spacing:.06em;background:var(--bg)}
+td.m,th.m{font-family:var(--f-mono);font-size:14px;white-space:nowrap}
+td.n{text-align:right;font-variant-numeric:tabular-nums;font-family:var(--f-mono);font-size:14px}
+/* quiz */
+.quiz{display:flex;flex-direction:column;gap:14px}
+.q{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.q .opts{display:flex;flex-direction:column;gap:6px}
+.q button.opt{text-align:left;font:15px var(--f-body);background:var(--bg);color:var(--ink);border:1px solid var(--line-strong);border-radius:8px;padding:8px 12px;cursor:pointer}
+.q button.opt:hover{border-color:var(--accent)}
+.q button.opt.right{background:var(--core-soft);border-color:var(--core)}
+.q button.opt.wrong{background:var(--bad-soft);border-color:var(--bad)}
+.q .fb{font-size:15px;color:var(--muted)}
+.q .fb b.ok{color:var(--core)} .q .fb b.no{color:var(--bad)}
+/* rating */
+.rate{display:flex;flex-direction:column;gap:10px}
+.rate-row{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:10px 14px}
+.rate-row > span{min-width:0;flex:1 1 240px}
+.btns{display:flex;gap:6px}
+.btns button{font:600 14px var(--f-body);border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:6px;padding:6px 12px;cursor:pointer;min-width:44px}
+.btns button[aria-pressed="true"][data-v="1"]{background:var(--chal-soft);border-color:var(--chal);color:var(--chal)}
+.btns button[aria-pressed="true"][data-v="2"]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.btns button[aria-pressed="true"][data-v="3"]{background:var(--core-soft);border-color:var(--core);color:var(--core)}
+footer{max-width:820px;margin:48px auto 0;padding-bottom:8px;border-top:1px solid var(--line);padding-top:16px;color:var(--muted);font-size:14px;display:flex;flex-wrap:wrap;gap:8px 20px;justify-content:space-between}
+@media (max-width:520px){ body{font-size:16px} .card,.figure{padding:14px} .cell{min-width:40px} }
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+.wrap > *, section > *, .figure > *, .card > *{min-width:0;max-width:100%}
+p code, span code, li code, td code{overflow-wrap:anywhere}
+a.wkcard{text-decoration:none;color:var(--ink);transition:border-color .15s}
+a.wkcard:hover{border-color:var(--accent)}
+a.wkcard .go{color:var(--accent);font-weight:600;font-size:15px;margin-top:auto}
+@media (max-width:560px){
+  .figure svg .tick, .figure svg .labm{font-size:22px}
+  .figure svg .lab{font-size:23px}
+}
+/* ---------- module layout: left menu + main column ---------- */
+.layout{display:grid;grid-template-columns:270px minmax(0,1fr);gap:36px;max-width:1220px;margin:0 auto}
+.side{position:sticky;top:0;align-self:start;height:100vh;overflow-y:auto;padding:22px 6px 40px 0;border-right:1px solid var(--line);font-size:14.5px}
+.main{min-width:0}
+.side-brand{display:block;font-weight:700;font-size:16px;color:var(--ink);text-decoration:none;margin-bottom:14px}
+.side-group{font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:18px 0 6px}
+.side-list,.side-secs{list-style:none;margin:0;padding:0}
+.side-wk{display:grid;grid-template-columns:2.2em 1fr;gap:4px;align-items:baseline;padding:5px 8px;border-radius:6px;color:var(--ink);text-decoration:none;line-height:1.35}
+.side-wk:hover{background:var(--accent-soft)}
+.side-wk .wn{font-family:var(--f-mono);font-size:12.5px;color:var(--muted);font-weight:600}
+.side-wk[aria-current="page"]{background:var(--accent-soft);color:var(--accent);font-weight:600}
+.side-wk[aria-current="page"] .wn{color:var(--accent)}
+.side-secs{margin:4px 0 8px 2.6em;border-left:2px solid var(--line);padding-left:10px;display:flex;flex-direction:column;gap:2px}
+.side-secs a{color:var(--muted);text-decoration:none;font-size:13.5px;display:block;padding:2px 0;line-height:1.35}
+.side-secs a:hover{color:var(--accent)}
+.mobilebar{display:none}
+.pager{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px}
+.pager a{display:flex;flex-direction:column;gap:2px;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:var(--paper);text-decoration:none;color:var(--ink);font-weight:600;font-size:15px}
+.pager a:hover{border-color:var(--accent)}
+.pager a .k{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.pager a.nx{text-align:right}
+@media (max-width:1000px){
+  .layout{display:block}
+  .side{display:none}
+  .mobilebar{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding-block:12px;border-bottom:1px solid var(--line);position:relative}
+  .mobilebar .side-brand{margin:6px 0 0}
+  .mnav summary{list-style:none;cursor:pointer;font-weight:600;font-size:14px;color:var(--accent);border:1px solid var(--line-strong);border-radius:6px;padding:6px 12px;width:auto;background:var(--paper)}
+  .mnav summary::-webkit-details-marker{display:none}
+  .mnav[open] summary{background:var(--accent-soft)}
+  .mnav-panel{position:absolute;left:0;right:0;top:100%;z-index:20;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:14px 14px 18px;box-shadow:0 12px 30px rgba(0,0,0,.18);max-height:75vh;overflow-y:auto}
+  .mnav-panel .side-brand{display:none}
+}
+@media (max-width:520px){ .pager{grid-template-columns:1fr} .pager a.nx{text-align:left} }
+@media (min-width:1001px){ .toc{display:none} }
+.side-secs a.on{color:var(--accent);font-weight:600}
+
+</style>
+</head>
+<body data-page="week05">
+<div class="layout">
+<aside class="side" aria-label="Module weeks"><a class="side-brand" href="index.html">COM747 R Labs</a><p class="side-group">Foundations</p><ul class="side-list"><li><a class="side-wk" href="week01.html"><span class="wn">1</span><span>Data, Questions and R</span></a></li><li><a class="side-wk" href="week02a.html"><span class="wn">2A</span><span>Statistical Computing with R</span></a></li><li><a class="side-wk" href="week02b.html"><span class="wn">2B</span><span>Probability Distributions and EDA</span></a></li><li><a class="side-wk" href="week03.html"><span class="wn">3</span><span>Inferential Statistics</span></a></li></ul><p class="side-group">Modelling</p><ul class="side-list"><li><a class="side-wk" href="week04.html"><span class="wn">4</span><span>Regression and Time Series</span></a></li><li><a class="side-wk" href="week05.html" aria-current="page"><span class="wn">5</span><span>Supervised ML and Feature Engineering</span></a><ul class="side-secs"><li><a href="#question">Can a machine learn to diagnose?</a></li><li><a href="#types">Types of machine learning</a></li><li><a href="#workflow">The supervised learning workflow</a></li><li><a href="#overfit">Overfitting and generalisation</a></li><li><a href="#knn">k-nearest neighbours: &quot;birds of a feather&quot;</a></li><li><a href="#trees">Decision trees</a></li><li><a href="#evaluation">Testing a model honestly</a></li><li><a href="#confusion">The confusion matrix</a></li><li><a href="#features">Feature engineering and selection</a></li><li><a href="#tasks">Your R tasks</a></li><li><a href="#quiz">Check yourself</a></li><li><a href="#glossary">Key terms</a></li><li><a href="#exit">Exit self-check</a></li></ul></li><li><a class="side-wk" href="week06.html"><span class="wn">6</span><span>Ethics, Evaluation and Logistic Regression</span></a></li><li><a class="side-wk" href="week07.html"><span class="wn">7</span><span>ML Optimisation and Text Mining</span></a></li></ul><p class="side-group">Unsupervised learning</p><ul class="side-list"><li><a class="side-wk" href="week08.html"><span class="wn">8</span><span>Clustering and PCA</span></a></li><li><a class="side-wk" href="week09.html"><span class="wn">9</span><span>Association Rule Mining</span></a></li></ul><p class="side-group">Wider practice</p><ul class="side-list"><li><a class="side-wk" href="week10.html"><span class="wn">10</span><span>Data Analytics and Engineering</span></a></li><li><a class="side-wk" href="week11.html"><span class="wn">11</span><span>Maths and the R Toolkit</span></a></li><li><a class="side-wk" href="week12.html"><span class="wn">12</span><span>Teamwork and Process Mining</span></a></li></ul></aside>
+<div class="main">
+<div class="mobilebar"><a class="side-brand" href="index.html">COM747 R Labs</a><details class="mnav"><summary>Menu</summary><nav class="mnav-panel" aria-label="Module weeks"><a class="side-brand" href="index.html">COM747 R Labs</a><p class="side-group">Foundations</p><ul class="side-list"><li><a class="side-wk" href="week01.html"><span class="wn">1</span><span>Data, Questions and R</span></a></li><li><a class="side-wk" href="week02a.html"><span class="wn">2A</span><span>Statistical Computing with R</span></a></li><li><a class="side-wk" href="week02b.html"><span class="wn">2B</span><span>Probability Distributions and EDA</span></a></li><li><a class="side-wk" href="week03.html"><span class="wn">3</span><span>Inferential Statistics</span></a></li></ul><p class="side-group">Modelling</p><ul class="side-list"><li><a class="side-wk" href="week04.html"><span class="wn">4</span><span>Regression and Time Series</span></a></li><li><a class="side-wk" href="week05.html" aria-current="page"><span class="wn">5</span><span>Supervised ML and Feature Engineering</span></a><ul class="side-secs"><li><a href="#question">Can a machine learn to diagnose?</a></li><li><a href="#types">Types of machine learning</a></li><li><a href="#workflow">The supervised learning workflow</a></li><li><a href="#overfit">Overfitting and generalisation</a></li><li><a href="#knn">k-nearest neighbours: &quot;birds of a feather&quot;</a></li><li><a href="#trees">Decision trees</a></li><li><a href="#evaluation">Testing a model honestly</a></li><li><a href="#confusion">The confusion matrix</a></li><li><a href="#features">Feature engineering and selection</a></li><li><a href="#tasks">Your R tasks</a></li><li><a href="#quiz">Check yourself</a></li><li><a href="#glossary">Key terms</a></li><li><a href="#exit">Exit self-check</a></li></ul></li><li><a class="side-wk" href="week06.html"><span class="wn">6</span><span>Ethics, Evaluation and Logistic Regression</span></a></li><li><a class="side-wk" href="week07.html"><span class="wn">7</span><span>ML Optimisation and Text Mining</span></a></li></ul><p class="side-group">Unsupervised learning</p><ul class="side-list"><li><a class="side-wk" href="week08.html"><span class="wn">8</span><span>Clustering and PCA</span></a></li><li><a class="side-wk" href="week09.html"><span class="wn">9</span><span>Association Rule Mining</span></a></li></ul><p class="side-group">Wider practice</p><ul class="side-list"><li><a class="side-wk" href="week10.html"><span class="wn">10</span><span>Data Analytics and Engineering</span></a></li><li><a class="side-wk" href="week11.html"><span class="wn">11</span><span>Maths and the R Toolkit</span></a></li><li><a class="side-wk" href="week12.html"><span class="wn">12</span><span>Teamwork and Process Mining</span></a></li></ul></nav></details></div>
+<div class="wrap">
+<header class="hero">
+  <div class="eyebrow">COM747 Data Science &amp; Machine Learning · Week 5</div>
+  <h1>Supervised Machine Learning and Feature Engineering</h1>
+  <p class="lead">Teach a computer to label new cases from labelled examples. See why models overfit, how k-nearest neighbours and decision trees make decisions, how to test a model honestly, and how to choose the features that matter.</p>
+  <div class="chips"><span class="chip">Lecture + lab</span><span class="chip">RStudio</span><span class="chip">Datasets: <a href="data/Iris.csv">Iris.csv</a> · <a href="data/data.csv">data.csv</a> (Breast Cancer Wisconsin)</span></div>
+</header>
+
+<nav class="toc" aria-label="On this page">
+  <a href="#question">The question</a><a href="#types">Types of ML</a><a href="#workflow">Workflow</a><a href="#overfit">Overfitting</a><a href="#knn">k-NN</a><a href="#trees">Decision trees</a><a href="#evaluation">Evaluation</a><a href="#confusion">Confusion matrix</a><a href="#features">Feature selection</a><a href="#tasks">R tasks</a><a href="#quiz">Quiz</a>
+</nav>
+
+<section id="question">
+  <div class="sec-head"><span class="sec-num">01</span><h2>Can a machine learn to diagnose?</h2></div>
+  <div class="prose"><p>The Breast Cancer Wisconsin dataset has 569 tumour samples, each with 30 measurements from a digitised image and a label from a pathologist: <b>B</b> (benign) or <b>M</b> (malignant). A supervised learning algorithm studies the labelled examples and learns a rule that labels new samples. This week you will build and test two such rules.</p></div>
+  <ul class="lo-list">
+    <li><span class="lo">LO1</span><span>Distinguish supervised, unsupervised, semi-supervised and reinforcement learning; classification and regression.</span></li>
+    <li><span class="lo">LO2</span><span>Explain overfitting and the bias–variance trade-off.</span></li>
+    <li><span class="lo">LO3</span><span>Build and tune a k-NN classifier, including feature scaling.</span></li>
+    <li><span class="lo">LO4</span><span>Explain how a decision tree chooses splits using entropy and information gain; build one with C5.0.</span></li>
+    <li><span class="lo">LO5</span><span>Evaluate with train/test splits, cross-validation and confusion-matrix metrics.</span></li>
+    <li><span class="lo">LO6</span><span>Select features with filter, wrapper and embedded methods, including Boruta.</span></li>
+  </ul>
+</section>
+
+<section id="types">
+  <div class="sec-head"><span class="sec-num">02</span><h2>Types of machine learning</h2></div>
+  <div class="grid2 two">
+    <div class="card"><span class="k">Supervised</span><p>Learns from <b>labelled</b> data: each example has the right answer. k-NN, decision trees, logistic regression, SVM, neural networks.</p></div>
+    <div class="card"><span class="k">Unsupervised</span><p>No labels. Finds structure on its own: clustering (Week 8), association rules (Week 9).</p></div>
+    <div class="card"><span class="k">Semi-supervised</span><p>A few labelled examples and many unlabelled ones, e.g. cluster first, then label the clusters.</p></div>
+    <div class="card"><span class="k">Reinforcement</span><p>An agent learns by trial and error from rewards in an environment: game playing, robotics.</p></div>
+  </div>
+  <div class="tbl"><table><thead><tr><th></th><th>Classification</th><th>Regression</th></tr></thead><tbody>
+    <tr><td>Predicts</td><td>A category (factor): B/M, species, pass/fail</td><td>A number: final run distance, house price</td></tr>
+    <tr><td>Example methods</td><td>k-NN, decision trees, logistic regression</td><td>Linear regression, regression trees, k-NN (average of neighbours)</td></tr>
+    <tr><td>Evaluate with</td><td>Accuracy, sensitivity, specificity, F1, kappa</td><td>MAE, RMSE, R²</td></tr>
+  </tbody></table></div>
+</section>
+
+<section id="workflow">
+  <div class="sec-head"><span class="sec-num">03</span><h2>The supervised learning workflow</h2></div>
+  <figure class="figure">
+    <svg id="wf-svg" role="img" aria-label="Workflow: labelled data, preparation and feature engineering, training, parameter optimisation, testing, deployment"></svg>
+    <figcaption>Optimisation loops back to training; the test set is used once, at the end. Feature engineering and selection must be decided on the <b>training set only</b>, or information leaks from the test set and your accuracy will be too optimistic.</figcaption>
+  </figure>
+  <div class="callout"><b>Where do the labels come from?</b> Is the label a human judgement or a gold-standard test? Was the labeller an expert? Did several people label each case, and how were disagreements resolved? A model can never be better than its labels.</div>
+</section>
+
+<section id="overfit">
+  <div class="sec-head"><span class="sec-num">04</span><h2>Overfitting and generalisation</h2></div>
+  <div class="prose"><p>A model that memorises the training data, noise and all, fits the training set perfectly but fails on new data: <b>overfitting</b>. A model too simple to capture the pattern <b>underfits</b>. The aim is a model that <b>generalises</b>: low error on data it has never seen.</p></div>
+  <div class="figure explorer">
+    <div class="title"><span class="tagx">Explorer</span><h3>Polynomial degree versus test error</h3></div>
+    <p class="caption">Blue points train the model; orange points test it. Increase the polynomial degree and watch the training error fall while the test error eventually climbs.</p>
+    <div class="controls">
+      <label class="ctl" for="of-d"><span>degree: <b id="of-dv">3</b></span><input type="range" id="of-d" min="1" max="12" value="3"></label>
+      <label class="ctl" for="of-n"><span>noise: <b id="of-nv">0.30</b></span><input type="range" id="of-n" min="0.05" max="0.8" step="0.05" value="0.3"></label>
+      <button class="btn primary" type="button" id="of-go">New data</button>
+    </div>
+    <svg id="of-svg" role="img" aria-label="Training points, test points and fitted polynomial"></svg>
+    <svg id="of-err" role="img" aria-label="Training and test error against polynomial degree"></svg>
+    <div class="kpis"><div class="kpi"><span>training MSE</span><b id="of-tr"></b></div><div class="kpi"><span>test MSE</span><b id="of-te"></b></div></div>
+  </div>
+  <div class="grid2 two">
+    <div class="card"><span class="k">High bias (underfit)</span><p>Too simple. Wrong on training <i>and</i> test data. Fix: a more flexible model, better features.</p></div>
+    <div class="card"><span class="k">High variance (overfit)</span><p>Too flexible. Changes a lot with each new training sample. Fix: more data, simpler model, regularisation, pruning.</p></div>
+  </div>
+</section>
+
+<section id="knn">
+  <div class="sec-head"><span class="sec-num">05</span><h2>k-nearest neighbours: "birds of a feather"</h2></div>
+  <div class="prose"><p>k-NN is a <b>lazy learner</b>: it doesn't build a model in advance. To classify a new case it finds the k closest training cases (usually by <b>Euclidean distance</b>, √Σ(a<sub>i</sub> − b<sub>i</sub>)²) and takes a majority vote. Use an odd k to avoid ties. Because it uses distances, features on bigger scales dominate, so <b>standardise</b> (<code>scale()</code>) or <b>normalise</b> (min–max) first.</p></div>
+  <div class="figure explorer">
+    <div class="title"><span class="tagx">Explorer</span><h3>Classify an iris</h3></div>
+    <p class="caption">Click anywhere in the plot to place a new flower. The shaded background shows what k-NN would predict at every point (the decision regions).</p>
+    <div class="controls">
+      <label class="ctl" for="kn-k"><span>k: <b id="kn-kv">3</b></span><input type="range" id="kn-k" min="1" max="25" step="2" value="3"></label>
+      <label class="ctl" for="kn-d">distance<select id="kn-d"><option value="e">Euclidean</option><option value="m">Manhattan</option></select></label>
+      <label class="ctl" for="kn-bg">decision regions<select id="kn-bg"><option value="1">show</option><option value="0">hide</option></select></label>
+    </div>
+    <svg id="kn-svg" role="img" aria-label="Iris petal length and width with the new flower and its nearest neighbours" style="cursor:crosshair"></svg>
+    <div class="console" id="kn-out" aria-live="polite"></div>
+  </div>
+  <figure class="figure">
+    <svg id="kacc-svg" role="img" aria-label="Test accuracy for k from 1 to 25"></svg>
+    <figcaption>Accuracy on the 50 test flowers for k = 1 to 25, using the seminar's split (<code>set.seed(1)</code>, standardised features, 100 train / 50 test). k = 3 gives 98% (49 of 50). Very small k overfits to noise; very large k blurs the class boundaries.</figcaption>
+  </figure>
+</section>
+
+<section id="trees">
+  <div class="sec-head"><span class="sec-num">06</span><h2>Decision trees</h2></div>
+  <div class="prose"><p>A decision tree is an upside-down flowchart of yes/no questions. Starting at the <b>root</b>, it splits the data on the feature and threshold that best separates the classes, then repeats inside each branch (<b>recursive partitioning</b>) until the <b>leaves</b> are pure enough. Trees are easy to explain and do their own feature selection.</p></div>
+  <div class="grid2 two">
+    <div class="card"><span class="k">Entropy (impurity)</span><p><code>−Σ p·log₂(p)</code>. 0 for a pure group, 1 for a 50/50 mix of two classes.</p></div>
+    <div class="card"><span class="k">Information gain</span><p>Entropy before the split minus the weighted entropy after. The tree picks the split with the biggest gain.</p></div>
+  </div>
+  <div class="figure explorer">
+    <div class="title"><span class="tagx">Explorer</span><h3>Find the best split</h3></div>
+    <div class="controls">
+      <label class="ctl" for="ig-f">feature<select id="ig-f"><option value="concave_points_worst">concave.points_worst</option><option value="radius_mean">radius_mean</option><option value="area_worst">area_worst</option><option value="texture_mean">texture_mean</option></select></label>
+      <label class="ctl" for="ig-t"><span>threshold: <b id="ig-tv"></b></span><input type="range" id="ig-t" min="0" max="1000" value="500"></label>
+      <button class="btn primary" type="button" id="ig-best">Find best threshold</button>
+    </div>
+    <svg id="ig-svg" role="img" aria-label="Stacked histogram of benign and malignant tumours with the split threshold"></svg>
+    <div class="kpis"><div class="kpi"><span>entropy before</span><b id="ig-h0"></b></div><div class="kpi"><span>left (≤): B / M</span><b id="ig-l"></b></div><div class="kpi"><span>right (&gt;): B / M</span><b id="ig-r"></b></div><div class="kpi"><span>information gain</span><b id="ig-g"></b></div></div>
+    <p class="caption">texture_mean overlaps a lot, so even its best split gains little. concave.points_worst separates the classes well, which is why real trees choose it first.</p>
+  </div>
+  <figure class="figure">
+    <svg id="tree-svg" role="img" aria-label="Decision tree fitted to the breast cancer training data"></svg>
+    <figcaption>A tree fitted to the 500 training tumours (<code>rpart</code>, depth 3). Each box shows the rule, the cases reaching it and the benign/malignant mix. The seminar's C5.0 tree gets 66 of 69 test cases right (95.7%): 40 benign and 26 malignant correct, 2 malignant missed, 1 false alarm.</figcaption>
+  </figure>
+  <div class="callout">Trees: C4.5, <b>C5.0</b>, CART (<code>rpart</code>), ID3. <b>Boosting</b> (<code>C5.0(..., trials = 10)</code>) builds many trees, each concentrating on the cases the previous ones got wrong, and lets them vote. A <b>random forest</b> averages many trees grown on bootstrap samples.</div>
+</section>
+
+<section id="evaluation">
+  <div class="sec-head"><span class="sec-num">07</span><h2>Testing a model honestly</h2></div>
+  <div class="figure explorer">
+    <div class="title"><span class="tagx">Explorer</span><h3>Hold-out split and k-fold cross-validation</h3></div>
+    <div class="controls">
+      <label class="ctl" for="cv-m">method<select id="cv-m"><option value="split">train / test split</option><option value="kfold" selected>k-fold cross-validation</option><option value="loo">leave-one-out (LOOCV)</option></select></label>
+      <label class="ctl" for="cv-k"><span>k / train %: <b id="cv-kv">5</b></span><input type="range" id="cv-k" min="2" max="10" value="5"></label>
+    </div>
+    <svg id="cv-svg" role="img" aria-label="Diagram of which cases are used for training and testing"></svg>
+    <p class="caption" id="cv-cap"></p>
+  </div>
+  <div class="grid3">
+    <div class="card"><span class="k">Hold-out</span><p>60/40, 70/30, 80/20 or 90/10. Quick, but the score depends on which cases happen to land in the test set.</p></div>
+    <div class="card"><span class="k">k-fold CV</span><p>Every case is tested exactly once. Report the mean accuracy across folds ± its standard error.</p></div>
+    <div class="card"><span class="k">LOOCV</span><p>k = n. Best for small datasets (trains on n − 1 cases), but builds n models.</p></div>
+  </div>
+</section>
+
+<section id="confusion">
+  <div class="sec-head"><span class="sec-num">08</span><h2>The confusion matrix</h2></div>
+  <div class="figure explorer">
+    <div class="title"><span class="tagx">Explorer</span><h3>Metrics calculator</h3></div>
+    <p class="caption">Defaults are from the seminar's confusion-matrix tutorial: a logistic regression tested on 283 patients.</p>
+    <div class="controls">
+      <label class="ctl" for="cm-tp">TP (has disease, predicted yes)<input type="number" id="cm-tp" value="102" min="0"></label>
+      <label class="ctl" for="cm-fn">FN (has disease, predicted no)<input type="number" id="cm-fn" value="22" min="0"></label>
+      <label class="ctl" for="cm-fp">FP (healthy, predicted yes)<input type="number" id="cm-fp" value="9" min="0"></label>
+      <label class="ctl" for="cm-tn">TN (healthy, predicted no)<input type="number" id="cm-tn" value="150" min="0"></label>
+    </div>
+    <svg id="cm-svg" role="img" aria-label="Confusion matrix"></svg>
+    <div class="tbl"><table><thead><tr><th>Metric</th><th>Formula</th><th>Value</th></tr></thead><tbody id="cm-body"></tbody></table></div>
+  </div>
+  <div class="callout warn"><b>Accuracy can mislead.</b> If 95% of patients are healthy, a model that always says "healthy" scores 95% accuracy and finds no disease at all. Sensitivity and specificity don't depend on how common the disease is. Balance the classes (undersample the majority, oversample the minority, or SMOTE in Week 6) and report several metrics.</div>
+</section>
+
+<section id="features">
+  <div class="sec-head"><span class="sec-num">09</span><h2>Feature engineering and selection</h2></div>
+  <div class="prose"><p><b>Feature extraction</b> creates features from raw data: amplitudes and intervals from an ECG, a "bag of visual words" from an image. <b>Feature selection</b> keeps the features that help, because extra features cost money to collect, slow training and can add noise.</p></div>
+  <div class="tbl"><table><thead><tr><th>Approach</th><th>Idea</th><th>In R</th></tr></thead><tbody>
+    <tr><td>Independent features</td><td>Drop one of each highly correlated pair</td><td class="m">cor(); caret::findCorrelation()</td></tr>
+    <tr><td>Filter</td><td>Score each feature against the label</td><td class="m">t.test(), chisq.test(), cor()</td></tr>
+    <tr><td>Wrapper</td><td>Try subsets with the model itself</td><td class="m">step(); caret::rfe(); Boruta</td></tr>
+    <tr><td>Embedded</td><td>The algorithm selects as it learns</td><td class="m">decision trees (information gain), lasso</td></tr>
+    <tr><td>Dimensionality reduction</td><td>Combine features into fewer new ones</td><td class="m">prcomp() (Week 8)</td></tr>
+  </tbody></table></div>
+  <figure class="figure">
+    <svg id="bor-svg" role="img" aria-label="Boruta importance for each feature compared with the best shadow feature"></svg>
+    <figcaption><b>Boruta</b> copies every feature and shuffles each copy (<b>shadow features</b>), destroying any real link to the label. A random forest scores real and shadow features; a real feature is <b>confirmed</b> (green) only if it beats the best shadow feature (dashed line) significantly often, and <b>rejected</b> (orange) if it doesn't. On the 500 training tumours: 27 confirmed, 2 tentative (grey), 1 rejected.</figcaption>
+  </figure>
+</section>
+
+<section id="tasks">
+  <div class="sec-head"><span class="sec-num">10</span><h2>Your R tasks</h2></div>
+  <div class="tier t-core">
+    <div class="tier-head"><span class="tag">Core</span><span class="note">k-NN on iris (LO3)</span></div>
+    <ol class="tasks">
+      <li class="task"><div class="task-q"><span class="num">1</span><span>Load <code>Iris.csv</code>, shuffle with <code>set.seed(1)</code>, keep columns 2–6, make Species a factor and check the class balance.</span></div>
+        <details><summary>Check your answer</summary><div class="code"><pre>Iris &lt;- read.csv("Iris.csv")
+set.seed(1)
+IrisData &lt;- Iris[sample(nrow(Iris)), c(2, 3, 4, 5, 6)]
+IrisData$Species &lt;- factor(IrisData$Species)
+table(IrisData$Species)               # 50 of each: balanced
+prop.table(table(IrisData$Species))   # 1/3 each</pre></div></details></li>
+      <li class="task"><div class="task-q"><span class="num">2</span><span>Standardise the four measurements, split 100/50 and run k-NN with k = 3. Show the confusion table and accuracy.</span></div>
+        <details><summary>Check your answer</summary><div class="code"><pre>IrisData[, 1:4] &lt;- scale(IrisData[, 1:4])
+trainingData &lt;- IrisData[1:100, 1:4];  testData &lt;- IrisData[101:150, 1:4]
+trainingLabels &lt;- IrisData[1:100, 5]; testingLabels &lt;- IrisData[101:150, 5]
+library(class)
+pred &lt;- knn(train = trainingData, test = testData, cl = trainingLabels, k = 3)
+table(testingLabels, pred)
+mean(pred == testingLabels)   # 0.98 (one virginica called versicolor)</pre></div></details></li>
+      <li class="task"><div class="task-q"><span class="num">3</span><span>From the tutorial matrix (TP 102, FN 22, FP 9, TN 150) calculate accuracy, sensitivity, specificity and F1.</span></div>
+        <details><summary>Check your answer</summary><div class="code"><pre>TP &lt;- 102; FN &lt;- 22; FP &lt;- 9; TN &lt;- 150
+(TP + TN) / (TP + TN + FP + FN)   # accuracy    0.890
+TP / (TP + FN)                    # sensitivity 0.823
+TN / (TN + FP)                    # specificity 0.943
+precision &lt;- TP / (TP + FP)
+2 * precision * (TP / (TP + FN)) / (precision + TP / (TP + FN))   # F1 0.868</pre></div></details></li>
+    </ol>
+  </div>
+  <div class="tier t-chal">
+    <div class="tier-head"><span class="tag">Challenge</span><span class="note">Tuning and trees (LO2, LO4)</span></div>
+    <ol class="tasks">
+      <li class="task"><div class="task-q"><span class="num">4</span><span>Plot test accuracy for k = 1 to 25. Then repeat with min–max normalisation instead of <code>scale()</code>.</span></div>
+        <details><summary>Check your answer</summary><div class="code"><pre>acc &lt;- sapply(1:25, function(k) mean(knn(trainingData, testData, trainingLabels, k = k) == testingLabels))
+plot(1:25, acc, type = "b", xlab = "k", ylab = "test accuracy")
+normalise &lt;- function(x) (x - min(x)) / (max(x) - min(x))
+IrisNorm &lt;- as.data.frame(lapply(Iris[, 2:5], normalise))</pre></div></details></li>
+      <li class="task"><div class="task-q"><span class="num">5</span><span>Breast cancer data: shuffle, train a C5.0 tree on 500 rows, test on 69. Calculate accuracy, sensitivity and specificity (treat M as positive).</span></div>
+        <details><summary>Check your answer</summary><div class="code"><pre>data &lt;- read.csv("data.csv")
+set.seed(1)
+DataDF &lt;- data[sample(nrow(data)), 2:32]
+DataDF$diagnosis &lt;- factor(DataDF$diagnosis)
+library(C50)
+tree &lt;- C5.0(diagnosis ~ ., data = DataDF[1:500, ])
+pred &lt;- predict(tree, DataDF[501:569, ])
+table(pred, actual = DataDF$diagnosis[501:569])
+# accuracy 66/69 = 0.957, sensitivity 26/28 = 0.929, specificity 40/41 = 0.976</pre></div></details></li>
+      <li class="task"><div class="task-q"><span class="num">6</span><span>Add boosting with <code>trials = 10</code>. Does it help on this test set? Why might it not?</span></div>
+        <details><summary>Check your answer</summary><p>Here it gets 65/69 (one more false alarm). With only 69 test cases, one case changes accuracy by 1.4 points, so a single split can't show a real difference. Use cross-validation to compare (Week 7).</p></details></li>
+    </ol>
+  </div>
+  <div class="tier t-str">
+    <div class="tier-head"><span class="tag">Stretch</span><span class="note">Feature selection (LO6)</span></div>
+    <ol class="tasks">
+      <li class="task"><div class="task-q"><span class="num">7</span><span>Filter method: run a t-test of each feature between B and M on the training set. Keep features with p &lt; 0.001 and rebuild the tree.</span></div>
+        <details><summary>Check your answer</summary><div class="code"><pre>train &lt;- DataDF[1:500, ]
+p &lt;- sapply(names(train)[-1], function(f) t.test(train[[f]] ~ train$diagnosis)$p.value)
+keep &lt;- names(p)[p &lt; 0.001]
+tree2 &lt;- C5.0(train[, keep], train$diagnosis)</pre></div></details></li>
+      <li class="task"><div class="task-q"><span class="num">8</span><span>Run Boruta on the training set. Which features are rejected? Plot the importance.</span></div>
+        <details><summary>Check your answer</summary><div class="code"><pre>library(Boruta)
+set.seed(1)
+b &lt;- Boruta(diagnosis ~ ., data = DataDF[1:500, ])
+print(b)                 # 27 confirmed, 2 tentative, 1 rejected
+plot(b, las = 2, cex.axis = 0.7)
+getSelectedAttributes(b)</pre></div></details></li>
+      <li class="task"><div class="task-q"><span class="num">9</span><span>Balance the training classes by oversampling M with <code>sample(..., replace = TRUE)</code>. Does sensitivity improve?</span></div>
+        <details><summary>Check your answer</summary><div class="code"><pre>M &lt;- train[train$diagnosis == "M", ]; B &lt;- train[train$diagnosis == "B", ]
+set.seed(1)
+balanced &lt;- rbind(B, M[sample(nrow(M), nrow(B), replace = TRUE), ])
+table(balanced$diagnosis)</pre></div></details></li>
+    </ol>
+  </div>
+</section>
+
+<section id="quiz">
+  <div class="sec-head"><span class="sec-num">11</span><h2>Check yourself</h2></div>
+  <div class="quiz">
+    <div class="q" data-answer="1" data-why="Predicting a category is classification; predicting a number is regression.">
+      <p><b>1.</b> Predicting whether a tumour is benign or malignant is…</p>
+      <div class="opts"><button class="opt">Regression</button><button class="opt">Classification</button><button class="opt">Clustering</button></div><p class="fb"></p></div>
+    <div class="q" data-answer="2" data-why="Low training error with high test error is the signature of overfitting.">
+      <p><b>2.</b> Training accuracy 100%, test accuracy 70%. The model is probably…</p>
+      <div class="opts"><button class="opt">Underfitting</button><button class="opt">Perfect</button><button class="opt">Overfitting</button></div><p class="fb"></p></div>
+    <div class="q" data-answer="0" data-why="k-NN uses distances, so a feature measured in thousands (area) swamps one measured in fractions (smoothness).">
+      <p><b>3.</b> Why scale features before k-NN?</p>
+      <div class="opts"><button class="opt">So features on large scales don't dominate the distance</button><button class="opt">To make k-NN run faster</button><button class="opt">Because k-NN needs normal data</button></div><p class="fb"></p></div>
+    <div class="q" data-answer="1" data-why="A pure node (all one class) has entropy 0; a 50/50 mix has entropy 1.">
+      <p><b>4.</b> A tree node contains 20 benign and 0 malignant tumours. Its entropy is…</p>
+      <div class="opts"><button class="opt">1</button><button class="opt">0</button><button class="opt">0.5</button></div><p class="fb"></p></div>
+    <div class="q" data-answer="2" data-why="Sensitivity = TP / (TP + FN): the share of real positives the model finds.">
+      <p><b>5.</b> Sensitivity measures…</p>
+      <div class="opts"><button class="opt">The share of predictions that are correct</button><button class="opt">The share of healthy people correctly cleared</button><button class="opt">The share of real positives the model detects</button></div><p class="fb"></p></div>
+    <div class="q" data-answer="0" data-why="Selecting features on all the data leaks test-set information into the model.">
+      <p><b>6.</b> Feature selection should be done on…</p>
+      <div class="opts"><button class="opt">The training set only</button><button class="opt">The test set</button><button class="opt">All the data before splitting</button></div><p class="fb"></p></div>
+  </div>
+</section>
+
+<section id="glossary">
+  <div class="sec-head"><span class="sec-num">12</span><h2>Key terms</h2></div>
+  <div class="tbl"><table><thead><tr><th>Term</th><th>Meaning</th></tr></thead><tbody>
+    <tr><td>Label / ground truth</td><td>The correct answer attached to each training example.</td></tr>
+    <tr><td>Feature</td><td>An input variable used to predict the label.</td></tr>
+    <tr><td>Overfitting</td><td>Learning the noise in the training data; poor on new data.</td></tr>
+    <tr><td>Lazy learner</td><td>Defers all work until prediction time (k-NN).</td></tr>
+    <tr><td>Entropy, information gain</td><td>Impurity of a group; reduction in impurity from a split.</td></tr>
+    <tr><td>Cross-validation</td><td>Rotating which part of the data is the test set.</td></tr>
+    <tr><td>Sensitivity / specificity</td><td>True positive rate / true negative rate.</td></tr>
+    <tr><td>Precision / F1</td><td>Share of positive predictions that are right / harmonic mean of precision and sensitivity.</td></tr>
+    <tr><td>Class imbalance</td><td>Many more cases in one class than another.</td></tr>
+    <tr><td>Shadow feature</td><td>A shuffled copy of a feature, used by Boruta as a baseline.</td></tr>
+  </tbody></table></div>
+</section>
+
+<section id="exit">
+  <div class="sec-head"><span class="sec-num">13</span><h2>Exit self-check</h2></div>
+  <p class="note">1 = I need help · 2 = nearly there · 3 = confident. Your choices stay on this device.</p>
+  <div class="rate">
+    <div class="rate-row"><span><span class="lo">LO2</span> Overfitting and bias–variance.</span><div class="btns" data-k="lo2"><button data-v="1">1</button><button data-v="2">2</button><button data-v="3">3</button></div></div>
+    <div class="rate-row"><span><span class="lo">LO3</span> Building and tuning k-NN.</span><div class="btns" data-k="lo3"><button data-v="1">1</button><button data-v="2">2</button><button data-v="3">3</button></div></div>
+    <div class="rate-row"><span><span class="lo">LO4</span> Decision trees and information gain.</span><div class="btns" data-k="lo4"><button data-v="1">1</button><button data-v="2">2</button><button data-v="3">3</button></div></div>
+    <div class="rate-row"><span><span class="lo">LO5</span> Evaluation and the confusion matrix.</span><div class="btns" data-k="lo5"><button data-v="1">1</button><button data-v="2">2</button><button data-v="3">3</button></div></div>
+    <div class="rate-row"><span><span class="lo">LO6</span> Feature selection and Boruta.</span><div class="btns" data-k="lo6"><button data-v="1">1</button><button data-v="2">2</button><button data-v="3">3</button></div></div>
+  </div>
+</section>
+
+<nav class="pager" aria-label="Previous and next week"><a href="week04.html"><span class="k">← Week 4</span>Regression and Time Series</a><a class="nx" href="week06.html"><span class="k">Week 6 →</span>Ethics, Evaluation and Logistic Regression</a></nav>
+</div>
+<footer><span>COM747 Data Science &amp; Machine Learning · QA Higher Education / Ulster University</span><span>Keep RStudio open beside this page.</span></footer>
+</div>
+</div>
+<script>
+/* Shared helpers for COM747 student pages: copy buttons, quizzes, self-ratings, stats maths, SVG charts */
+(function(){
+"use strict";
+/* ---------- copy buttons ---------- */
+document.querySelectorAll('.code').forEach(function(box){
+  if (box.dataset.nocopy !== undefined) return;
+  var pre = box.querySelector('pre'); if (!pre) return;
+  var btn = document.createElement('button'); btn.type='button'; btn.className='copy'; btn.textContent='Copy';
+  box.appendChild(btn);
+  btn.addEventListener('click', function(){
+    var text = pre.innerText;
+    var done = function(){ btn.textContent='Copied'; setTimeout(function(){btn.textContent='Copy';},1500); };
+    var fallback = function(){ var r=document.createRange(); r.selectNodeContents(pre); var s=window.getSelection(); s.removeAllRanges(); s.addRange(r); btn.textContent='Press Ctrl+C'; };
+    try { navigator.clipboard.writeText(text).then(done, fallback); } catch(e){ fallback(); }
+  });
+});
+/* ---------- quizzes: <div class="q" data-answer="1" data-why="..."> ---------- */
+document.querySelectorAll('.q').forEach(function(q){
+  var ans = +q.dataset.answer; var fb = q.querySelector('.fb');
+  var opts = q.querySelectorAll('button.opt');
+  opts.forEach(function(b, i){
+    b.type='button';
+    b.addEventListener('click', function(){
+      opts.forEach(function(o){ o.classList.remove('right','wrong'); });
+      if (i === ans){ b.classList.add('right'); fb.innerHTML = '<b class="ok">Correct.</b> ' + (q.dataset.why||''); }
+      else { b.classList.add('wrong'); fb.innerHTML = '<b class="no">Not quite.</b> Try another option.'; }
+    });
+  });
+});
+/* ---------- self-rating ---------- */
+var key = 'com747-' + (document.body.dataset.page || 'page');
+var saved = {};
+try { saved = JSON.parse(localStorage.getItem(key) || '{}'); } catch(e){}
+document.querySelectorAll('.btns').forEach(function(group){
+  var k = group.dataset.k;
+  var set = function(v){ group.querySelectorAll('button').forEach(function(b){ b.setAttribute('aria-pressed', String(b.dataset.v === v)); }); };
+  group.querySelectorAll('button').forEach(function(b){ b.type='button'; b.setAttribute('aria-pressed','false'); });
+  if (saved[k]) set(saved[k]);
+  group.addEventListener('click', function(e){
+    var b = e.target.closest('button'); if(!b) return;
+    set(b.dataset.v); saved[k]=b.dataset.v;
+    try { localStorage.setItem(key, JSON.stringify(saved)); } catch(e){}
+  });
+});
+
+/* ---------- stats maths ---------- */
+var S = {};
+S.mean = function(a){ var s=0; for (var i=0;i<a.length;i++) s+=a[i]; return s/a.length; };
+S.variance = function(a){ var m=S.mean(a), s=0; for (var i=0;i<a.length;i++) s+=(a[i]-m)*(a[i]-m); return s/(a.length-1); };
+S.sd = function(a){ return Math.sqrt(S.variance(a)); };
+S.median = function(a){ var b=a.slice().sort(function(x,y){return x-y;}); var n=b.length; return n%2? b[(n-1)/2] : (b[n/2-1]+b[n/2])/2; };
+S.erf = function(x){ /* Abramowitz-Stegun 7.1.26, |err|<1.5e-7 */
+  var s = x<0?-1:1; x=Math.abs(x);
+  var t=1/(1+0.3275911*x);
+  var y=1-(((((1.061405429*t-1.453152027)*t)+1.421413741)*t-0.284496736)*t+0.254829592)*t*Math.exp(-x*x);
+  return s*y; };
+S.dnorm = function(x,m,s){ m=m||0; s=s||1; var z=(x-m)/s; return Math.exp(-0.5*z*z)/(s*Math.sqrt(2*Math.PI)); };
+S.pnorm = function(x,m,s){ m=m||0; s=s||1; return 0.5*(1+S.erf((x-m)/(s*Math.SQRT2))); };
+S.qnorm = function(p){ /* Acklam */
+  var a=[-3.969683028665376e+01,2.209460984245205e+02,-2.759285104469687e+02,1.383577518672690e+02,-3.066479806614716e+01,2.506628277459239e+00],
+      b=[-5.447609879822406e+01,1.615858368580409e+02,-1.556989798598866e+02,6.680131188771972e+01,-1.328068155288572e+01],
+      c=[-7.784894002430293e-03,-3.223964580411365e-01,-2.400758277161838e+00,-2.549732539343734e+00,4.374664141464968e+00,2.938163982698783e+00],
+      d=[7.784695709041462e-03,3.224671290700398e-01,2.445134137142996e+00,3.754408661907416e+00];
+  var q,r; if (p<=0) return -Infinity; if (p>=1) return Infinity;
+  if (p<0.02425){ q=Math.sqrt(-2*Math.log(p)); return (((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5])/((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1); }
+  if (p>1-0.02425){ q=Math.sqrt(-2*Math.log(1-p)); return -(((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5])/((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1); }
+  q=p-0.5; r=q*q; return (((((a[0]*r+a[1])*r+a[2])*r+a[3])*r+a[4])*r+a[5])*q/(((((b[0]*r+b[1])*r+b[2])*r+b[3])*r+b[4])*r+1); };
+S.lgamma = function(x){ var c=[76.18009172947146,-86.50532032941677,24.01409824083091,-1.231739572450155,0.1208650973866179e-2,-0.5395239384953e-5];
+  var y=x, t=x+5.5; t-=(x+0.5)*Math.log(t); var s=1.000000000190015; for (var j=0;j<6;j++) s+=c[j]/++y; return -t+Math.log(2.5066282746310005*s/x); };
+function betacf(a,b,x){ var MAXIT=200,EPS=3e-14,FPMIN=1e-300; var qab=a+b,qap=a+1,qam=a-1,c=1,d=1-qab*x/qap; if(Math.abs(d)<FPMIN)d=FPMIN; d=1/d; var h=d;
+  for (var m=1;m<=MAXIT;m++){ var m2=2*m, aa=m*(b-m)*x/((qam+m2)*(a+m2)); d=1+aa*d; if(Math.abs(d)<FPMIN)d=FPMIN; c=1+aa/c; if(Math.abs(c)<FPMIN)c=FPMIN; d=1/d; h*=d*c;
+    aa=-(a+m)*(qab+m)*x/((a+m2)*(qap+m2)); d=1+aa*d; if(Math.abs(d)<FPMIN)d=FPMIN; c=1+aa/c; if(Math.abs(c)<FPMIN)c=FPMIN; d=1/d; var del=d*c; h*=del; if(Math.abs(del-1)<EPS)break; }
+  return h; }
+S.ibeta = function(x,a,b){ if (x<=0) return 0; if (x>=1) return 1;
+  var bt=Math.exp(S.lgamma(a+b)-S.lgamma(a)-S.lgamma(b)+a*Math.log(x)+b*Math.log(1-x));
+  return x<(a+1)/(a+b+2) ? bt*betacf(a,b,x)/a : 1-bt*betacf(b,a,1-x)/b; };
+S.pt = function(t,df){ var x=df/(df+t*t); var tail=0.5*S.ibeta(x,df/2,0.5); return t>0? 1-tail : tail; };
+S.dt = function(t,df){ return Math.exp(S.lgamma((df+1)/2)-S.lgamma(df/2))/Math.sqrt(df*Math.PI)*Math.pow(1+t*t/df,-(df+1)/2); };
+S.qt = function(p,df){ var lo=-60,hi=60; for (var i=0;i<100;i++){ var mid=(lo+hi)/2; if (S.pt(mid,df)<p) lo=mid; else hi=mid; } return (lo+hi)/2; };
+S.choose = function(n,k){ var r=1; for (var i=1;i<=k;i++) r=r*(n-k+i)/i; return r; };
+S.dbinom = function(k,n,p){ return S.choose(n,k)*Math.pow(p,k)*Math.pow(1-p,n-k); };
+S.rnorm = function(m,s){ var u=0,v=0; while(u===0)u=Math.random(); while(v===0)v=Math.random(); return m + s*Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v); };
+S.welch = function(x,y){ var mx=S.mean(x),my=S.mean(y),vx=S.variance(x),vy=S.variance(y),nx=x.length,ny=y.length;
+  var se=Math.sqrt(vx/nx+vy/ny), t=(mx-my)/se; var df=Math.pow(vx/nx+vy/ny,2)/(Math.pow(vx/nx,2)/(nx-1)+Math.pow(vy/ny,2)/(ny-1));
+  return {t:t, df:df, p:2*(1-S.pt(Math.abs(t),df))}; };
+S.fmt = function(x,d){ if (!isFinite(x)) return String(x); d = d===undefined?2:d; var s=x.toFixed(d); return s==='-0'+(d?'.'+'0'.repeat(d):'')? s.slice(1): s; };
+S.sig = function(x,n){ n=n||4; if (x===0) return '0'; if (Math.abs(x)<1e-4) return x.toExponential(2); return String(+x.toPrecision(n)); };
+window.S = S;
+
+/* ---------- SVG helpers ---------- */
+var NS='http://www.w3.org/2000/svg';
+function el(tag, attrs, parent){ var e=document.createElementNS(NS,tag); for (var k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; }
+function txt(parent, x, y, s, cls, anchor){ var t=el('text',{x:x,y:y,'class':cls||'tick','text-anchor':anchor||'middle'},parent); t.textContent=s; return t; }
+function niceTicks(lo, hi, n){ var span=hi-lo; if (span<=0) return [lo]; var step=Math.pow(10,Math.floor(Math.log10(span/n))); var err=n/span*step;
+  if (err<=0.15) step*=10; else if (err<=0.35) step*=5; else if (err<=0.75) step*=2;
+  var out=[]; for (var v=Math.ceil(lo/step)*step; v<=hi+1e-9; v+=step) out.push(+v.toFixed(10)); return out; }
+/* Chart frame: returns {g, x(), y(), W, H} */
+function frame(svg, opts){
+  while (svg.firstChild) svg.removeChild(svg.firstChild);
+  var W=opts.W||640, H=opts.H||260, m=opts.m||{l:48,r:16,t:14,b:38};
+  svg.setAttribute('viewBox','0 0 '+W+' '+H);
+  var x=function(v){ return m.l + (v-opts.x0)/(opts.x1-opts.x0)*(W-m.l-m.r); };
+  var y=function(v){ return H-m.b - (v-opts.y0)/(opts.y1-opts.y0)*(H-m.t-m.b); };
+  var g=el('g',{},svg);
+  if (opts.ygrid!==false){ niceTicks(opts.y0,opts.y1,opts.ny||4).forEach(function(v){ el('line',{x1:m.l,x2:W-m.r,y1:y(v),y2:y(v),'class':'gridl'},g); if (opts.ylabels!==false) txt(g,m.l-6,y(v)+4,opts.yfmt?opts.yfmt(v):S.sig(v,3),'tick','end'); }); }
+  el('line',{x1:m.l,x2:W-m.r,y1:H-m.b,y2:H-m.b,'class':'ax'},g);
+  (opts.xticks || niceTicks(opts.x0,opts.x1,opts.nx||6)).forEach(function(v){ el('line',{x1:x(v),x2:x(v),y1:H-m.b,y2:H-m.b+4,'class':'ax'},g); txt(g,x(v),H-m.b+17,opts.xfmt?opts.xfmt(v):S.sig(v,4)); });
+  if (opts.xlab) txt(g,(m.l+W-m.r)/2,H-4,opts.xlab,'labm');
+  if (opts.ylab){ var t=txt(g,12,(m.t+H-m.b)/2,opts.ylab,'labm'); t.setAttribute('transform','rotate(-90 12 '+((m.t+H-m.b)/2)+')'); }
+  return {g:g, x:x, y:y, W:W, H:H, m:m};
+}
+function pathFrom(pts){ return pts.map(function(p,i){ return (i?'L':'M')+p[0].toFixed(2)+' '+p[1].toFixed(2); }).join(''); }
+/* histogram of values into bins: returns {edges, counts} */
+function bins(vals, lo, hi, k){ var w=(hi-lo)/k, c=new Array(k).fill(0); vals.forEach(function(v){ var i=Math.floor((v-lo)/w); if (i===k) i=k-1; if (i>=0&&i<k) c[i]++; }); var e=[]; for (var i=0;i<=k;i++) e.push(lo+i*w); return {edges:e, counts:c, w:w}; }
+window.G = {el:el, txt:txt, frame:frame, path:pathFrom, ticks:niceTicks, bins:bins};
+})();
+/* scroll-spy: highlight the current section in the left menu */
+(function(){
+  var links = Array.prototype.slice.call(document.querySelectorAll('.side .side-secs a'));
+  if (!links.length || !('IntersectionObserver' in window)) return;
+  var map = {}; links.forEach(function(a){ map[a.getAttribute('href').slice(1)] = a; });
+  var obs = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){ if (e.isIntersecting){ links.forEach(function(a){ a.classList.remove('on'); }); var a = map[e.target.id]; if (a) a.classList.add('on'); } });
+  }, {rootMargin: '-20% 0px -70% 0px'});
+  Object.keys(map).forEach(function(id){ var s = document.getElementById(id); if (s) obs.observe(s); });
+})();
+
+</script>
+<script>
+(function(){
+"use strict";
+var W5={"knn_acc":[0.94,0.94,0.98,0.98,0.94,0.96,0.96,0.96,0.98,0.98,0.98,0.98,0.98,0.98,0.98,0.98,0.98,0.98,0.98,0.98,0.98,0.98,0.98,0.96,0.96],"iris":{"pl":[1.4,1.4,1.3,1.5,1.4,1.7,1.4,1.5,1.4,1.5,1.5,1.6,1.4,1.1,1.2,1.5,1.3,1.4,1.7,1.5,1.7,1.5,1,1.7,1.9,1.6,1.6,1.5,1.4,1.6,1.6,1.5,1.5,1.4,1.5,1.2,1.3,1.4,1.3,1.5,1.3,1.3,1.3,1.6,1.9,1.4,1.6,1.4,1.5,1.4,4.7,4.5,4.9,4,4.6,4.5,4.7,3.3,4.6,3.9,3.5,4.2,4,4.7,3.6,4.4,4.5,4.1,4.5,3.9,4.8,4,4.9,4.7,4.3,4.4,4.8,5,4.5,3.5,3.8,3.7,3.9,5.1,4.5,4.5,4.7,4.4,4.1,4,4.4,4.6,4,3.3,4.2,4.2,4.2,4.3,3,4.1,6,5.1,5.9,5.6,5.8,6.6,4.5,6.3,5.8,6.1,5.1,5.3,5.5,5,5.1,5.3,5.5,6.7,6.9,5,5.7,4.9,6.7,4.9,5.7,6,4.8,4.9,5.6,5.8,6.1,6.4,5.6,5.1,5.6,6.1,5.6,5.5,4.8,5.4,5.6,5.1,5.1,5.9,5.7,5.2,5,5.2,5.4,5.1],"pw":[0.2,0.2,0.2,0.2,0.2,0.4,0.3,0.2,0.2,0.1,0.2,0.2,0.1,0.1,0.2,0.4,0.4,0.3,0.3,0.3,0.2,0.4,0.2,0.5,0.2,0.2,0.4,0.2,0.2,0.2,0.2,0.4,0.1,0.2,0.2,0.2,0.2,0.1,0.2,0.2,0.3,0.3,0.2,0.6,0.4,0.3,0.2,0.2,0.2,0.2,1.4,1.5,1.5,1.3,1.5,1.3,1.6,1,1.3,1.4,1,1.5,1,1.4,1.3,1.4,1.5,1,1.5,1.1,1.8,1.3,1.5,1.2,1.3,1.4,1.4,1.7,1.5,1,1.1,1,1.2,1.6,1.5,1.6,1.5,1.3,1.3,1.3,1.2,1.4,1.2,1,1.3,1.2,1.3,1.3,1.1,1.3,2.5,1.9,2.1,1.8,2.2,2.1,1.7,1.8,1.8,2.5,2,1.9,2.1,2,2.4,2.3,1.8,2.2,2.3,1.5,2.3,2,2,1.8,2.1,1.8,1.8,1.8,2.1,1.6,1.9,2,2.2,1.5,1.4,2.3,2.4,1.8,1.8,2.1,2.4,2.3,1.9,2.3,2.5,2.3,1.9,2,2.3,1.8],"sl":[5.1,4.9,4.7,4.6,5,5.4,4.6,5,4.4,4.9,5.4,4.8,4.8,4.3,5.8,5.7,5.4,5.1,5.7,5.1,5.4,5.1,4.6,5.1,4.8,5,5,5.2,5.2,4.7,4.8,5.4,5.2,5.5,4.9,5,5.5,4.9,4.4,5.1,5,4.5,4.4,5,5.1,4.8,5.1,4.6,5.3,5,7,6.4,6.9,5.5,6.5,5.7,6.3,4.9,6.6,5.2,5,5.9,6,6.1,5.6,6.7,5.6,5.8,6.2,5.6,5.9,6.1,6.3,6.1,6.4,6.6,6.8,6.7,6,5.7,5.5,5.5,5.8,6,5.4,6,6.7,6.3,5.6,5.5,5.5,6.1,5.8,5,5.6,5.7,5.7,6.2,5.1,5.7,6.3,5.8,7.1,6.3,6.5,7.6,4.9,7.3,6.7,7.2,6.5,6.4,6.8,5.7,5.8,6.4,6.5,7.7,7.7,6,6.9,5.6,7.7,6.3,6.7,7.2,6.2,6.1,6.4,7.2,7.4,7.9,6.4,6.3,6.1,7.7,6.3,6.4,6,6.9,6.7,6.9,5.8,6.8,6.7,6.7,6.3,6.5,6.2,5.9],"sw":[3.5,3,3.2,3.1,3.6,3.9,3.4,3.4,2.9,3.1,3.7,3.4,3,3,4,4.4,3.9,3.5,3.8,3.8,3.4,3.7,3.6,3.3,3.4,3,3.4,3.5,3.4,3.2,3.1,3.4,4.1,4.2,3.1,3.2,3.5,3.6,3,3.4,3.5,2.3,3.2,3.5,3.8,3,3.8,3.2,3.7,3.3,3.2,3.2,3.1,2.3,2.8,2.8,3.3,2.4,2.9,2.7,2,3,2.2,2.9,2.9,3.1,3,2.7,2.2,2.5,3.2,2.8,2.5,2.8,2.9,3,2.8,3,2.9,2.6,2.4,2.4,2.7,2.7,3,3.4,3.1,2.3,3,2.5,2.6,3,2.6,2.3,2.7,3,2.9,2.9,2.5,2.8,3.3,2.7,3,2.9,3,3,2.5,2.9,2.5,3.6,3.2,2.7,3,2.5,2.8,3.2,3,3.8,2.6,2.2,3.2,2.8,2.8,2.7,3.3,3.2,2.8,3,2.8,3,2.8,3.8,2.8,2.8,2.6,3,3.4,3.1,3,3.1,3.1,3.1,2.7,3.2,3.3,3,2.5,3,3.4,3],"sp":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3]},"bc":{"diag":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,0,1,0,0,0,0,0,1,1,0,1,1,0,0,0,0,1,0,1,1,0,0,0,0,1,0,1,1,0,1,0,1,1,0,0,0,1,1,0,1,1,1,0,0,0,1,0,0,1,1,0,0,0,1,1,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,1,1,1,0,1,1,0,0,0,1,1,0,1,0,1,1,0,1,1,0,0,1,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,1,0,1,0,0,1,1,0,0,1,1,0,0,0,0,1,0,0,1,1,1,0,1,0,1,0,0,0,1,0,0,1,1,0,1,1,1,1,0,1,1,1,0,1,0,1,0,0,1,0,1,1,1,1,0,0,1,1,0,0,0,1,0,0,0,0,0,1,1,0,0,1,0,0,1,1,0,1,0,0,0,0,1,0,0,0,0,0,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,1,0,1,0,0,1,0,0,1,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,1,0,0,0,0,1,1,1,0,0,0,0,1,0,1,0,1,0,0,0,1,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,1,1,0,1,1,1,0,1,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,1,0,0,1,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,1,0,1,0,0,0,0,0,1,0,0,1,0,1,0,0,1,0,1,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,1,0,0,1,0,0,0,0,0,1,1,0,1,0,1,0,0,0,0,0,1,0,0,1,0,1,0,1,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0],"radius_mean":[17.99,20.57,19.69,11.42,20.29,12.45,18.25,13.71,13,12.46,16.02,15.78,19.17,15.85,13.73,14.54,14.68,16.13,19.81,13.54,13.08,9.504,15.34,21.16,16.65,17.14,14.58,18.61,15.3,17.57,18.63,11.84,17.02,19.27,16.13,16.74,14.25,13.03,14.99,13.48,13.44,10.95,19.07,13.28,13.17,18.65,8.196,13.17,12.05,13.49,11.76,13.64,11.94,18.22,15.1,11.52,19.21,14.71,13.05,8.618,10.17,8.598,14.25,9.173,12.68,14.78,9.465,11.31,9.029,12.78,18.94,8.888,17.2,13.8,12.31,16.07,13.53,18.05,20.18,12.86,11.45,13.34,25.22,19.1,12,18.46,14.48,19.02,12.36,14.64,14.62,15.37,13.27,13.45,15.06,20.26,12.18,9.787,11.6,14.42,13.61,6.981,12.18,9.876,10.49,13.11,11.64,12.36,22.27,11.34,9.777,12.63,14.26,10.51,8.726,11.93,8.95,14.87,15.78,17.95,11.41,18.66,24.25,14.5,13.37,13.85,13.61,19,15.1,19.79,12.19,15.46,16.16,15.71,18.45,12.77,11.71,11.43,14.95,11.28,9.738,16.11,11.43,12.9,10.75,11.9,11.8,14.95,14.44,13.74,13,8.219,9.731,11.15,13.15,12.25,17.68,16.84,12.06,10.9,11.75,19.19,19.59,12.34,23.27,14.97,10.8,16.78,17.47,14.97,12.32,13.43,15.46,11.08,10.66,8.671,9.904,16.46,13.01,12.81,27.22,21.09,15.7,11.41,15.28,10.08,18.31,11.71,11.81,12.3,14.22,12.77,9.72,12.34,14.86,12.91,13.77,18.08,19.18,14.45,12.23,17.54,23.29,13.81,12.47,15.12,9.876,17.01,13.11,15.27,20.58,11.84,28.11,17.42,14.19,13.86,11.89,10.2,19.8,19.53,13.65,13.56,10.18,15.75,13.27,14.34,10.44,15,12.62,12.83,17.05,11.32,11.22,20.51,9.567,14.03,23.21,20.48,14.22,17.46,13.64,12.42,11.3,13.75,19.4,10.48,13.2,12.89,10.65,11.52,20.94,11.5,19.73,17.3,19.45,13.96,19.55,15.32,15.66,15.53,20.31,17.35,17.29,15.61,17.19,20.73,10.6,13.59,12.87,10.71,14.29,11.29,21.75,9.742,17.93,11.89,11.33,18.81,13.59,13.85,19.16,11.74,19.4,16.24,12.89,12.58,11.94,12.89,11.26,11.37,14.41,14.96,12.95,11.85,12.72,13.77,10.91,11.76,14.26,10.51,19.53,12.46,20.09,10.49,11.46,11.6,13.2,9,13.5,13.05,11.7,14.61,12.76,11.54,8.597,12.49,12.18,18.22,9.042,12.43,10.25,20.16,12.86,20.34,12.2,12.67,14.11,12.03,16.27,16.26,16.03,12.98,11.22,11.25,12.3,17.06,12.99,18.77,10.05,23.51,14.42,9.606,11.06,19.68,11.71,10.26,12.06,14.76,11.47,11.95,11.66,15.75,25.73,15.08,11.14,12.56,13.05,13.87,8.878,9.436,12.54,13.3,12.76,16.5,13.4,20.44,20.2,12.21,21.71,22.01,16.35,15.19,21.37,20.64,13.69,16.17,10.57,13.46,13.66,11.08,11.27,11.04,12.05,12.39,13.28,14.6,12.21,13.88,11.27,19.55,10.26,8.734,15.49,21.61,12.1,14.06,13.51,12.8,11.06,11.8,17.91,11.93,12.96,12.94,12.34,10.94,16.14,12.85,17.99,12.27,11.36,11.04,9.397,14.99,15.13,11.89,9.405,15.5,12.7,11.16,11.57,14.69,11.61,13.66,9.742,10.03,10.48,10.8,11.13,12.72,14.9,12.4,20.18,18.82,14.86,13.98,12.87,14.04,13.85,14.02,10.97,17.27,13.78,10.57,18.03,11.99,17.75,14.8,14.53,21.1,11.87,19.59,12,14.53,12.62,13.38,11.63,13.21,13,9.755,17.08,27.42,14.4,11.6,13.17,13.24,13.14,9.668,17.6,11.62,9.667,12.04,14.92,12.27,10.88,12.83,14.2,13.9,11.49,16.25,12.16,13.9,13.47,13.7,15.73,12.45,14.64,19.44,11.68,16.69,12.25,17.85,18.01,12.46,13.16,14.87,12.65,12.47,18.49,20.59,15.04,13.82,12.54,23.09,9.268,9.676,12.22,11.06,16.3,15.46,11.74,14.81,13.4,14.58,15.05,11.34,18.31,19.89,12.88,12.75,9.295,24.63,11.26,13.71,9.847,8.571,13.46,12.34,13.94,12.07,11.75,11.67,13.68,20.47,10.96,20.55,14.27,11.69,7.729,7.691,11.54,14.47,14.74,13.21,13.87,13.62,10.32,10.26,9.683,10.82,10.86,11.13,12.77,9.333,12.88,10.29,10.16,9.423,14.59,11.51,14.05,11.2,15.22,20.92,21.56,20.13,16.6,20.6,7.76],"concave_points_worst":[0.2654,0.186,0.243,0.2575,0.1625,0.1741,0.1932,0.1556,0.206,0.221,0.09975,0.181,0.1767,0.1119,0.2208,0.1712,0.1609,0.2073,0.2388,0.1288,0.07283,0.06227,0.2393,0.2009,0.2095,0.255,0.2701,0.149,0.2024,0.1456,0.1848,0.1546,0.1847,0.1785,0.1864,0.1813,0.1447,0.05013,0.02899,0.2258,0.1112,0.1424,0.2493,0.1492,0.1607,0.2378,0.02564,0.2088,0.06548,0.1282,0.03715,0.08586,0.06296,0.1325,0.153,0.06316,0.2091,0.1834,0.01111,0.04419,0.02579,0.02778,0.1785,0.05087,0.1716,0.1614,0.06517,0.06961,0.175,0.05882,0.1789,0.04786,0.1899,0.1383,0.0866,0.152,0.07407,0.2102,0.2508,0.07926,0.06127,0.1708,0.2867,0.1841,0.07632,0.1642,0.1225,0.1956,0.1205,0.1397,0.06946,0.1476,0.1001,0.07911,0.2115,0.1573,0.05882,0.02381,0.08449,0.1565,0.1184,0,0.07431,0.09749,0.03203,0.1986,0.1218,0.08442,0.291,0.08278,0.05334,0.1105,0.1505,0.06136,0.105,0.07247,0.03846,0.2027,0.2034,0.1185,0.08958,0.1674,0.2248,0.1221,0.08978,0.05104,0.1329,0.1218,0.1423,0.1732,0.08187,0.1514,0.1312,0.1374,0.1379,0.09331,0.06968,0.08476,0.1667,0.08611,0,0.1216,0.06402,0.1012,0.03413,0.06042,0.1865,0.08405,0.1599,0.06019,0.06296,0.07879,0.1571,0.05506,0.09722,0.08211,0.1515,0.08436,0.07025,0.03953,0.07909,0.1777,0.2247,0.08194,0.2346,0.05754,0.04603,0.1474,0.1721,0.08485,0.09391,0.116,0.1827,0.04306,0,0,0.0991,0.2035,0.009259,0.0399,0.2688,0.2903,0.1541,0.06296,0.1226,0.01042,0.1571,0.1099,0.04306,0.04815,0.1772,0.04773,0,0.1459,0.1727,0.08235,0.1673,0.09181,0.1708,0.1838,0.108,0.1939,0.2733,0.2013,0.1015,0.1252,0.05588,0.1096,0.1126,0.1035,0.192,0.06913,0.1595,0.1099,0.1772,0.1654,0.1138,0.03571,0.182,0.1625,0.08056,0.0909,0.05575,0.1479,0.09678,0.1087,0.04464,0.1379,0.118,0.1977,0.2543,0.02083,0.03002,0.1563,0.07222,0.07963,0.2593,0.1445,0.08219,0.2066,0.09222,0.04052,0.1218,0.06106,0.1564,0.06736,0.0497,0.1561,0.06136,0.09608,0.2105,0.06544,0.2507,0.1857,0.1999,0.1374,0.1941,0.2229,0.2462,0.2014,0.1697,0.08235,0.1528,0.08568,0.1984,0.1659,0.07926,0.06189,0.0578,0.086,0.03333,0.0875,0.1841,0.05159,0.1136,0.08946,0.01111,0.1294,0.05185,0.09993,0.1872,0.0829,0.2252,0.1732,0.1017,0.008772,0.1155,0.05366,0.09314,0.06203,0.1021,0.1489,0.1056,0.0914,0.06343,0.05802,0.03194,0.0716,0.0753,0.03125,0.198,0.07625,0.1923,0.06528,0.05509,0.04815,0.025,0.01389,0.0221,0.03532,0.05741,0.05813,0.08411,0.04715,0,0.02784,0.01852,0.1776,0.1145,0.02832,0.09744,0.1425,0.1155,0.2685,0.05556,0.05602,0.0589,0.02796,0.1583,0.1047,0.1981,0.09858,0.02022,0.01667,0.03983,0.1827,0.0585,0.2048,0.06499,0.2089,0.1414,0.0812,0.1075,0.2255,0.07864,0.04074,0.05093,0.1251,0.06548,0.04766,0.04262,0.2135,0.2756,0.1526,0.03922,0.09265,0.1258,0.05556,0.04762,0.05052,0.01635,0.05614,0.08312,0.09123,0.06987,0.1765,0.2152,0.08829,0.182,0.2432,0.2248,0.08178,0.1966,0.2112,0.06987,0.1251,0.1465,0.05781,0.1054,0.2524,0.1318,0.06754,0.1092,0.09804,0.09173,0.1359,0.0914,0.04537,0.08272,0.1825,0.06696,0,0.2121,0.2422,0.06266,0.07911,0.1453,0.08296,0.05556,0.05356,0.1964,0.06876,0.06608,0.08388,0.04793,0.07887,0.1129,0.05601,0.1974,0.09532,0.08698,0.07431,0.02564,0.1308,0.06575,0.08263,0.0377,0.2134,0.08224,0.04306,0.06664,0.1108,0.1105,0.1407,0.04589,0.02579,0.0931,0.07485,0.04044,0.03612,0.2475,0.0737,0.2173,0.1708,0.07971,0.1827,0.06384,0.07453,0.0589,0.08216,0.1555,0.1739,0.03312,0.02222,0.1535,0.1202,0.197,0.08308,0.09594,0.228,0.0875,0.1466,0.07116,0.1069,0.09851,0.07763,0.06835,0.06005,0.05921,0.04866,0.1555,0.2625,0.05563,0.08288,0.1045,0.1357,0.1181,0.025,0.1996,0.1416,0.0656,0.05547,0.1147,0,0.07966,0.09783,0.1339,0.06222,0.07431,0.1775,0.0569,0.0815,0.1335,0.09077,0.1452,0.1342,0.07828,0.206,0.09815,0.08737,0.06335,0.08341,0.1489,0.0268,0.04195,0.1017,0.1407,0.1053,0.1663,0.2113,0.1018,0.1521,0.08411,0.2264,0.1025,0.1075,0.08088,0.09514,0.1357,0.2163,0.1056,0.07955,0.2051,0.09186,0.112,0.08542,0.151,0.1613,0.1096,0.08045,0.07262,0.2475,0.02832,0.1284,0.06528,0.08512,0.1427,0.107,0.1015,0.07393,0.101,0.0812,0.08704,0.1613,0.09861,0.2148,0.1362,0.1308,0,0.05,0.06918,0.1205,0.1095,0.07958,0.06845,0.07174,0.02381,0.08333,0.03846,0.03264,0,0.06413,0.06498,0.02564,0.06493,0.09127,0.02232,0,0.1105,0.09653,0.1048,0,0.2356,0.2542,0.2216,0.1628,0.1418,0.265,0],"texture_mean":[10.38,17.77,21.25,20.38,14.34,15.7,19.98,20.83,21.82,24.04,23.24,17.89,24.8,23.95,22.61,27.54,20.13,20.68,22.15,14.36,15.71,12.44,14.26,23.04,21.38,16.4,21.53,20.25,25.27,15.05,25.11,18.7,23.98,26.47,17.88,21.59,21.72,18.42,25.2,20.82,21.58,21.35,24.81,20.28,21.81,17.6,16.84,18.66,14.63,22.3,21.6,16.34,18.24,18.7,22.02,18.75,18.57,21.59,19.31,11.79,14.88,20.98,22.15,13.86,23.84,23.94,21.01,19.04,17.33,16.49,21.31,14.64,24.52,15.79,16.52,19.65,10.94,16.15,23.97,18,20.97,15.86,24.91,26.29,15.65,18.52,21.46,24.59,21.8,15.24,24.02,22.76,14.76,18.3,19.83,23.03,17.84,19.94,12.84,19.77,24.98,13.43,20.52,19.4,19.29,15.56,18.33,18.54,19.67,21.26,16.99,20.76,19.65,20.19,15.83,21.53,15.76,16.67,22.91,20.01,10.82,17.12,20.2,10.89,16.39,17.21,24.69,18.91,16.39,25.12,13.29,19.48,21.54,13.93,21.91,22.47,16.67,15.39,17.57,13.39,11.97,18.05,17.31,15.92,14.97,14.65,16.58,18.77,15.18,17.91,20.78,20.7,15.34,13.08,15.34,17.94,20.74,19.46,12.74,12.96,20.18,15.94,18.15,22.22,22.04,19.76,9.71,18.8,24.68,16.95,12.39,19.63,11.89,14.71,15.15,14.45,18.06,20.11,22.22,13.06,21.87,26.57,20.31,14.92,22.41,15.11,18.58,17.19,17.39,15.9,23.12,21.41,18.22,26.86,23.21,16.33,22.29,21.84,22.49,20.22,19.56,19.32,26.67,23.75,18.6,16.68,17.27,20.26,22.54,12.91,22.14,18.94,18.47,25.56,23.81,16.93,18.35,17.48,21.56,32.47,13.16,13.9,17.53,20.25,17.02,13.47,15.46,15.51,23.97,22.33,19.08,27.08,33.81,27.81,15.91,21.25,26.97,21.46,27.85,39.28,15.6,15.04,18.19,23.77,23.5,19.86,17.43,14.11,25.22,14.93,23.56,18.45,19.82,17.08,19.33,17.05,28.77,17.27,23.2,33.56,27.06,23.06,22.13,19.38,22.07,31.12,18.95,21.84,16.21,20.39,16.82,13.04,20.99,15.67,24.48,17.36,14.16,19.98,17.84,15.18,26.6,14.02,18.18,18.77,15.7,18.4,20.76,13.12,19.96,18.89,19.73,19.1,16.02,17.46,13.78,13.27,12.35,18.14,18.17,23.09,18.9,19.89,23.86,18.61,18.16,24.49,15.82,14.4,12.71,13.84,19.11,15.69,13.37,10.72,18.6,16.85,14.08,18.87,18.9,17,16.18,19.66,13.32,21.51,15.21,17.3,12.88,17.93,20.71,21.88,15.51,19.35,19.86,14.78,19.02,21,14.23,21.43,17.53,24.27,16.54,16.84,14.96,21.68,15.45,14.71,18.9,14.74,16.03,14.96,17.07,19.22,17.46,25.74,14.07,19.07,18.59,16.21,15.49,18.32,18.07,21.57,18.84,18.29,16.95,21.78,26.83,18.02,17.25,21.9,23.29,13.21,15.1,17.35,16.07,16.07,20.22,28.21,15.15,18.83,12.96,14.93,22.72,17.48,13.72,23.29,14.09,16.16,15.5,23.21,12.22,16.84,19.97,22.28,17.72,17.18,18.89,17.46,14.83,17.26,21.02,10.91,18.29,16.17,14.95,18.59,14.86,21.37,20.66,17.92,17.57,16.83,21.68,22.11,29.81,21.17,21.7,21.08,12.17,21.41,19.04,13.98,16.02,19.13,19.12,21.28,14.98,21.98,16.62,17.67,22.53,17.68,19.54,21.97,16.94,19.62,19.54,15.98,19.6,15.66,17.2,25.42,15.79,18.32,16.85,24.89,28.03,17.66,19.34,20.52,21.54,25,28.23,13.98,17.15,30.72,29.29,25.25,25.13,28.2,27.15,26.27,26.99,18.36,18.22,20.13,20.74,18.1,23.33,18.18,18.49,28.14,14.93,29.97,15.62,15.73,20.53,16.62,14.59,19.51,18.03,19.24,14.06,17.64,11.28,16.41,16.85,18.82,16.17,20.2,22.44,13.23,20.56,12.83,20.54,20.21,18.17,17.31,17.52,21.24,16.74,24.49,16.32,19.83,12.87,13.14,20.04,17.12,15.7,23.95,14.69,14.7,20.52,13.66,19.07,18.61,20.58,20.26,18.22,16.7,13.9,21.6,19.83,18.68,15.68,13.1,18.75,12.27,13.17,13.44,17.56,20.02,16.33,20.67,17.62,20.86,22.55,24.44,25.49,25.44,14.44,24.99,25.42,28.06,20.7,23.23,16.35,16.58,19.34,24.21,21.48,22.44,29.43,21.94,28.92,27.61,19.59,27.88,22.68,23.93,27.15,29.37,30.62,25.09,22.39,28.25,28.08,29.33,24.54],"area_worst":[2019,1956,1709,567.7,1575,741.6,1606,897,739.3,711.4,1150,1299,1332,876.5,697.7,943.2,1138,1315,2398,711.2,630.5,314.9,980.9,2615,2215,1461,896.9,1403,1269,1227,1670,888.7,1344,1813,1261,1229,799.6,545.9,698.8,740.4,787.9,514,1651,907.2,740.7,1567,242.2,759.4,582.6,698.8,516.5,656.7,527.2,1321,1030,506.2,2145,985.5,624.1,274.9,368.6,273.9,959.5,310.1,888.3,925.1,330.7,466.7,324.7,554.9,1866,284.4,1681,812.4,611.1,1223,605.5,1610,1623,622.1,525.1,614.9,2562,1298,567.9,1603,808.9,1623,574.7,803.6,803.7,830.9,830.6,699.4,1025,1750,495.2,366.1,512.5,826.4,906.5,185.2,547.8,361.2,402.8,827.2,521.7,544.1,2360,518.1,367,527.4,709,374.4,284.4,583,270,1095,1272,1261,510.5,1549,2073,745.5,632.1,725.9,848.7,1538,762.6,1589,545.2,1156,1175,922.8,1590,653.6,546.7,462,971.4,434,342.9,1233,503,643.8,441.2,509.6,591.7,809.7,766.9,725.9,616.7,249.8,380.5,440.8,677.3,564.2,1302,1032,532.8,470,543.9,1495,2232,553,2403,782.1,414,1260,1660,793.7,549.1,993.6,1102,396.5,408.3,259.2,390.2,981.2,608.8,570.7,3216,2089,1269,467.2,973.1,437,1410,521.5,489.5,546.7,762.4,579.5,303.8,768.9,784.7,600.6,806.9,1228,1688,1044,638.4,1239,1986,1153,677.9,989.5,331.6,1210,639.3,932.7,1656,546.3,2499,1021,811.3,750.1,531.2,403.7,2009,2477,706.2,686.6,375.6,1088,708.8,873.2,395.4,808.2,624,706,1189,452.3,470.9,1872,335.9,715.5,2944,1750,764,1408,683.4,543.4,472.9,706,1417,402.8,602,639.1,455.7,491.8,2010,508.9,1933,1222,1972,826,1926,928.8,1226,1035,1844,1218,1295,988.6,1436,3432,424.8,661.5,597.5,410.4,684.6,457.5,2384,355.2,1320,472.4,458,1236,739.1,670,1724,533.7,1628,1031,595.6,564.1,546.1,577,437.6,459.3,767.3,809.8,585.4,517.8,553.7,661.1,392.2,553.6,819.7,362.7,2053,551.3,1696,375.4,489.8,476.5,636.9,285.5,698.7,672.4,483.1,840.8,618.8,467.8,240.1,544.2,513.1,1485,297.1,515.9,390.4,1657,599.5,1938,583.1,574.4,749.9,523.4,1121,975.2,1070,634.3,436.1,492.7,544.3,1362,576,1873,384,2906,862.1,353.6,440,1540,516.4,357.1,562.6,880.8,475.8,496.2,542.5,915.3,3234,1050,453.5,547.4,591.2,694.4,302,439.6,585.7,621.2,579.7,1009,663.5,1780,1671,624.6,3143,2227,1165,819.1,1535,1946,670.6,861.5,351.9,680.6,657,508.1,476.1,447.1,488.4,600.5,623.7,758.2,529.9,745.3,450,1313,394.5,317,1359,2081,559.5,684.5,675.2,591,496.7,562,1304,589.5,621.9,580.9,533.1,472.4,947.9,645.8,1349,610.2,521.3,471.4,301,867.1,931.4,522.9,359.4,1748,566.9,458,520.5,809.2,475.7,708.8,380.9,376.3,440.4,489.5,421.1,586.8,832.7,515.8,1479,1603,777.5,869.3,626.9,750,749.1,688.9,476.4,1284,706.6,366.3,1292,513.9,1437,829.5,830.5,2022,507.2,1421,523.7,749.9,633.5,705.6,527.8,632.9,628.5,349.9,1648,4254,734.6,495.1,687.6,733.5,689.1,380.2,1437,528.1,385.2,567.6,906.6,558.9,433.1,605.8,828.5,718.9,467.6,939.7,547.4,830.5,660.2,686.5,854.3,580.6,831,1740,549.8,1084,622.9,1210,1426,534,648.3,783.6,633.7,607.3,1600,1760,856.9,788,552,2782,300.2,328.1,515.3,411.1,928.2,909.4,473.8,760.2,844.4,862,967,478.6,1493,1646,674.7,624.1,326.6,2642,435.9,701.9,376.5,275.6,719.8,564.9,653.3,549.9,552.3,550.6,773.4,1645,407.5,1809,728.3,487.7,248,223.6,457.8,808.9,826.4,629.6,688.6,729.8,384.9,357.4,364.2,505.6,412.3,436.6,594.7,295.8,595.7,357.6,347.3,330.6,733.5,474.2,706.7,439.6,915,1819,2027,1731,1124,1821,268.6]},"tree":{"id":[1,2,4,5,10,11,3,6,7],"var":["concave.points_worst","area_mean","<leaf>","texture_mean","<leaf>","<leaf>","area_se","<leaf>","<leaf>"],"n":[500,333,309,24,7,17,167,9,158],"nB":[316,306,300,6,5,1,10,6,4],"nM":[184,27,9,18,2,16,157,3,154],"cls":["B","B","B","M","B","M","M","B","M"],"label":["root","concave.points_worst< 0.1424","area_mean< 696.2","area_mean>=696.2","texture_mean< 18.8","texture_mean>=18.8","concave.points_worst>=0.1424","area_se< 18.34","area_se>=18.34"]},"boruta":{"feat":["radius_mean","texture_mean","perimeter_mean","area_mean","smoothness_mean","compactness_mean","concavity_mean","concave.points_mean","symmetry_mean","fractal_dimension_mean","radius_se","texture_se","perimeter_se","area_se","smoothness_se","compactness_se","concavity_se","concave.points_se","symmetry_se","fractal_dimension_se","radius_worst","texture_worst","perimeter_worst","area_worst","smoothness_worst","compactness_worst","concavity_worst","concave.points_worst","symmetry_worst","fractal_dimension_worst"],"med":[10.169,8.647,9.889,11.143,6.983,6.423,11.052,14.529,3.741,2.981,9.236,2.701,8.388,12.198,1.882,3.96,5.351,4.316,2.22,3.281,15.415,10.5,15.537,15.785,9.962,8.443,12.246,17.326,7.427,4.873],"dec":["Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Tentative","Confirmed","Confirmed","Rejected","Confirmed","Confirmed","Confirmed","Tentative","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed","Confirmed"],"shadowMax":2.443},"cm_dt":[40,1,2,26],"cm_dt10":[39,2,2,26]};
+var CLS=['var(--c1)','var(--c2)','var(--c3)'];
+function dot(g,x,y,r,style){ return G.el('circle',{cx:x,cy:y,r:r,style:style},g); }
+function arrowDefs(svg,id){ var d=G.el('defs',{},svg), m=G.el('marker',{id:id,viewBox:'0 0 10 10',refX:9,refY:5,markerWidth:7,markerHeight:7,orient:'auto'},d); G.el('path',{d:'M0 0 L10 5 L0 10 z',style:'fill:var(--muted)'},m); }
+
+/* ---------- workflow diagram ---------- */
+(function(){
+  var svg=document.getElementById('wf-svg'), W=640, H=190; svg.setAttribute('viewBox','0 0 '+W+' '+H); arrowDefs(svg,'wfa');
+  var steps=['Labelled data','Cleaning & feature engineering','Train','Optimise parameters','Test','Deploy'];
+  var bw=92, gap=(W-20-bw*6)/5;
+  steps.forEach(function(s,i){ var x=10+i*(bw+gap), y=60;
+    G.el('rect',{x:x,y:y,width:bw,height:62,rx:8,style:'fill:'+(i===4?'var(--chal-soft)':'var(--accent-soft)')+';stroke:'+(i===4?'var(--chal)':'var(--accent)')},svg);
+    var words=s.split(' '), lines=[], cur='';
+    words.forEach(function(w){ if ((cur+' '+w).trim().length>12){ lines.push(cur.trim()); cur=w; } else cur+=' '+w; }); lines.push(cur.trim());
+    lines.forEach(function(l,j){ G.txt(svg,x+bw/2,y+31-(lines.length-1)*8+j*16,l,'lab'); });
+    if (i<5) G.el('line',{x1:x+bw+2,x2:x+bw+gap-3,y1:y+31,y2:y+31,style:'stroke:var(--muted);stroke-width:2','marker-end':'url(#wfa)'},svg);
+  });
+  var x2=10+2*(bw+gap)+bw/2, x3=10+3*(bw+gap)+bw/2;
+  G.el('path',{d:'M'+x3+' 58 C '+x3+' 18, '+x2+' 18, '+x2+' 56',style:'fill:none;stroke:var(--muted);stroke-width:2;stroke-dasharray:5 4','marker-end':'url(#wfa)'},svg);
+  G.txt(svg,(x2+x3)/2,22,'tune and retrain','labm');
+  G.txt(svg,10+4*(bw+gap)+bw/2,145,'used once','labm');
+})();
+
+/* ---------- overfitting ---------- */
+(function(){
+  var dS=document.getElementById('of-d'), nS=document.getElementById('of-n'), svg=document.getElementById('of-svg'), es=document.getElementById('of-err');
+  var tr=[], te=[];
+  function truth(x){ return Math.sin(2*Math.PI*x); }
+  function gen(){ var s=+nS.value; tr=[]; te=[];
+    for (var i=0;i<15;i++){ var x=(i+Math.random()*0.8)/15; tr.push([x,truth(x)+S.rnorm(0,s)]); }
+    for (var j=0;j<30;j++){ var x2=Math.random(); te.push([x2,truth(x2)+S.rnorm(0,s)]); } }
+  function fit(d){ var n=d+1, A=[], b=[]; for (var i=0;i<n;i++){ A.push(new Array(n).fill(0)); b.push(0); }
+    tr.forEach(function(p){ var z=2*p[0]-1, pw=[]; for (var k=0;k<n;k++) pw.push(Math.pow(z,k)); for (var r=0;r<n;r++){ b[r]+=pw[r]*p[1]; for (var c=0;c<n;c++) A[r][c]+=pw[r]*pw[c]; } });
+    for (var r2=0;r2<n;r2++) A[r2][r2]+=1e-9;
+    for (var col=0;col<n;col++){ var piv=col; for (var rr=col+1;rr<n;rr++) if (Math.abs(A[rr][col])>Math.abs(A[piv][col])) piv=rr;
+      var t=A[col]; A[col]=A[piv]; A[piv]=t; var tb=b[col]; b[col]=b[piv]; b[piv]=tb;
+      for (var r3=col+1;r3<n;r3++){ var f=A[r3][col]/A[col][col]; for (var c2=col;c2<n;c2++) A[r3][c2]-=f*A[col][c2]; b[r3]-=f*b[col]; } }
+    var w=new Array(n).fill(0); for (var r4=n-1;r4>=0;r4--){ var s=b[r4]; for (var c3=r4+1;c3<n;c3++) s-=A[r4][c3]*w[c3]; w[r4]=s/A[r4][r4]; }
+    return function(x){ var z=2*x-1, s=0; for (var k=0;k<n;k++) s+=w[k]*Math.pow(z,k); return s; }; }
+  function mse(fn,pts){ var s=0; pts.forEach(function(p){ var e=fn(p[0])-p[1]; s+=e*e; }); return s/pts.length; }
+  function draw(){ var d=+dS.value; document.getElementById('of-dv').textContent=d; document.getElementById('of-nv').textContent=S.fmt(+nS.value,2);
+    var fn=fit(d);
+    var f=G.frame(svg,{W:640,H:260,x0:0,x1:1,y0:-2.2,y1:2.2,ny:4,xlab:'x',ylab:'y',m:{l:40,r:16,t:12,b:38}});
+    var pts=[]; for (var x=0;x<=1.0001;x+=0.005) pts.push([f.x(x),f.y(Math.max(-2.2,Math.min(2.2,fn(x))))]);
+    var tp=[]; for (var x2=0;x2<=1.0001;x2+=0.01) tp.push([f.x(x2),f.y(truth(x2))]);
+    G.el('path',{d:G.path(tp),style:'fill:none;stroke:var(--line-strong);stroke-width:2;stroke-dasharray:5 4'},f.g);
+    G.el('path',{d:G.path(pts),'class':'curve'},f.g);
+    te.forEach(function(p){ dot(f.g,f.x(p[0]),f.y(p[1]),3.5,'fill:var(--c2);opacity:.75'); });
+    tr.forEach(function(p){ dot(f.g,f.x(p[0]),f.y(p[1]),5,'fill:var(--c1)'); });
+    document.getElementById('of-tr').textContent=S.fmt(mse(fn,tr),3);
+    document.getElementById('of-te').textContent=S.fmt(Math.min(mse(fn,te),99),3);
+    var etr=[], ete=[]; for (var k=1;k<=12;k++){ var g=fit(k); etr.push(mse(g,tr)); ete.push(Math.min(mse(g,te),3)); }
+    var e=G.frame(es,{W:640,H:180,x0:0.5,x1:12.5,y0:0,y1:Math.max(0.6,Math.min(3,Math.max.apply(null,ete)*1.1)),ny:3,xticks:[1,2,3,4,5,6,7,8,9,10,11,12],xlab:'polynomial degree',ylab:'MSE',m:{l:40,r:16,t:10,b:38}});
+    G.el('path',{d:G.path(etr.map(function(v,i){return [e.x(i+1),e.y(v)];})),'class':'curve'},e.g);
+    G.el('path',{d:G.path(ete.map(function(v,i){return [e.x(i+1),e.y(v)];})),'class':'curve2'},e.g);
+    G.el('line',{x1:e.x(d),x2:e.x(d),y1:e.y(0),y2:e.y(e.y?1e9:0),style:'stroke:none'},e.g);
+    G.el('rect',{x:e.x(d)-12,y:e.m.t,width:24,height:e.y(0)-e.m.t,style:'fill:var(--accent);opacity:.08'},e.g);
+    G.txt(e.g,e.x(12.3),e.y(etr[11])-6,'training','labm','end').setAttribute('style','fill:var(--c1)');
+    G.txt(e.g,e.x(1.2),e.y(ete[0])-6,'test','labm','start').setAttribute('style','fill:var(--c2)');
+  }
+  dS.addEventListener('input',draw); nS.addEventListener('change',function(){ gen(); draw(); });
+  document.getElementById('of-go').addEventListener('click',function(){ gen(); draw(); });
+  gen(); draw();
+})();
+
+/* ---------- k-NN explorer ---------- */
+(function(){
+  var I=W5.iris, names=['setosa','versicolor','virginica'];
+  var kS=document.getElementById('kn-k'), dS=document.getElementById('kn-d'), bg=document.getElementById('kn-bg'), svg=document.getElementById('kn-svg'), out=document.getElementById('kn-out');
+  var q=[4.9,1.6], f;
+  function classify(px,py,k,man){ var d=I.pl.map(function(x,i){ var a=x-px, b=I.pw[i]-py; return [man?Math.abs(a)+Math.abs(b):Math.sqrt(a*a+b*b), i]; }).sort(function(u,v){return u[0]-v[0];});
+    var nn=d.slice(0,k), votes=[0,0,0]; nn.forEach(function(p){ votes[I.sp[p[1]]-1]++; });
+    var best=0; for (var c=1;c<3;c++) if (votes[c]>votes[best] || (votes[c]===votes[best] && I.sp[nn[0][1]]-1===c)) best=c;
+    return {cls:best, votes:votes, nn:nn}; }
+  function draw(){ var k=+kS.value, man=dS.value==='m'; document.getElementById('kn-kv').textContent=k;
+    f=G.frame(svg,{W:640,H:340,x0:0.5,x1:7.5,y0:-0.1,y1:2.8,ny:5,xlab:'petal length (cm)',ylab:'petal width (cm)',m:{l:44,r:16,t:12,b:38}});
+    if (bg.value==='1'){ var nx=70, ny=40; for (var i=0;i<nx;i++) for (var j=0;j<ny;j++){ var x=0.5+(i+0.5)*7/nx, y=-0.1+(j+0.5)*2.9/ny, c=classify(x,y,k,man).cls;
+      G.el('rect',{x:f.x(0.5+i*7/nx),y:f.y(-0.1+(j+1)*2.9/ny),width:f.x(7/nx)-f.x(0)+0.6,height:f.y(0)-f.y(2.9/ny)+0.6,style:'fill:'+CLS[c]+';opacity:.13'},f.g); } }
+    var r=classify(q[0],q[1],k,man);
+    r.nn.forEach(function(p){ G.el('line',{x1:f.x(q[0]),y1:f.y(q[1]),x2:f.x(I.pl[p[1]]),y2:f.y(I.pw[p[1]]),style:'stroke:var(--ink);stroke-width:1;opacity:.5'},f.g); });
+    I.pl.forEach(function(x,i){ dot(f.g,f.x(x+(i%3-1)*0.012),f.y(I.pw[i]+(i%5-2)*0.008),3.6,'fill:'+CLS[I.sp[i]-1]+';opacity:.8'); });
+    r.nn.forEach(function(p){ dot(f.g,f.x(I.pl[p[1]]),f.y(I.pw[p[1]]),6,'fill:none;stroke:var(--ink);stroke-width:1.5'); });
+    G.el('path',{d:'M'+(f.x(q[0])-9)+' '+f.y(q[1])+' L'+(f.x(q[0])+9)+' '+f.y(q[1])+' M'+f.x(q[0])+' '+(f.y(q[1])-9)+' L'+f.x(q[0])+' '+(f.y(q[1])+9),style:'stroke:var(--ink);stroke-width:3'},f.g);
+    names.forEach(function(nm,i){ dot(f.g,f.x(0.8),f.y(2.65-i*0.2),5,'fill:'+CLS[i]); G.txt(f.g,f.x(0.8)+10,f.y(2.65-i*0.2)+4,nm,'labm','start'); });
+    out.innerHTML='new flower: petal length '+S.fmt(q[0],2)+' cm, width '+S.fmt(q[1],2)+' cm\nvotes from the '+k+' nearest ('+(man?'Manhattan':'Euclidean')+'): setosa '+r.votes[0]+' · versicolor '+r.votes[1]+' · virginica '+r.votes[2]+
+      '\n<b>prediction: '+names[r.cls]+'</b>';
+  }
+  function pt(ev){ var p=svg.createSVGPoint(); p.x=ev.clientX; p.y=ev.clientY; return p.matrixTransform(svg.getScreenCTM().inverse()); }
+  svg.addEventListener('click',function(ev){ var p=pt(ev); var x=0.5+(p.x-f.x(0.5))/(f.x(7.5)-f.x(0.5))*7, y=-0.1+(p.y-f.y(-0.1))/(f.y(2.8)-f.y(-0.1))*2.9; if (x<0.5||x>7.5||y<-0.1||y>2.8) return; q=[x,y]; draw(); });
+  [kS,dS,bg].forEach(function(e){ e.addEventListener('input',draw); e.addEventListener('change',draw); }); draw();
+  var a=W5.knn_acc, s2=document.getElementById('kacc-svg');
+  var g=G.frame(s2,{W:640,H:220,x0:0.5,x1:25.5,y0:0.9,y1:1,ny:4,yfmt:function(v){return Math.round(v*100)+'%';},xticks:[1,3,5,7,9,11,13,15,17,19,21,23,25],xlab:'k',ylab:'test accuracy',m:{l:48,r:16,t:12,b:38}});
+  G.el('path',{d:G.path(a.map(function(v,i){return [g.x(i+1),g.y(v)];})),'class':'curve'},g.g);
+  a.forEach(function(v,i){ dot(g.g,g.x(i+1),g.y(v),i===2?6:3.5,'fill:'+(i===2?'var(--c2)':'var(--c1)')); });
+})();
+
+/* ---------- information gain ---------- */
+(function(){
+  var BC=W5.bc, fS=document.getElementById('ig-f'), tS=document.getElementById('ig-t'), svg=document.getElementById('ig-svg');
+  function H(b,m){ var n=b+m; if (!n) return 0; var s=0; [b,m].forEach(function(c){ if (c){ var p=c/n; s-=p*Math.log2(p); } }); return s; }
+  function stats(v,t){ var lb=0,lm=0,rb=0,rm=0; v.forEach(function(x,i){ var m=BC.diag[i]; if (x<=t){ if(m) lm++; else lb++; } else { if(m) rm++; else rb++; } });
+    var n=v.length, h0=H(lb+rb,lm+rm), h1=((lb+lm)*H(lb,lm)+(rb+rm)*H(rb,rm))/n; return {lb:lb,lm:lm,rb:rb,rm:rm,h0:h0,ig:h0-h1}; }
+  function draw(){ var v=BC[fS.value], lo=Math.min.apply(null,v), hi=Math.max.apply(null,v), t=lo+(hi-lo)*(+tS.value)/1000;
+    var dp=hi<1?4:hi<50?2:0; document.getElementById('ig-tv').textContent=S.fmt(t,dp);
+    var k=40, w=(hi-lo)/k, cb=new Array(k).fill(0), cm=new Array(k).fill(0);
+    v.forEach(function(x,i){ var j=Math.min(k-1,Math.floor((x-lo)/w)); if (BC.diag[i]) cm[j]++; else cb[j]++; });
+    var ymax=Math.max.apply(null,cb.map(function(c,i){return c+cm[i];}));
+    var f=G.frame(svg,{W:640,H:250,x0:lo,x1:hi,y0:0,y1:ymax*1.15,ny:4,xlab:fS.options[fS.selectedIndex].text,ylab:'tumours',m:{l:44,r:16,t:12,b:38}});
+    for (var j=0;j<k;j++){ var x=f.x(lo+j*w), ww=f.x(lo+(j+1)*w)-x-0.8;
+      G.el('rect',{x:x,y:f.y(cb[j]),width:ww,height:f.y(0)-f.y(cb[j]),'class':'bar'},f.g);
+      G.el('rect',{x:x,y:f.y(cb[j]+cm[j]),width:ww,height:f.y(cb[j])-f.y(cb[j]+cm[j]),'class':'bar2'},f.g); }
+    G.el('line',{x1:f.x(t),x2:f.x(t),y1:f.y(0),y2:f.y(ymax*1.12),style:'stroke:var(--ink);stroke-width:2.5;stroke-dasharray:6 3'},f.g);
+    G.txt(f.g,f.x(hi)-4,f.y(ymax*1.05),'blue = benign · orange = malignant','labm','end');
+    var s=stats(v,t);
+    document.getElementById('ig-h0').textContent=S.fmt(s.h0,3);
+    document.getElementById('ig-l').textContent=s.lb+' / '+s.lm;
+    document.getElementById('ig-r').textContent=s.rb+' / '+s.rm;
+    document.getElementById('ig-g').textContent=S.fmt(s.ig,3);
+  }
+  document.getElementById('ig-best').addEventListener('click',function(){ var v=BC[fS.value], lo=Math.min.apply(null,v), hi=Math.max.apply(null,v), best=0, bi=0;
+    for (var i=1;i<1000;i++){ var g=stats(v,lo+(hi-lo)*i/1000).ig; if (g>best){ best=g; bi=i; } } tS.value=bi; draw(); });
+  fS.addEventListener('change',draw); tS.addEventListener('input',draw); draw();
+})();
+
+/* ---------- tree diagram ---------- */
+(function(){
+  var T=W5.tree, svg=document.getElementById('tree-svg'), W=640, nodes={};
+  T.id.forEach(function(id,i){ nodes[id]={id:id,var:T.var[i],n:T.n[i],nB:T.nB[i],nM:T.nM[i],cls:T.cls[i],label:T.label[i]}; });
+  var leaves=[]; (function walk(id){ var n=nodes[id]; if (!n) return; if (n.var==='<leaf>') leaves.push(id); else { walk(2*id); walk(2*id+1); } })(1);
+  var depthMax=0; Object.keys(nodes).forEach(function(k){ depthMax=Math.max(depthMax,Math.floor(Math.log2(+k))); });
+  var H=60+depthMax*95+70; svg.setAttribute('viewBox','0 0 '+W+' '+H);
+  var pos={}; leaves.forEach(function(id,i){ pos[id]=[ (i+0.5)*W/leaves.length ]; });
+  (function place(id){ var n=nodes[id]; if (n.var!=='<leaf>'){ place(2*id); place(2*id+1); pos[id]=[(pos[2*id][0]+pos[2*id+1][0])/2]; } })(1);
+  Object.keys(pos).forEach(function(k){ pos[k][1]=20+Math.floor(Math.log2(+k))*95; });
+  Object.keys(pos).forEach(function(k){ var id=+k; if (nodes[2*id]){ [2*id,2*id+1].forEach(function(c){ G.el('line',{x1:pos[id][0],y1:pos[id][1]+56,x2:pos[c][0],y2:pos[c][1],style:'stroke:var(--line-strong);stroke-width:1.5'},svg); }); } });
+  Object.keys(pos).forEach(function(k){ var n=nodes[k], x=pos[k][0], y=pos[k][1], bw=Math.min(124, W/leaves.length-4), leaf=n.var==='<leaf>';
+    var col=n.cls==='M'?'var(--c2)':'var(--c1)';
+    G.el('rect',{x:x-bw/2,y:y,width:bw,height:56,rx:6,style:'fill:var(--paper);stroke:'+(leaf?col:'var(--line-strong)')+';stroke-width:'+(leaf?2:1.2)},svg);
+    var pm=n.nM/n.n; G.el('rect',{x:x-bw/2+6,y:y+40,width:(bw-12)*(1-pm),height:8,style:'fill:var(--c1)'},svg); G.el('rect',{x:x-bw/2+6+(bw-12)*(1-pm),y:y+40,width:(bw-12)*pm,height:8,style:'fill:var(--c2)'},svg);
+    var lbl=n.label==='root'?'all tumours':n.label.replace('concave.points_worst','conc.pts.worst').replace('>=',' ≥ ').replace('< ',' < ');
+    G.txt(svg,x,y+15,lbl.replace('texture_mean','texture').replace('area_mean','area_mean'),'labm mono').setAttribute('style','font-size:9.5px');
+    G.txt(svg,x,y+31,'n '+n.n+': B '+n.nB+' / M '+n.nM+(leaf?' → '+n.cls:''),'lab').setAttribute('style','font-size:10px;font-weight:'+(leaf?700:400));
+  });
+})();
+
+/* ---------- cross-validation diagram ---------- */
+(function(){
+  var m=document.getElementById('cv-m'), kS=document.getElementById('cv-k'), svg=document.getElementById('cv-svg'), cap=document.getElementById('cv-cap');
+  function draw(){ var mode=m.value, k=+kS.value; var n=20;
+    if (mode==='split'){ kS.min=5; kS.max=9; if (k<5) k=5; kS.value=k; }
+    else { kS.min=2; kS.max=10; }
+    k=+kS.value;
+    var rows = mode==='split'?1 : mode==='loo'? 8 : k;
+    document.getElementById('cv-kv').textContent= mode==='split'? (k*10)+'%' : mode==='loo'? 'n' : k;
+    kS.disabled = mode==='loo';
+    var W=640, cw=(W-120)/n, rh=22, H=rows*(rh+6)+30; svg.setAttribute('viewBox','0 0 '+W+' '+H);
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+    for (var r=0;r<rows;r++){
+      G.txt(svg,8,24+r*(rh+6)+rh/2,mode==='split'?'single split':mode==='loo'?'model '+(r+1):'fold '+(r+1),'labm','start');
+      for (var i=0;i<n;i++){ var test;
+        if (mode==='split') test = i >= Math.round(n*k/10);
+        else if (mode==='loo') test = i===r;
+        else test = Math.floor(i*k/n)===r;
+        G.el('rect',{x:100+i*cw,y:20+r*(rh+6),width:cw-2,height:rh,rx:3,style:'fill:'+(test?'var(--c2)':'var(--c1)')+';opacity:'+(test?0.9:0.35)},svg); } }
+    if (mode==='loo') G.txt(svg,100+n*cw/2,H-4,'… continues until every case has been the test case once (n models)','labm');
+    cap.innerHTML = mode==='split' ? 'One random split: '+(k*10)+'% train (blue), '+(100-k*10)+'% test (orange). Simple but noisy.' :
+      mode==='loo' ? 'Leave-one-out: each model trains on all cases but one and tests on that one.' :
+      k+'-fold CV: the data is cut into '+k+' folds. Each fold takes one turn as the test set (orange) while the other '+(k-1)+' train the model. The '+k+' scores are averaged.';
+  }
+  m.addEventListener('change',draw); kS.addEventListener('input',draw); draw();
+})();
+
+/* ---------- confusion matrix ---------- */
+(function(){
+  var ids=['cm-tp','cm-fn','cm-fp','cm-tn'], e={}; ids.forEach(function(i){ e[i]=document.getElementById(i); });
+  var svg=document.getElementById('cm-svg'), body=document.getElementById('cm-body');
+  function draw(){ var TP=Math.max(0,+e['cm-tp'].value), FN=Math.max(0,+e['cm-fn'].value), FP=Math.max(0,+e['cm-fp'].value), TN=Math.max(0,+e['cm-tn'].value), N=TP+FN+FP+TN||1;
+    var W=640,H=220; svg.setAttribute('viewBox','0 0 '+W+' '+H); while (svg.firstChild) svg.removeChild(svg.firstChild);
+    var x0=200, y0=40, cw=200, ch=80;
+    G.txt(svg,x0+cw,22,'Predicted','lab').setAttribute('style','font-weight:700');
+    ['disease','healthy'].forEach(function(l,i){ G.txt(svg,x0+cw*i+cw/2,y0-4,l,'labm'); G.txt(svg,x0-10,y0+ch*i+ch/2+4,(i?'healthy':'disease'),'labm','end'); });
+    G.txt(svg,60,y0+ch,'Actual','lab').setAttribute('style','font-weight:700');
+    var cells=[[TP,'TP','var(--core-soft)'],[FN,'FN · Type II','var(--chal-soft)'],[FP,'FP · Type I','var(--bad-soft)'],[TN,'TN','var(--core-soft)']];
+    cells.forEach(function(c,i){ var x=x0+(i%2)*cw, y=y0+Math.floor(i/2)*ch;
+      G.el('rect',{x:x,y:y,width:cw-4,height:ch-4,rx:6,style:'fill:'+c[2]+';stroke:var(--line)'},svg);
+      G.txt(svg,x+cw/2-2,y+36,String(c[0]),'lab mono').setAttribute('style','font-size:24px;font-weight:700');
+      G.txt(svg,x+cw/2-2,y+60,c[1],'labm'); });
+    var sens=TP/(TP+FN), spec=TN/(TN+FP), prec=TP/(TP+FP), npv=TN/(TN+FN), acc=(TP+TN)/N, f1=2*prec*sens/(prec+sens);
+    var po=acc, pe=((TP+FP)*(TP+FN)+(FN+TN)*(FP+TN))/(N*N), kap=(po-pe)/(1-pe);
+    var rows=[['Accuracy','(TP + TN) / total',acc],['Sensitivity (recall, TPR)','TP / (TP + FN)',sens],['Specificity (TNR)','TN / (TN + FP)',spec],['Precision (PPV)','TP / (TP + FP)',prec],['Negative predictive value','TN / (TN + FN)',npv],['F1 score','2 × precision × recall / (precision + recall)',f1],['Balanced accuracy','(sensitivity + specificity) / 2',(sens+spec)/2],['Cohen\'s kappa','agreement beyond chance',kap],['Type I errors','false positives',FP],['Type II errors','false negatives',FN]];
+    body.innerHTML=rows.map(function(r){ return '<tr><td>'+r[0]+'</td><td class="m">'+r[1]+'</td><td class="n">'+(r[2]%1===0&&r[2]>1?r[2]:isFinite(r[2])?S.fmt(r[2],4):'–')+'</td></tr>'; }).join('');
+  }
+  ids.forEach(function(i){ e[i].addEventListener('input',draw); }); draw();
+})();
+
+/* ---------- Boruta ---------- */
+(function(){
+  var B=W5.boruta, svg=document.getElementById('bor-svg');
+  var order=B.feat.map(function(f,i){return i;}).sort(function(a,b){return B.med[b]-B.med[a];});
+  var W=640, rh=17, H=order.length*rh+50, mx=Math.max.apply(null,B.med)*1.08;
+  svg.setAttribute('viewBox','0 0 '+W+' '+H);
+  var x0=190, xw=W-x0-20, sx=function(v){ return x0+v/mx*xw; };
+  order.forEach(function(i,r){ var y=10+r*rh, d=B.dec[i], col=d==='Confirmed'?'var(--c3)':d==='Rejected'?'var(--c2)':'var(--line-strong)';
+    G.el('rect',{x:x0,y:y,width:Math.max(1,sx(Math.max(0,B.med[i]))-x0),height:rh-4,rx:2,style:'fill:'+col},svg);
+    G.txt(svg,x0-6,y+rh-6,B.feat[i].replace(/\./g,' '),'labm','end').setAttribute('style','font-size:11px'); });
+  G.el('line',{x1:sx(B.shadowMax),x2:sx(B.shadowMax),y1:4,y2:H-36,style:'stroke:var(--ink);stroke-width:1.5;stroke-dasharray:5 4'},svg);
+  G.txt(svg,sx(B.shadowMax)+4,H-24,'best shadow feature','labm','start');
+  G.txt(svg,x0+xw/2,H-6,'median importance (random forest)','labm');
+})();
+})();
+
+</script>
+</body>
+</html>
