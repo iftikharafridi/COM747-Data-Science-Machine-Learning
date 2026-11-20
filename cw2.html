@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>COM747 CW2 Route Map</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+/* VOICE: clear, practical, encouraging; a tutor's map, not a lecture
+   IDEA: a metro map: the group line and the individual line run side by side and meet at one terminus (Blackboard, 4 Dec noon)
+   PICTURE: the route map itself, clickable stations, "you are here" pulse on today's stop
+   COLOUR and TYPE: white ground, blue = group, red = individual, amber = suggested, green = done; Figtree 800 + Figtree
+   LAYOUT: map first, then numbered "lines" of guidance in bands; checklist and tools at the end */
+:root{color-scheme:light dark;--bg:light-dark(#fff,#0e1116);--ink:light-dark(#111418,#eef1f5);--muted:light-dark(#596170,#9ea7b6);--line:light-dark(#e2e5ea,#262c36);--soft:light-dark(#f3f5f8,#151a21);--card:light-dark(#fff,#1a2029);--blue:light-dark(#0a5cff,#4f8dff);--red:light-dark(#e6261f,#ff5d55);--amber:#ffb400;--green:light-dark(#00a05a,#2ccf86);--blueT:light-dark(#e8f0ff,#14233f);--redT:light-dark(#fdeceb,#3a1918);--amberT:light-dark(#fff5d9,#3a2e0c)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Figtree,system-ui,Segoe UI,Arial,sans-serif;overflow-x:clip}
+h1,h2,h3{font-weight:800;line-height:1.1;text-wrap:balance;margin:0}
+h1{font-size:clamp(32px,5vw,50px)}h2{font-size:clamp(26px,3.4vw,34px);margin-bottom:8px}h3{font-size:19px;margin-bottom:6px}
+p{margin:6px 0 12px;max-width:70ch}a{color:var(--blue)}
+.band{padding:clamp(28px,4vw,56px) max(5vw,16px)}.band>*{max-width:1240px;margin-inline:auto}
+.alt{background:var(--soft)}
+.muted{color:var(--muted)}.small{font-size:14px}
+.top{display:flex;flex-wrap:wrap;gap:18px 32px;align-items:flex-end;justify-content:space-between;margin-bottom:10px}
+.count{text-align:right}.count b{display:block;font-size:clamp(40px,7vw,64px);line-height:1;color:var(--red)}
+.facts{display:flex;flex-wrap:wrap;gap:8px 22px;margin:10px 0 0;padding:0;list-style:none;font-size:15px}.facts b{font-weight:800}
+.legend{display:flex;flex-wrap:wrap;gap:8px 20px;font-size:14px;margin:14px 0 4px}
+.legend .k::before{content:"";display:inline-block;width:26px;height:7px;border-radius:4px;margin-right:8px;vertical-align:middle;background:var(--c)}
+.fig{position:relative;min-height:330px;margin-top:6px}.fig>svg{position:absolute;inset:0;width:100%;height:100%}
+.ln{fill:none;stroke-width:8;stroke-linecap:round;stroke-linejoin:round}
+.st{cursor:pointer}.st text{fill:var(--ink);font:600 13px Figtree,system-ui,sans-serif}.st:hover text,.st.sel text{font-weight:800}
+.st:focus{outline:none}.st:focus-visible circle.dot{stroke-width:6}
+.pulse{fill:none;stroke-width:3;animation:p 1.8s ease-out infinite;transform-box:fill-box;transform-origin:center}
+@keyframes p{from{opacity:.9;transform:scale(1)}to{opacity:0;transform:scale(2.4)}}
+@media (prefers-reduced-motion:reduce){.pulse{animation:none;opacity:.6}}
+.detail{border-radius:14px;padding:18px 20px;margin-top:8px;background:var(--t);border-left:6px solid var(--c)}
+.detail h3 span{font-size:14px;font-weight:600;color:var(--muted);margin-left:8px}
+.detail dl{display:grid;grid-template-columns:9em minmax(0,1fr);gap:6px 14px;margin:10px 0 0}.detail dt{font-weight:800}.detail dd{margin:0}
+@media(max-width:600px){.detail dl{grid-template-columns:1fr}.detail dd{margin-bottom:8px}}
+.tag{display:inline-block;font-size:13px;font-weight:800;border-radius:6px;padding:1px 8px;white-space:nowrap;vertical-align:1px}
+.off{background:var(--ink);color:var(--bg)}.sug{background:var(--amber);color:#1a1400}
+nav.scroll{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);display:flex;gap:4px;padding:6px max(5vw,16px);white-space:nowrap}
+nav.scroll a{flex:none;text-decoration:none;color:var(--ink);font-weight:600;font-size:15px;padding:10px 12px;border-radius:8px}nav.scroll a:hover{background:var(--soft)}
+@media(max-width:900px){nav.scroll{position:static}}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+@media(max-width:820px){.grid2,.grid3{grid-template-columns:minmax(0,1fr)}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px}
+.when{list-style:none;padding:0;margin:14px 0 0}
+  .when li{display:grid;grid-template-columns:6.5em minmax(0,1fr);gap:16px;padding:14px 0;border-top:1px solid var(--line)}
+.when time{font-weight:800;font-size:20px;line-height:1.2;white-space:nowrap}.when li:nth-child(8) time{color:var(--muted)}.when li:last-child time{color:var(--red)}.when li.now time{color:var(--red)}.when li.past{opacity:.55}
+.when li.now{background:var(--redT);border-radius:10px;padding-inline:12px;border-top-color:transparent}
+.when b{display:block}
+@media(max-width:600px){.when li{grid-template-columns:minmax(0,1fr);gap:2px}}
+.seg{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 16px}
+.seg button,.btn{font:inherit;font-weight:600;min-height:44px;padding:8px 16px;border-radius:10px;border:2px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+.seg button[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.btn.pri{background:var(--blue);border-color:var(--blue);color:#fff}
+button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+.roles{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
+.role{border-top:6px solid var(--blue)}.role h3{font-size:17px}.role p{font-size:15px;margin:4px 0}
+.leader{border:2px dashed var(--blue);border-radius:14px;padding:14px 18px;margin-bottom:14px;background:var(--blueT)}
+table{border-collapse:collapse;width:100%}th,td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--line);vertical-align:top}th{font-size:14px;color:var(--muted)}
+td.n,th.n{text-align:right;white-space:nowrap}
+input[type=text],input[type=number]{font:inherit;font-size:16px;padding:9px 10px;border:2px solid var(--line);border-radius:9px;background:var(--card);color:var(--ink);width:100%}
+input[type=number]{width:6.5em;text-align:right}
+label.f{display:block;font-weight:600;margin-bottom:10px}label.f input{margin-top:4px}
+.meter{height:14px;background:var(--line);border-radius:99px;overflow:hidden;position:relative;margin:8px 0}.meter i{display:block;height:100%;background:var(--green);transition:width .2s}
+.meter.warn i{background:var(--amber)}.meter.bad i{background:var(--red)}
+.big{font-size:clamp(30px,5vw,44px);font-weight:800;line-height:1}
+.vbar{display:flex;height:64px;border-radius:12px;overflow:hidden;margin:12px 0 6px}
+.vbar div{display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:14px;padding:0 4px;text-align:center;line-height:1.1}
+.vkey{list-style:none;padding:0;margin:8px 0}.vkey li{padding:8px 0;border-bottom:1px solid var(--line)}.vkey b{white-space:nowrap}
+.rub{margin:8px 0 18px}.rub button{all:unset;cursor:pointer;display:grid;grid-template-columns:minmax(0,1fr) 3.5em;gap:10px;align-items:center;width:100%;padding:8px 0;border-bottom:1px solid var(--line)}
+.rub .bar{height:30px;border-radius:7px;background:var(--c);display:flex;align-items:center;padding:0 10px;color:#fff;font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden}
+.rub .pts{text-align:right;font-weight:800}.rub .why{padding:8px 0 12px;font-size:15px}
+.checks{list-style:none;padding:0;margin:0}.checks li{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-bottom:1px solid var(--line)}
+.checks input{width:22px;height:22px;margin-top:2px;accent-color:var(--green);flex:none}
+.checks li.done label{color:var(--muted);text-decoration:line-through}
+.files code{display:block;font-size:15px;padding:6px 10px;background:var(--soft);border-radius:7px;margin:4px 0;overflow-wrap:anywhere}
+.note{font-size:14px;color:var(--muted)}
+.callout{background:var(--amberT);border-left:6px solid var(--amber);border-radius:10px;padding:14px 16px;margin:14px 0}
+footer{padding:24px max(5vw,16px);font-size:14px;color:var(--muted);border-top:1px solid var(--line)}
+pre{background:var(--soft);border-radius:10px;padding:12px;font-size:14px;overflow-x:auto}
+@media print{nav,.btn,.seg{display:none!important}.fig{break-inside:avoid}}
+@media(max-width:600px){table{font-size:14px}.stack thead{display:none}.stack tr{display:grid;padding-block:10px;border-bottom:1px solid var(--line)}.stack td{display:flow-root;border:0;padding:3px 0;padding-inline-start:8em;text-align:start}.stack td::before{content:attr(data-l);float:inline-start;width:7.5em;margin-inline-start:-8em;font-weight:800}.stack td:empty{display:none}}
+nav.scroll{overflow-x:auto;scrollbar-width:thin}
+.home{display:flex;flex-wrap:wrap;gap:6px 18px;align-items:center;padding:10px max(5vw,16px);border-bottom:1px solid var(--line);font-size:15px}.home a{font-weight:800;text-decoration:none}.home a+a{font-weight:600}
+</style>
+<script>new MutationObserver(()=>{for(const c of document.querySelectorAll('.stack td:not([data-l])')){let i=0,p=c;while(p=p.previousElementSibling)i+=p.colSpan;c.dataset.l=c.closest('table').rows[0].cells[i]?.textContent||''}}).observe(document,{childList:true,subtree:true})</script>
+</head>
+<body>
+<div class="home"><a href="index.html">← COM747 R Labs</a><a href="week06.html">Week 6: ethics for your paper</a><a href="index.html#notebooks">Notebooks</a><a href="index.html#datasets">Datasets</a></div>
+
+<header class="band" style="padding-bottom:12px">
+  <div class="top">
+    <div>
+      <p class="muted" style="margin:0 0 6px;font-weight:600">COM747 Data Science &amp; Machine Learning · 2026/27</p>
+      <h1>Coursework 2 route map</h1>
+      <ul class="facts">
+        <li><b>60%</b> of the module</li><li><b>50%</b> group IEEE paper</li><li><b>50%</b> individual 4-minute video</li><li>Due <b>Fri 4 Dec 2026, 12:00 noon</b> (UK)</li>
+      </ul>
+    </div>
+    <div class="count" aria-live="polite"><b id="days">–</b><span id="daysLbl" class="muted">days to deadline</span></div>
+  </div>
+  <div class="legend"><span class="k" style="--c:var(--blue)">Group line: one shared paper</span><span class="k" style="--c:var(--red)">Individual line: your own submission</span><span><span class="tag off">Brief</span> official requirement</span><span><span class="tag sug">Suggested</span> recommended practice</span></div>
+  <div class="fig" id="map"><svg id="mapSvg" role="img" aria-label="Metro-style map of Coursework 2 stages. Select a station for details."></svg></div>
+  <div class="detail" id="detail" aria-live="polite"></div>
+  <p class="note">Tap any station for details. Week numbers follow the semester teaching weeks; the deadline falls in Week 10.</p>
+</header>
+
+<nav class="scroll" aria-label="Sections"><a href="#schedule">Schedule</a><a href="#group">Group &amp; roles</a><a href="#data">Dataset &amp; methods</a><a href="#paper">Paper</a><a href="#video">Video</a><a href="#marks">Marks &amp; peer score</a><a href="#submit">Submit</a></nav>
+
+<section class="band alt" id="schedule">
+  <h2>Ten weeks, one deadline</h2>
+  <p>A week-by-week plan from the start of the semester. Weekly milestones are <span class="tag sug">Suggested</span>; the only official date is the deadline. Coursework 1 runs in Week 8, so the plan lightens that week. Aim to upload everything the day before the deadline.</p>
+  <ol class="when" id="when"></ol>
+</section>
+
+<section class="band" id="group">
+  <h2>How the group works</h2>
+  <p><span class="tag off">Brief</span> Groups have <b>3 to 5 members</b> and are allocated by the teaching team. Meet weekly, use lab time, and keep agendas, minutes and attendance. You may use OneDrive, Teams, Git and similar tools.</p>
+  <div class="leader">
+    <h3>The group leader</h3>
+    <p style="margin:0"><span class="tag off">Brief</span> Submits the IEEE paper for the whole group and informs the module leader and their tutor who the leader is. The brief asks for this preferably by the end of Week 4; aim for Week 2. Leading is an extra duty, not a role: the leader still owns a technical stage.</p>
+  </div>
+  <h3>Split the technical work <span class="tag sug">Suggested</span></h3>
+  <p>Choose your group size (3, 4 or 5). Every member leads one coding stage, one part of the paper, and the matching part of their own video. Everyone must still understand the whole codebase.</p>
+  <div class="seg" id="sizes" role="group" aria-label="Group size"></div>
+  <div class="roles" id="roles"></div>
+  <div class="grid2" style="margin-top:22px">
+    <div class="card"><h3>Evidence to keep from day one</h3>
+      <table class="stack"><thead><tr><th>Record</th><th>What goes in it</th></tr></thead><tbody>
+      <tr><td>Meeting minutes <span class="tag off">Brief</span></td><td>Date, agenda, who attended and who didn't, decisions, actions with owners</td></tr>
+      <tr><td>Code history <span class="tag sug">Suggested</span></td><td>Git commits or OneDrive versions showing who wrote what</td></tr>
+      <tr><td>Contribution log <span class="tag sug">Suggested</span></td><td>Per person: script, what was done, decision made and why</td></tr>
+      <tr><td>Paper history <span class="tag sug">Suggested</span></td><td>Shared Word doc or Overleaf with tracked edits</td></tr>
+      </tbody></table>
+      <p class="note">These help with fair peer assessment and give each of you material for the video.</p>
+    </div>
+    <div class="card"><h3>Suggested repository layout</h3>
+<pre>cw2-project/
+├── data/raw/          # untouched download + licence note
+├── data/processed/
+├── R/ (or py/)
+│   ├── 01_import_clean.R
+│   ├── 02_eda_stats.R
+│   ├── 03_features.R
+│   ├── 04_models.R
+│   └── 05_evaluate.R
+├── figures/           # exported plots for the paper
+├── minutes/
+└── README.md          # how to run, who wrote what</pre>
+      <p class="note">One script per stage makes ownership clear, keeps the code readable, and exports cleanly into the code PDF.</p>
+    </div>
+  </div>
+</section>
+
+<section class="band alt" id="data">
+  <h2>Choosing a dataset and methods</h2>
+  <div class="grid2">
+    <div class="card">
+      <h3>Where to look</h3>
+      <p><span class="tag off">Brief</span> <a href="https://archive.ics.uci.edu/datasets" target="_blank" rel="noopener">UCI repository</a> · <a href="https://www.kaggle.com/datasets" target="_blank" rel="noopener">Kaggle</a> · <a href="https://pure.ulster.ac.uk/en/datasets/" target="_blank" rel="noopener">Ulster PURE</a></p>
+      <p><span class="tag sug">Also useful</span> <a href="https://datasetsearch.research.google.com/" target="_blank" rel="noopener">Google Dataset Search</a> · <a href="https://www.data.gov.uk/" target="_blank" rel="noopener">data.gov.uk</a></p>
+      <div class="callout small"><b>Official rule:</b> the dataset must be open, and you must not reuse data, examples or content from a previous assignment or one running at the same time.</div>
+      <h3 style="margin-top:14px">Is this dataset good enough?</h3>
+      <ul class="checks" id="dsChecks"></ul>
+      <p class="note">No minimum size is set. Choose a dataset that fits your research question, not the biggest one you can find.</p>
+    </div>
+    <div class="card">
+      <h3>Pick your problem type</h3>
+      <p class="small muted">The project must include cleaning and wrangling, statistical analysis, visualisation, feature engineering and ML modelling, in R and/or Python, following a lifecycle such as CRISP-DM.</p>
+      <div class="seg" id="ptypes" role="group" aria-label="Problem type"></div>
+      <div id="ptype"></div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:18px">
+    <h3>Ethics belongs in the method, not only the discussion</h3>
+    <p>This criterion is worth 10 of the paper's 50 marks. The top band rewards a project that was clearly <i>guided</i> by legal, social, ethical and professional issues, with attention to sustainability, inclusion and equality and diversity, backed by policies, legislation and standards. Show what you actually did, for example:</p>
+    <div class="grid3 small">
+      <div><b>Legal and data</b><br>Licence checked; personal data and GDPR considered; sensitive columns removed or justified.</div>
+      <div><b>Fairness</b><br>Performance compared across subgroups such as gender or age band; class imbalance handled and reported.</div>
+      <div><b>Trust and sustainability</b><br>Interpretable model or feature importance; fixed seeds for reproducibility; compute kept proportionate.</div>
+    </div>
+  </div>
+</section>
+
+<section class="band" id="paper">
+  <h2>The IEEE paper</h2>
+  <p><span class="tag off">Brief</span> About 4 pages and 3,000 words, excluding references; content past 3,300 words may not be marked. IEEE template (Word or Overleaf), Times New Roman 10 pt, PDF, scholarly references in IEEE style. The word count goes at the end, e.g. <i>"Word count excluding references = 2965 words"</i>.</p>
+  <div class="grid2">
+    <div class="card">
+      <h3>Required headings <span class="tag off">Brief</span></h3>
+      <ol class="small" style="padding-left:20px;margin:6px 0">
+        <li>Title</li><li>Abstract</li><li>Introduction<br><span class="muted">a. Related works · b. Aim and objectives</span></li><li>Methods</li><li>Results</li><li>Discussion<br><span class="muted">a. Professional, ethical, social, sustainability and other factors · b. Limitations</span></li><li>Conclusion</li><li>References (IEEE or similar)</li><li>Word count excluding references</li>
+      </ol>
+      <p class="note">The Methods section should cover how you accessed the data, the techniques and packages you used, and how you evaluated and validated the models.</p>
+    </div>
+    <div class="card">
+      <h3>Word budget <span class="tag sug">Suggested</span></h3>
+      <p class="small muted">Change the numbers to plan your sections, or enter your draft's real counts.</p>
+      <table><tbody id="wb"></tbody></table>
+      <div class="meter" id="wbm"><i></i></div>
+      <p style="margin:0"><span class="big" id="wbt">3000</span> <span id="wbs" class="muted"></span></p>
+    </div>
+  </div>
+  <div class="grid3 small" style="margin-top:18px">
+    <div class="card"><b>Not a lab diary.</b> Report the decisions that mattered and why, not every command you ran.</div>
+    <div class="card"><b>Figures, not screenshots.</b> Export plots with <code>ggsave()</code>, number and caption them, and refer to each one in the text.</div>
+    <div class="card"><b>Compare, don't just report.</b> Use a baseline, two or more models, cross-validation and benchmarks from the related work.</div>
+  </div>
+</section>
+
+<section class="band alt" id="video">
+  <h2>Your 4-minute video</h2>
+  <p><span class="tag off">Brief</span> Make it on your own, without sharing or co-producing it. MP4 is preferred; don't use .wmv. Use Panopto or other screen-capture software, with slides and/or your code editor. Showing your face is optional. Content after 4:24 may not be marked.</p>
+  <div class="vbar" id="vbar" aria-hidden="true"></div>
+  <ul class="vkey" id="vkey"></ul>
+  <div class="grid2" style="margin-top:12px">
+    <div class="card"><h3>Show the four qualities the rubric names</h3>
+      <p class="small">The top band rewards "innovative practice" that makes code <b>readable, updatable, maintainable and reusable</b>. Point to real examples in your own code:</p>
+      <ul class="small" style="padding-left:20px;margin:4px 0">
+        <li><b>Readable:</b> meaningful names, comments that explain why, consistent style</li>
+        <li><b>Updatable:</b> settings and file paths kept at the top of the script rather than scattered through it</li>
+        <li><b>Maintainable:</b> one script per stage, checks such as <code>stopifnot()</code>, fixed seeds</li>
+        <li><b>Reusable:</b> functions instead of copy-pasted blocks, and a README on how to run it</li>
+      </ul>
+    </div>
+    <div class="card"><h3>Avoid these</h3>
+      <ul class="small" style="padding-left:20px;margin:4px 0">
+        <li>Reading slides aloud, or explaining textbook definitions of algorithms</li>
+        <li>Showing results without walking through the code that produced them</li>
+        <li>Spending two minutes on the project overview (it earns 10 marks; the code earns 30)</li>
+        <li>Recording before the code is final, then having to record it again</li>
+        <li>Background noise, or uploading without checking the video plays in Blackboard</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="band" id="marks">
+  <h2>Where the marks are</h2>
+  <p>Tap a criterion to see what the top bands ask for (from the brief's indicative rubric).</p>
+  <div class="grid2">
+    <div><h3>Group paper · 50 marks</h3><div class="rub" id="rubG"></div></div>
+    <div><h3>Individual video · 50 marks</h3><div class="rub" id="rubI"></div><p class="note">The group code PDF is required evidence but is not marked.</p></div>
+  </div>
+  <div class="card" style="margin-top:8px">
+    <h3>Self and peer assessment: check the effect</h3>
+    <p class="small"><span class="tag off">Brief</span> Each student scores themselves and every group member out of 10, where 5 is satisfactory. If your <b>rounded</b> average is 5 or more, you get the full group paper mark. If it is below 5, your paper mark is multiplied by your <b>raw</b> average ÷ 5. Your video mark is not affected.</p>
+    <div class="grid2">
+      <div>
+        <label class="f">Scores you received, including your own (comma separated)<input type="text" id="pScores" value="3, 2, 2.5, 2.5" inputmode="decimal"></label>
+        <label class="f">Group paper mark out of 50<input type="number" id="pMark" value="30" min="0" max="50" step="0.5"></label>
+      </div>
+      <div aria-live="polite"><p class="muted" style="margin:0">Your group paper mark</p><p class="big" id="pOut" style="margin:4px 0">–</p><p class="small" id="pWhy"></p></div>
+    </div>
+    <p class="note">The scoring method (Microsoft Form, Word form or Excel sheet) will be confirmed by the teaching team. Score honestly, using the brief's descriptors: 8–10 outstanding and proactive, 5–5.9 satisfactory but often reactive, 0–4.9 very limited.</p>
+  </div>
+</section>
+
+<section class="band alt" id="submit">
+  <h2>Before you press submit</h2>
+  <div class="grid2">
+    <div class="card">
+      <h3>My checklist</h3>
+      <div class="meter" id="ckm"><i></i></div><p class="small muted" id="ckc"></p>
+      <ul class="checks" id="cks"></ul>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px"><button class="btn pri" id="copy">Copy checklist</button><button class="btn" id="print" hidden>Print</button><button class="btn" id="reset">Clear ticks</button></div>
+      <p class="note" id="copyMsg">Ticks are saved in this browser only.</p>
+    </div>
+    <div class="card files">
+      <h3>Name your files</h3>
+      <p class="small"><span class="tag off">Brief</span> Every file uses <b>SurnameFirstNameBNumber</b>, e.g. BrownJohnB00001234_Assignment.</p>
+      <label class="f">Surname<input type="text" id="fS" value="Brown" autocomplete="family-name"></label>
+      <label class="f">First name<input type="text" id="fF" value="John" autocomplete="given-name"></label>
+      <label class="f">B number<input type="text" id="fB" value="B00001234"></label>
+      <div id="fOut"></div>
+      <p class="note">The suffixes are <span class="tag sug">Suggested</span>; only the name prefix is set by the brief. Late work may receive a mark of 0. Feedback follows University guidance (currently 20 working days).</p>
+    </div>
+  </div>
+</section>
+
+<footer>COM747 Coursework 2 student support resource, based on the 2026/27 module guide. Deadline and group size as confirmed by the teaching team. The official brief and Blackboard announcements take precedence over anything on this page. Follow the University's <a href="https://www.ulster.ac.uk/learningenhancement/cqe/strategies/ai" target="_blank" rel="noopener">guidance on AI use</a>, and acknowledge any Generative AI use as it describes.</footer>
+
+<script>
+{
+/* ---- Tutor settings: edit these and republish ---- */
+const CONFIG={deadline:'2026-12-04T12:00:00Z',storeKey:'com747cw2_v2'};
+
+const D=s=>new Date(s+'T12:00:00Z');
+const today=new Date();
+let store={};try{store=JSON.parse(localStorage.getItem(CONFIG.storeKey)||'{}')}catch(e){store={}}
+store.ck=store.ck||{};store.ds=store.ds||{};
+const save=()=>{try{localStorage.setItem(CONFIG.storeKey,JSON.stringify(store))}catch(e){}};
+const $=id=>document.getElementById(id);
+
+/* countdown */
+const ms=new Date(CONFIG.deadline)-today,dl=Math.ceil(ms/864e5);
+$('days').textContent=ms>0?dl:'0';$('daysLbl').textContent=ms>0?(dl===1?'day to deadline':'days to deadline'):'deadline has passed';
+
+/* ---- metro stations ---- */
+const G=[
+ {id:'g1',l:['Group','& leader'],when:'Weeks 1–2',off:'Groups of 3–5 are allocated. Choose a leader and inform the module leader and your tutor, preferably by the end of Week 4. Keep agendas, minutes and attendance.',do:'Confirm members, book two short meetings a week, set up a shared OneDrive/Teams folder and a Git repository, and agree how you will communicate.',ev:'Member list, module leader and tutor informed, first meeting minutes.'},
+ {id:'g2',l:['Question','& dataset'],when:'Week 3',off:'Use an open dataset with a clear aim and objectives. Do not reuse data or content from another assessment.',do:'Start from a real-world problem, then find data that can answer it. Write an aim, 3 to 5 measurable objectives and a short data dictionary. Check the licence.',ev:'One-page proposal: question, dataset link, licence, objectives, roles.'},
+ {id:'g3',l:['Prepare','the data'],when:'Weeks 4–5',off:'Data importing, cleaning, wrangling and feature engineering, following a lifecycle such as CRISP-DM.',do:'Inspect types, missing values, duplicates and outliers. Justify every cleaning decision. Split train and test sets before fitting scalers or imputers, to avoid leakage.',ev:'01_import_clean.R, a cleaning log, the processed dataset.'},
+ {id:'g4',l:['Analyse','& model'],when:'Weeks 5–7',off:'Statistical analysis, data visualisation and machine learning modelling, with evaluation and validation, in R and/or Python.',do:'Descriptive statistics and EDA, then targeted hypothesis tests. Build a baseline and two or more models, using cross-validation and the right metrics. Check how performance differs across subgroups.',ev:'EDA and model scripts, results tables, exported figures.'},
+ {id:'g5',l:['Write the','IEEE paper'],when:'Weeks 6–9 (drafted alongside the analysis)',off:'About 4 pages and 3,000 words in the IEEE template, with the required headings, scholarly references and a word count.',do:'Each member drafts the section matching their stage. One person edits for a single voice. Read the paper against the rubric before finalising.',ev:'Shared document version history.'},
+ {id:'g6',l:['Leader','uploads paper'],when:'Week 10, the day before the deadline',off:'The group leader submits the paper PDF on behalf of the group before 12:00 noon, 4 Dec.',do:'Export to PDF, check fonts, figures and the word-count line, and confirm every author is named. Keep the submission receipt.',ev:'Blackboard receipt shared with the group.'}];
+const I=[
+ {id:'i1',l:['Agree','your role'],when:'Week 3',off:'Your video must focus on the code you mainly contributed. You still need to understand all or most of the rest.',do:'Claim a coding stage you will lead. Start a personal log: date, script, what you did, and why.',ev:'Your contribution log and commits.'},
+ {id:'i2',l:['Lead','your code'],when:'Weeks 4–8',off:'Code should be structured and well commented.',do:'Write your stage as clean, commented functions. Read and run your teammates’ scripts so you can explain how everything fits together.',ev:'Commits in your name, a reviewed script.'},
+ {id:'i3',l:['Plan','your video'],when:'Week 9',off:'Prepare the video individually. Do not share it or work on it with others.',do:'Write a timed outline against the rubric (see the Video section). Choose the code you will open on screen.',ev:'A one-page script with timings.'},
+ {id:'i4',l:['Record','& check'],when:'Week 9 (after the code freeze)',off:'4 minutes; content after 4:24 may not be marked. MP4 is preferred; do not use .wmv. Panopto or other screen capture.',do:'Use a quiet room and a working microphone. Record, trim, then watch it all the way through once.',ev:'The final MP4.'},
+ {id:'i5',l:['Code PDF','& peer forms'],when:'Weeks 9–10',off:'The full group code as text in one PDF (no screenshots), slides as PDF if used, and self and peer assessment forms.',do:'Export the final scripts to a single PDF with selectable text. Score yourself and each teammate honestly.',ev:'Code PDF, slides PDF, completed forms.'},
+ {id:'i6',l:['Upload','your files'],when:'Week 10, the day before the deadline',off:'Every student submits their own files. Check the video plays in the browser inside Blackboard.',do:'Name files correctly, upload, play the video back in Blackboard, and screenshot the receipt.',ev:'Receipt and backup copies.'}];
+const T={id:'t',l:['Blackboard','4 Dec · 12:00'],when:'Week 10 · Fri 4 Dec 2026, 12:00 noon UK',off:'Late work may not be marked and may receive 0.',do:'Nothing should be left for deadline morning. Use it only to fix a failed upload.',ev:'—'};
+const all=[...G,...I,T];
+const curG=-1,curI=-1;
+let sel=all[0].id;
+const svg=$('mapSvg'),map=$('map');
+const lbl=(x,y,lines,anchor,dy)=>`<text x="${x}" y="${y}" text-anchor="${anchor}">${lines.map((t,k)=>`<tspan x="${x}" dy="${k?dy:0}">${t}</tspan>`).join('')}</text>`;
+const stn=(s,x,y,col,lx,ly,anchor,isCur)=>`<g class="st${s.id===sel?' sel':''}" data-id="${s.id}" tabindex="0" role="button" aria-label="${s.l.join(' ')}">
+ <rect x="${x-46}" y="${Math.min(y,ly)-26}" width="92" height="${Math.abs(ly-y)+46}" fill="transparent"/>
+ ${isCur?`<circle class="pulse" cx="${x}" cy="${y}" r="10" stroke="${col}"/>`:''}
+ <circle class="dot" cx="${x}" cy="${y}" r="9" fill="${s.id===sel?col:'var(--bg)'}" stroke="${col}" stroke-width="4"/>
+ ${lbl(lx,ly,s.l,anchor,15)}</g>`;
+const draw=()=>{
+ const W=map.clientWidth,narrow=W<640;let h='';
+ const B='var(--blue)',R='var(--red)';
+ if(!narrow){
+  const H=330;map.style.height=H+'px';const yb=100,yr=232,ym=166,tx=W-125,sp=(tx-80-50)/5,x=i=>50+i*sp;
+  h+=`<path class="ln" stroke="${B}" d="M16 ${yb}H${tx-(ym-yb)}L${tx} ${ym}"/><path class="ln" stroke="${R}" d="M16 ${yr}H${tx-(yr-ym)}L${tx} ${ym}"/>`;
+  G.forEach((s,i)=>h+=stn(s,x(i),yb,B,x(i),yb-36,'middle',i===curG));
+  I.forEach((s,i)=>h+=stn(s,x(i),yr,R,x(i),yr+30,'middle',i===curI));
+  h+=`<g class="st${sel==='t'?' sel':''}" data-id="t" tabindex="0" role="button" aria-label="Deadline: Blackboard 4 December noon"><rect x="${tx-22}" y="${ym-30}" width="140" height="60" fill="transparent"/><circle cx="${tx}" cy="${ym}" r="15" fill="${sel==='t'?'var(--ink)':'var(--bg)'}" stroke="var(--ink)" stroke-width="6"/>${lbl(tx+24,ym-3,T.l,'start',16)}</g>`;
+ }else{
+  const xb=22,xr=Math.round(W/2)+8,y=i=>28+i*64,yl=y(5),xc=Math.round(W/2),ty=yl+(xc-xb)+30,H=ty+60;map.style.height=H+'px';
+  h+=`<path class="ln" stroke="${B}" d="M${xb} 10V${ty-(xc-xb)}L${xc} ${ty}"/><path class="ln" stroke="${R}" d="M${xr} 10V${ty-(xr-xc)}L${xc} ${ty}"/>`;
+  G.forEach((s,i)=>h+=stn(s,xb,y(i),B,xb+18,y(i)-3,'start',i===curG).replace(/<rect[^>]*>/,`<rect x="0" y="${y(i)-22}" width="${xr-12}" height="48" fill="transparent"/>`));
+  I.forEach((s,i)=>h+=stn(s,xr,y(i),R,xr+18,y(i)-3,'start',i===curI).replace(/<rect[^>]*>/,`<rect x="${xr-14}" y="${y(i)-22}" width="${W-xr+14}" height="48" fill="transparent"/>`));
+  h+=`<g class="st${sel==='t'?' sel':''}" data-id="t" tabindex="0" role="button" aria-label="Deadline"><circle cx="${xc}" cy="${ty}" r="15" fill="${sel==='t'?'var(--ink)':'var(--bg)'}" stroke="var(--ink)" stroke-width="6"/>${lbl(xc,ty+36,T.l,'middle',16)}</g>`;
+ }
+ svg.innerHTML=h;
+};
+const show=id=>{sel=id;const s=all.find(z=>z.id===id),grp=id[0]==='g',ind=id[0]==='i';
+ const d=$('detail');d.style.setProperty('--c',grp?'var(--blue)':ind?'var(--red)':'var(--ink)');d.style.setProperty('--t',grp?'var(--blueT)':ind?'var(--redT)':'var(--soft)');
+ d.innerHTML=`<h3>${s.l.join(' ')}<span>${grp?'Group line':ind?'Individual line':'Terminus'} · ${s.when}</span></h3><dl><dt><span class="tag off">Brief</span></dt><dd>${s.off}</dd><dt><span class="tag sug">Suggested</span></dt><dd>${s.do}</dd><dt>Evidence</dt><dd>${s.ev}</dd></dl>`;draw()};
+svg.addEventListener('click',e=>{const g=e.target.closest('[data-id]');if(g)show(g.dataset.id)});
+svg.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.dataset&&e.target.dataset.id){e.preventDefault();show(e.target.dataset.id);const n=svg.querySelector(`[data-id="${sel}"]`);if(n)n.focus()}});
+const mapRO=new ResizeObserver(draw);mapRO.observe(map);
+show(G[0].id);
+
+/* ---- schedule ---- */
+const W8=[
+ ['Week 1','Read the brief, meet your group','Groups of 3–5 allocated. Exchange contacts, read the brief and rubric together, agree how you will communicate.'],
+ ['Week 2','Leader, meetings, workspace','Choose a leader and inform the module leader and tutor. Fix a weekly meeting slot, create the shared folder and repository, brainstorm real-world problems.'],
+ ['Week 3','Question and dataset agreed','Research question, open dataset, licence check, aim and objectives, data dictionary. Agree who leads which coding stage. Everyone starts searching the literature.'],
+ ['Week 4','Proposal checked, data imported','Show the proposal to your tutor in the lab. Import and inspect the data. Leader confirmed by the end of this week at the latest.'],
+ ['Week 5','Clean, engineer, explore','Cleaning and feature engineering scripts, descriptive statistics and first plots. Draft introduction and related work.'],
+ ['Week 6','Statistics and baseline','Hypothesis tests, correlation analysis, a baseline model. Draft the Methods section.'],
+ ['Week 7','Models compared','Two or more models, tuning, cross-validation, subgroup and fairness checks. Export the final figures.'],
+ ['Week 8','Code freeze (CW1 week)','Coursework 1 runs this week, so keep it light: tidy and comment the code, freeze the results, draft the Results section.'],
+ ['Week 9','Paper draft, videos, peer forms','Full paper draft reviewed against the rubric. Each student plans and records their video, exports the code PDF and completes self and peer assessments.'],
+ ['Week 10','Final checks and submit','Check headings, references and the word-count line. Upload everything the day before; check the video plays in Blackboard. Deadline: Fri 4 Dec 2026, 12:00 noon.']];
+$('when').innerHTML=W8.map((w,i)=>`<li><time>${w[0]}</time><div><b>${w[1]}${i===9?' <span class="tag off">Brief</span>':''}</b>${w[2]}</div></li>`).join('');
+
+/* ---- roles ---- */
+const R={
+ 3:[['Data & features','Import, clean, wrangle and engineer features','Methods: data and preprocessing','Your cleaning and feature functions'],['EDA & statistics','Descriptive statistics, visualisation, hypothesis tests','Introduction and related work; Results: statistics','Your plots and test code, and how you read them'],['Models & evaluation','Train, tune, cross-validate and compare models','Results: models; Discussion','Your model pipeline and evaluation code']],
+ 4:[['Data preparation','Import, clean, handle missing values, encode','Methods: data and preprocessing','Your cleaning functions and the decisions behind them'],['EDA & statistics','Descriptive statistics, visualisation, hypothesis tests','Introduction and related work; Results: statistics','Your EDA and test code'],['Modelling','Feature engineering, model training and tuning','Methods: models','Your training code, parameters and why you chose them'],['Evaluation & fairness','Cross-validation, metrics, subgroup checks, comparison','Results: models; Discussion: ethics and limitations','Your evaluation code and what it shows']],
+ 5:[['Data preparation','Import, clean, wrangle, encode','Methods: data','Cleaning functions and decisions'],['EDA & statistics','Statistics, visualisation, hypothesis tests','Results: statistics','EDA and test code'],['Model A','Feature engineering plus the first model family (e.g. logistic regression)','Methods: models','Model A code and tuning'],['Model B','A second model family (e.g. random forest), tuned','Related work and benchmarks','Model B code and tuning'],['Evaluation & fairness','Cross-validation, metrics, subgroup checks, comparison','Discussion: ethics and limitations','Evaluation code and interpretation']]};
+let size=4;
+const drawRoles=()=>{$('sizes').innerHTML=[3,4,5].map(n=>`<button aria-pressed="${n===size}" data-n="${n}">${n} members</button>`).join('');
+ $('roles').innerHTML=R[size].map((r,i)=>`<div class="card role"><h3>Member ${String.fromCharCode(65+i)} · ${r[0]}</h3><p><b>Codes:</b> ${r[1]}</p><p><b>Drafts:</b> ${r[2]}</p><p><b>Video focus:</b> ${r[3]}</p></div>`).join('')};
+$('sizes').addEventListener('click',e=>{const b=e.target.closest('button');if(b){size=+b.dataset.n;drawRoles()}});drawRoles();
+
+/* ---- dataset checklist ---- */
+const DS=['Openly available, and the licence allows academic use','Answers a clear real-world question','Has a sensible target variable, or supports a well-defined clustering task','Enough rows and relevant variables to model and to test hypotheses','Every key variable can be explained (a data dictionary exists or can be written)','Manageable in R and/or Python on your laptops','Privacy, bias and data-quality issues can be identified and discussed','Not used by anyone in the group in another assessment'];
+const drawDS=()=>{$('dsChecks').innerHTML=DS.map((t,i)=>`<li class="${store.ds[i]?'done':''}"><input type="checkbox" id="ds${i}" data-i="${i}" ${store.ds[i]?'checked':''}><label for="ds${i}">${t}</label></li>`).join('')};
+$('dsChecks').addEventListener('change',e=>{store.ds[e.target.dataset.i]=e.target.checked;save();drawDS()});drawDS();
+
+/* ---- problem types ---- */
+const P={
+ Classification:{q:'Can we predict whether a student passes, using attendance and prior marks?',s:'Chi-square tests, t-tests or Mann–Whitney U tests between classes, plus a correlation heatmap',m:'Logistic regression (baseline), decision tree, random forest, kNN',e:'Confusion matrix, precision, recall, F1, ROC-AUC, with stratified k-fold cross-validation',w:'Class imbalance (accuracy can look high but mislead), and leakage from variables recorded after the outcome'},
+ Regression:{q:'What drives household energy use, and how well can we predict it?',s:'Correlation (Pearson or Spearman), ANOVA, residual diagnostics',m:'Linear regression (baseline), regularised regression, regression tree, random forest',e:'MAE, RMSE, R² on a held-out test set; compare against a mean-only baseline',w:'Skewed targets (try a log transform), multicollinearity, and extrapolating beyond the training range'},
+ Clustering:{q:'What natural customer segments exist in retail purchasing data?',s:'Descriptive profiles, PCA for structure, tests comparing the clusters afterwards',m:'k-means, hierarchical clustering, PCA plus clustering',e:'Elbow method and silhouette score, plus whether the clusters make sense in the domain',w:'Not scaling features, picking k arbitrarily, and naming clusters without evidence'}};
+let pt='Classification';
+const drawP=()=>{$('ptypes').innerHTML=Object.keys(P).map(k=>`<button aria-pressed="${k===pt}" data-k="${k}">${k}</button>`).join('');const p=P[pt];
+ $('ptype').innerHTML=`<table class="stack small"><thead><tr><th>Aspect</th><th>Example</th></tr></thead><tbody><tr><td>Question</td><td>${p.q}</td></tr><tr><td>Statistics</td><td>${p.s}</td></tr><tr><td>Models</td><td>${p.m}</td></tr><tr><td>Evaluate with</td><td>${p.e}</td></tr><tr><td>Watch out for</td><td>${p.w}</td></tr></tbody></table><p class="note">Examples only. Choose techniques that fit your question, and justify them in the Methods section.</p>`};
+$('ptypes').addEventListener('click',e=>{const b=e.target.closest('button');if(b){pt=b.dataset.k;drawP()}});drawP();
+
+/* ---- word budget ---- */
+const WB=[['Abstract',150],['Introduction + related work + aims',550],['Methods',750],['Results',650],['Discussion (ethics, limitations)',650],['Conclusion',250]];
+store.wb=store.wb||WB.map(w=>w[1]);
+$('wb').innerHTML=WB.map((w,i)=>`<tr><td><label for="wb${i}">${w[0]}</label></td><td class="n"><input type="number" id="wb${i}" data-i="${i}" min="0" step="10" value="${store.wb[i]}"></td></tr>`).join('');
+const wbCalc=()=>{const t=store.wb.reduce((a,b)=>a+(+b||0),0),m=$('wbm');$('wbt').textContent=t.toLocaleString('en-GB');m.querySelector('i').style.width=Math.min(100,t/3300*100)+'%';
+ m.className='meter'+(t>3300?' bad':t>3000?' warn':'');$('wbs').textContent=t>3300?'words: over 3,300, so the excess may not be marked':t>3000?'words: within the 10% allowance, but aim for 3,000':'words of 3,000, excluding references'};
+$('wb').addEventListener('input',e=>{store.wb[e.target.dataset.i]=+e.target.value||0;save();wbCalc()});wbCalc();
+
+/* ---- video plan ---- */
+const V=[['0:00–0:30',30,'var(--ink)','Overview','Problem, dataset, method and the headline result. Rubric: overview, 10 marks.'],['0:30–1:00',30,'var(--blue)','How it fits','Walk through the repository: which script does what, and how the data flows between them. Shows you understand the whole project.'],['1:00–3:20',140,'var(--red)','Your code','The main focus. Open your scripts and explain the key functions, parameters, the choices you made and what the output means. Rubric: technical contribution, 30 marks.'],['3:20–3:50',30,'#b07a00','Code quality','Concrete examples of readable, updatable, maintainable and reusable code.'],['3:50–4:00',10,'var(--green)','Close','One thing you learned, or one limitation.']];
+$('vbar').innerHTML=V.map(v=>`<div style="width:${v[1]/240*100}%;background:${v[2]}">${v[1]>=30?v[3]:''}</div>`).join('');
+$('vkey').innerHTML=V.map(v=>`<li><b style="color:${v[2]}">${v[0]} · ${v[3]}</b> <span class="tag sug">Suggested</span><br><span class="small">${v[4]}</span></li>`).join('')+`<li class="small"><b>Communication (10 marks)</b> runs through the whole video: clear structure, good audio, readable zoom on the code.</li>`;
+
+/* ---- rubric ---- */
+const RG=[['Methodology and results',20,'Outstanding justification of the statistical and ML methods, thorough statistics characterising the data, a comprehensive (even innovative) experimental design, critical evaluation including benchmarking, and scientific-standard graphs and tables.'],['Domain and existing work',10,'A scholarly, critical review of key recent papers that supports the gap you address, with an exceptionally well-written abstract, introduction, aim and objectives.'],['Communication, discussion, conclusions, references',10,'Clear insight into what the results mean and their limitations, reasonable conclusions, high-quality scientific references, and clear layout throughout.'],['Professional, ethical, social, sustainability',10,'The project is visibly guided by legal, social, ethical and professional practice, with attention to sustainable, inclusive and trustworthy systems and to equality and diversity, backed by policies, legislation and standards.']];
+const RI=[['Your technical contribution and understanding',30,'Clear description and justification of the code and technology, sophisticated insight into functions, structure and parameters, an evidently significant personal contribution, and innovative practice for readable, updatable, maintainable and reusable code.'],['Short project overview',10,'An extremely clear, structured summary of the main stages, including the headline results.'],['Communication and presentation quality',10,'Well organised and professional, with clear communication of sophisticated technical content.']];
+const rub=(el,rows,col)=>{$(el).innerHTML=rows.map((r,i)=>`<button aria-expanded="false" data-i="${i}"><span class="bar" style="--c:${col};width:${Math.max(r[1]/30*100,34)}%">${r[0]}</span><span class="pts">${r[1]}</span></button><div class="why" hidden><b>Top bands ask for:</b> ${r[2]}</div>`).join('');
+ $(el).addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const w=b.nextElementSibling,o=b.getAttribute('aria-expanded')==='true';b.setAttribute('aria-expanded',!o);w.hidden=o})};
+rub('rubG',RG,'var(--blue)');rub('rubI',RI,'var(--red)');
+
+/* ---- peer calculator ---- */
+const peer=()=>{const sc=$('pScores').value.split(/[,;\s]+/).map(Number).filter(n=>!isNaN(n)&&n>=0&&n<=10&&String(n)!=='');const m=Math.min(50,Math.max(0,+$('pMark').value||0));
+ if(!sc.length){$('pOut').textContent='–';$('pWhy').textContent='Enter one or more scores between 0 and 10.';return}
+ const raw=sc.reduce((a,b)=>a+b,0)/sc.length,rd=Math.round(raw),adj=rd>=5?m:m*raw/5;
+ $('pOut').textContent=`${+adj.toFixed(2)} / 50`;
+ $('pWhy').innerHTML=rd>=5?`Raw average ${raw.toFixed(2)} rounds to ${rd}, which is 5 or more, so you receive the full group mark.`:`Raw average ${raw.toFixed(2)} rounds to ${rd}, which is below 5, so the mark is reduced: ${m} × (${raw.toFixed(2)} ÷ 5) = <b>${adj.toFixed(2)}</b>.`};
+['pScores','pMark'].forEach(id=>$(id).addEventListener('input',peer));peer();
+
+/* ---- checklist ---- */
+const CK=[['Group (leader)','Paper is in PDF, IEEE template, Times New Roman 10 pt, about 4 pages'],['Group (leader)','All required headings, IEEE-style references, word-count line at the end'],['Group (leader)','Every group member named as an author'],['Group (leader)','Paper uploaded; receipt shared with the group'],['Me','Video is 4:00 or less (never over 4:24), MP4, clear audio'],['Me','Video focuses on my own code and explains how the whole project fits together'],['Me','Slides exported to PDF (if I used any)'],['Me','Full group code in one PDF as selectable text, not screenshots'],['Me','Self and peer assessment completed using the confirmed method'],['Me','All files named SurnameFirstNameBNumber'],['Me','Any AI use acknowledged as University guidance requires'],['Me','Video plays in the browser inside Blackboard after upload'],['Me','Receipts screenshotted and backups kept']];
+const drawCK=()=>{let cur='';$('cks').innerHTML=CK.map((c,i)=>{const h=c[0]!==cur?`<li style="border:0;padding-top:14px"><b>${cur=c[0]}</b></li>`:'';return h+`<li class="${store.ck[i]?'done':''}"><input type="checkbox" id="ck${i}" data-i="${i}" ${store.ck[i]?'checked':''}><label for="ck${i}">${c[1]}</label></li>`}).join('');
+ const n=CK.filter((_,i)=>store.ck[i]).length;$('ckm').querySelector('i').style.width=n/CK.length*100+'%';$('ckc').textContent=`${n} of ${CK.length} done`};
+$('cks').addEventListener('change',e=>{if(e.target.dataset.i!==undefined){store.ck[e.target.dataset.i]=e.target.checked;save();drawCK()}});drawCK();
+$('reset').addEventListener('click',()=>{store.ck={};save();drawCK();$('copyMsg').textContent='Ticks cleared.'});
+$('copy').addEventListener('click',async()=>{const txt='COM747 CW2 checklist\n'+CK.map((c,i)=>`[${store.ck[i]?'x':' '}] ${c[0]}: ${c[1]}`).join('\n');try{await navigator.clipboard.writeText(txt);$('copyMsg').textContent='Copied. Paste it into your group chat or notes.'}catch(e){$('copyMsg').textContent='Copy was blocked by this browser. Select the list and copy it manually.'}});
+if(window.self===window.top){$('print').hidden=false;$('print').addEventListener('click',()=>window.print())}
+
+/* ---- file names ---- */
+const clean=s=>s.replace(/[^A-Za-z0-9'-]/g,'');
+const fn=()=>{const p=clean($('fS').value)+clean($('fF').value)+clean($('fB').value).toUpperCase();
+ $('fOut').innerHTML=[['Video',p+'_Video.mp4'],['Slides',p+'_Slides.pdf'],['Code',p+'_Code.pdf'],['Peer form',p+'_PeerAssessment.docx'],['Paper (leader only)',p+'_IEEEPaper.pdf']].map(f=>`<div class="small muted" style="margin-top:6px">${f[0]}</div><code>${f[1]}</code>`).join('')};
+['fS','fF','fB'].forEach(id=>$(id).addEventListener('input',fn));fn();
+}
+</script>
+</body>
+</html>
